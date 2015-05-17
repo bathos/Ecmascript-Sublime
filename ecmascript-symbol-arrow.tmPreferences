@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>name</key>
+	<string>Arrow Symbol</string>
+	<key>scope</key>
+	<string>source.es meta.symbol-helper.arrow</string>
+	<key>settings</key>
+	<dict>
+		<key>showInIndexedSymbolList</key>
+		<integer>0</integer>
+		<key>showInSymbolList</key>
+		<integer>1</integer>
+		<key>symbolTransformation</key>
+		<string>s/(.+)/arrow $1/;</string>
+	</dict>
+	<key>uuid</key>
+	<string>96597763-6760-4814-a82f-2ff424cea154</string>
+</dict>
+</plist>

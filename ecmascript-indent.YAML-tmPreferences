@@ -1,0 +1,28 @@
+# [PackageDev] target_format: plist, ext: tmPreferences
+name: Indent
+uuid: 54754702-a030-4b65-af1b-45759e122b28
+scope: source.es
+settings:
+
+  increaseIndentPattern: >-
+    (?x)
+      (
+        \{ [^\}]* |
+        \( [^\)]* |
+        \[ [^\]]*
+      )$
+
+  decreaseIndentPattern: >-
+    (?x)
+      (
+        \} [^\{]* |
+        \) [^\(]* |
+        \] [^\[]*
+      )$
+
+  bracketIndentNextLinePattern: >-
+    (?x)
+      \b(
+        ( do | else ) \s* |
+        ( if | while | for ) \b .* \( .* \) [^;]*
+      )$

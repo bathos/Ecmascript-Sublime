@@ -1,0 +1,11 @@
+# [PackageDev] target_format: plist, ext: tmPreferences
+name: Arrow Symbol
+uuid: 96597763-6760-4814-a82f-2ff424cea154
+
+# ARROW FUNCTION
+scope: >-
+  source.es meta.symbol-helper.arrow
+settings:
+  showInSymbolList: 1
+  showInIndexedSymbolList: 0
+  symbolTransformation: s/(.+)/arrow $1/;

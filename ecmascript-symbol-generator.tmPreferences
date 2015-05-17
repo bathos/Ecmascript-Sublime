@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>name</key>
+	<string>Generator Symbol</string>
+	<key>scope</key>
+	<string>source.es entity.name.function.generator, source.es meta.symbol-helper.generator</string>
+	<key>settings</key>
+	<dict>
+		<key>showInIndexedSymbolList</key>
+		<integer>0</integer>
+		<key>showInSymbolList</key>
+		<integer>1</integer>
+		<key>symbolTransformation</key>
+		<string>s/(.+)/generator $1/;</string>
+	</dict>
+	<key>uuid</key>
+	<string>47d901a1-9272-472f-b9e3-b3b105433cee</string>
+</dict>
+</plist>

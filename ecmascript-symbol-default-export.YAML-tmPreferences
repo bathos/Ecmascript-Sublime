@@ -1,0 +1,11 @@
+# [PackageDev] target_format: plist, ext: tmPreferences
+name: Default Export Symbol
+uuid: 539f45e7-67ab-463c-bced-1f521bbcd2dc
+
+# DEFAULT EXPORT
+scope: >-
+  storage.type.module.default
+settings:
+  showInSymbolList: 1
+  showInIndexedSymbolList: 0
+  symbolTransformation: s/.*/default export/;

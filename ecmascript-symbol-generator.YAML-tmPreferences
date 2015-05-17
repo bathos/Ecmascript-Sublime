@@ -1,0 +1,12 @@
+# [PackageDev] target_format: plist, ext: tmPreferences
+name: Generator Symbol
+uuid: 47d901a1-9272-472f-b9e3-b3b105433cee
+
+# GENERATOR
+scope: >-
+  source.es entity.name.function.generator,
+  source.es meta.symbol-helper.generator
+settings:
+  showInSymbolList: 1
+  showInIndexedSymbolList: 0
+  symbolTransformation: s/(.+)/generator $1/;

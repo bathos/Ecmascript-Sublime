@@ -1,0 +1,12 @@
+# [PackageDev] target_format: plist, ext: tmPreferences
+name: Function Symbol
+uuid: eb868b79-51c7-4da6-af14-fe238b367963
+
+# FUNCTION
+scope: >-
+  source.es entity.name.function,
+  source.es meta.symbol-helper.function
+settings:
+  showInSymbolList: 1
+  showInIndexedSymbolList: 0
+  symbolTransformation: s/(.+)/function $1/;
