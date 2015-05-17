@@ -60,7 +60,7 @@ variables:
       [^\$_‍‍{{ID_Continue}}] )
       (?<![{{ID_Continue}}])
       {{identifierInitCap}}
-  identifierAllCaps: '(?:[\p{Lu}_]{2,}|\p{Lu}){{idEnd}}'
+  identifierAllCaps: '(?:[\p{Lu}\d_]{2,}|\p{Lu}){{idEnd}}'
   identifierAllCapsStrict: >-
     (?x)
       (?! (?:{{reservedWords}})
@@ -70,6 +70,7 @@ variables:
   identifierName: '{{identifierStart}}{{identifierPart}}'
   identifierPart: '(?:[\$_‍‍{{ID_Continue}}]|{{unicodeEscape}})*' # ZWN?J after _
   identifierStart: '(?:[\$_{{ID_Start}}]|{{unicodeEscape}})'
+  allThreeIDs: '({{identifierAllCaps}})|({{identifierInitCap}})|({{identifier}})'
   unicodeEscape: '\\u(?:\h{4}|\{\h+\})'
 
   # WELL-KNOWN IDENTIFIERS #####################################################
@@ -366,8 +367,7 @@ contexts:
     # other possible pattern if contextualized correctly. While not so terrible
     # generally if it meant only that we were more permissive of malformed
     # syntax, the problem mainly concerns difficulty with distinguishing the
-    # homonym ‘in’: it’s critical that we do our best since the meanings are
-    # not in any way related (binary operator vs loop control keyword).
+    # homonym ‘in’ (operator vs control keyword).
     #
     # Our best bet, as far as I can tell, is to use the existence of a non-
     # terminal semi-colon as a heuristic indicator that this is a ‘legacy’ for
@@ -384,9 +384,9 @@ contexts:
       set: forStatement_EXP_LEGACY_INIT
     # At this point we believe we are in a for-in or for-of loop. Though the
     # circumstances that would lead to this being false would be unusual in
-    # practice, we now stand a tiny chance of breaking highlighting. In order to
-    # pull this off, we need a version of to disallow the ‘in’ operator in the
-    # initial expression.
+    # practice, we now stand a tiny chance of breaking highlighting. To make it
+    # work, we need a whole duplicative version of the expression ‘tree’ that
+    # exists only to disallow the ‘in’ operator.
     - match: 'var{{idEnd}}'
       scope: storage.type.variable.var
       set: forStatement_IN_OR_OF_DECLARATION_AFTER_WORD
@@ -396,10 +396,8 @@ contexts:
     - match: 'const{{idEnd}}'
       scope: storage.type.constant
       set: forStatement_IN_OR_OF_DECLARATION_AFTER_WORD
-    # The expression must actually be an LHSE; realistically this distinction
-    # can’t be made, but fortunately it isn’t important for highlighting.
     - match: '{{PLA_anything}}'
-      set: [ forStatement_IN_OR_OF_AFTER_BINDING, assignmentExpression_NO_IN ]
+      set: [ forStatement_IN_OR_OF_AFTER_BINDING, assignmentExpression_NO_IN ] # (lhse)
 
   forStatement_EXP_LEGACY_INIT:
     - match: ';'
@@ -725,10 +723,9 @@ contexts:
     - match: '\{'
       scope: punctuation.definition.class.body.begin
       set: classDeclaration_AFTER_BRACE
-    # Technically the expression element following 'extends' must be an lhse.
     - match: 'extends{{idEnd}}'
       scope: keyword.other.extends
-      set: [ classDeclaration_AFTER_HERITAGE, assignmentExpression ]
+      set: [ classDeclaration_AFTER_HERITAGE, assignmentExpression ] # (lhse)
     - include: other_illegal_pop
 
   classDeclaration_AFTER_HERITAGE:
@@ -741,10 +738,6 @@ contexts:
     - match: '\}'
       scope: punctuation.definition.class.body.end
     # Semicolons in the class body are technically legal for uncertain reasons.
-    # Since they possess no meaning here, and the class body doesn’t contain any
-    # statements, my best guess is that it was done for the benefit of the sort
-    # of JS dev who just doesn’t know where semicolons belong and errs on the
-    # side of ... ‘everywhere!’ 
     - match: ';'
       scope: punctuation.terminator.statement
     - match: 'static{{idEnd}}'
@@ -818,24 +811,30 @@ contexts:
     # The first four of these are used to assign scopes for using in the symbol
     # list. This is important as the `const x =` function ‘declaration’ pattern
     # seems to be taking off now that there’s an actual reason for it.
-    - match: '({{identifier}})(?=\s*=\s*function\s*\*\s*\()'
-      scope: variable.other.readwrite
+    - match: '({{allThreeIDs}})(?=\s*=\s*function\s*\*\s*\()'
       captures:
         1: meta.symbol-helper.generator
+        2: variable.other.readwrite.allCap
+        3: variable.other.readwrite.initCap
+        4: variable.other.readwrite
       set: constLetVarDeclaration_AFTER_BINDING
-    - match: '({{identifier}})(?=\s*=\s*function\s*\()'
-      scope: variable.other.readwrite
+    - match: '({{allThreeIDs}})(?=\s*=\s*function\s*\()'
       captures:
         1: meta.symbol-helper.function
+        2: variable.other.readwrite.allCap
+        3: variable.other.readwrite.initCap
+        4: variable.other.readwrite
       set: constLetVarDeclaration_AFTER_BINDING
-    - match: '({{identifier}})(?=\s*=\s*class\s*(?:\{|extends{idEnd}))'
-      scope: variable.other.readwrite
+    - match: '({{allThreeIDs}})(?=\s*=\s*class\s*(?:\{|extends{idEnd}))'
       captures:
         1: meta.symbol-helper.class
+        2: variable.other.readwrite.allCap
+        3: variable.other.readwrite.initCap
+        4: variable.other.readwrite
       set: constLetVarDeclaration_AFTER_BINDING
     - match: >-
         (?x)
-          ( {{identifierName}} )
+          ( {{allThreeIDs}} )
           (?=
             \s* = \s*
             (?:
@@ -844,9 +843,11 @@ contexts:
             )
             \s* =>
           )
-      scope: variable.other.readwrite.arrow
       captures:
         1: meta.symbol-helper.arrow
+        2: variable.other.readwrite.allCap
+        3: variable.other.readwrite.initCap
+        4: variable.other.readwrite
       set: constLetVarDeclaration_AFTER_BINDING
     - match: '{{identifier}}'
       scope: variable.other.readwrite
@@ -874,8 +875,11 @@ contexts:
     - include: other_illegal_pop
 
   functionDeclaration_AFTER_FUNCTION:
-    - match: '{{identifier}}'
-      scope: entity.name.function
+    - match: '{{allThreeIDs}}'
+      captures:
+        1: entity.name.function.allCap
+        2: entity.name.function.initCap
+        3: entity.name.function
       set: functionDeclaration_AFTER_NAME
     - include: other_illegal_pop
 
@@ -905,8 +909,11 @@ contexts:
     - include: statements
 
   generatorDeclaration_AFTER_ASTERISK:
-    - match: '{{identifier}}'
-      scope: entity.name.function.generator
+    - match: '{{allThreeIDs}}'
+      captures:
+        1: entity.name.function.generator.allCap
+        2: entity.name.function.generator.initCap
+        3: entity.name.function.generator
       set: generatorDeclaration_AFTER_NAME
     - include: other_illegal_pop
 
@@ -1002,8 +1009,11 @@ contexts:
     - match: '\('
       scope: punctuation.definition.parameters.generator.begin
       set: [ generatorDeclaration_AFTER_PARAMS, parameters ]
-    - match: '{{identifier}}'
-      scope: entity.name.function.generator
+    - match: '{{allThreeIDs}}'
+      captures:
+        1: entity.name.function.generator.allCap
+        2: entity.name.function.generator.initCap
+        3: entity.name.function.generator
       set: generatorDeclaration_AFTER_NAME
     - include: other_illegal_pop
 
@@ -1011,8 +1021,11 @@ contexts:
     - match: '\('
       scope: punctuation.definition.parameters.function.begin
       set: [ functionDeclaration_AFTER_PARAMS, parameters ]
-    - match: '{{identifier}}'
-      scope: entity.name.function
+    - match: '{{allThreeIDs}}'
+      captures:
+        1: entity.name.function.allCap
+        2: entity.name.function.initCap
+        3: entity.name.function
       set: functionDeclaration_AFTER_NAME
     - include: other_illegal_pop
 
@@ -1358,9 +1371,9 @@ contexts:
     - match: '(?x) \( (?= (?<parens> [^\(\)] | \( \g<parens>* \) )* \)\s*=> )'
       scope: punctuation.definition.parameters.function.arrow.begin
       set: [ ae_ARROW_AFTER_PARAMS, parameters ]
-    # It is a curious fact that the async spec contains an arrow version. While
-    # I doubt it will survive to ES7, because it’s already supported by Babel
-    # I’ve included it. But the decision not to have generator arrows was made
+    # The async spec contains an arrow version. I doubt it will survive to ES7,
+    # but it’s already supported by Babel so I’ve included it. And it probably
+    # is useful. But the decision not to have generator arrows was already made
     # and as far as I can tell, that was that. Async functions are a new kind of
     # generator, so...
     - match: '(async)\s*(\()'
@@ -1597,10 +1610,8 @@ contexts:
         3: punctuation.definition.arguments.begin
       set: [ ae_AFTER_THING, arguments ]
     # NODE OBJECTS
-    # I left out ‘root,’ yet another synonym for global, since it strikes me as
-    # too likely to end up being a weird highlight in other contexts. Also note
-    # I put require in here when uninvoked, since it is also a namespace object
-    # with additional utilities.
+    # Omitted ‘root’ intentionally (identifier too common). ‘require’ makes a
+    # second appearance moonlighting as a namespace object.
     - match: '(global|GLOBAL|process|__(?:dir|file)name|module|exports|require){{idEnd}}'
       scope: support.type.object.node
       set: ae_AFTER_THING
@@ -1675,22 +1686,22 @@ contexts:
       scope: keyword.operator.ternary.if
       set: ae_TERNARY_AFTER_QUESTION
     # ARITHMETIC
-    - match: '\+'
+    - match: '\+(?!=)'
       scope: keyword.operator.arithmetic.addition
       set: assignmentExpression
-    - match: '-'
+    - match: '-(?!=)'
       scope: keyword.operator.arithmetic.subtraction
       set: assignmentExpression
-    - match: '\*\*'
+    - match: '\*\*(?!=)'
       scope: keyword.operator.arithmetic.exponentiation
       set: assignmentExpression
-    - match: '\*'
+    - match: '\*(?![=\*])'
       scope: keyword.operator.arithmetic.multiplication
       set: assignmentExpression
-    - match: '\/'
+    - match: '\/(?!=)'
       scope: keyword.operator.arithmetic.division
       set: assignmentExpression
-    - match: '%'
+    - match: '%(?!=)'
       scope: keyword.operator.arithmetic.modulo
       set: assignmentExpression
     # EQUALITY
@@ -1729,28 +1740,28 @@ contexts:
     - match: '&&'
       scope: keyword.operator.logical.and
       set: assignmentExpression
-    - match: '\|\|'
+    - match: '\|\|(?!=)'
       scope: keyword.operator.logical.or
       set: assignmentExpression
     # BITWISE LOGICAL
-    - match: '&'
+    - match: '&(?!=)'
       scope: keyword.operator.bitwise.logical.and
       set: assignmentExpression
-    - match: '\|'
+    - match: '\|(?![=\|])'
       scope: keyword.operator.bitwise.logical.or
       set: assignmentExpression
-    - match: '\^'
+    - match: '\^(?!=)'
       scope: keyword.operator.bitwise.logical.xor
       set: assignmentExpression
     # BITWISE SHIFT
-    - match: '<<'
+    - match: '<<(?!=)'
       scope: keyword.operator.bitwise.shift.left
       set: assignmentExpression
-    - match: '>>'
-      scope: keyword.operator.bitwise.shift.right
-      set: assignmentExpression
-    - match: '>>>'
+    - match: '>>>(?!=)'
       scope: keyword.operator.bitwise.shift.right.unsigned
+      set: assignmentExpression
+    - match: '>>(?![=>])'
+      scope: keyword.operator.bitwise.shift.right
       set: assignmentExpression
 
   ae_INFIX_OPS_ASSIGNMENT:
@@ -1795,11 +1806,11 @@ contexts:
     - match: '<<='
       scope: keyword.operator.assignment.augmented.bitwise.shift.left
       set: assignmentExpression
-    - match: '>>='
-      scope: keyword.operator.assignment.augmented.bitwise.shift.right
-      set: assignmentExpression
     - match: '>>>='
       scope: keyword.operator.assignment.augmented.bitwise.shift.right.unsigned
+      set: assignmentExpression
+    - match: '>>='
+      scope: keyword.operator.assignment.augmented.bitwise.shift.right
       set: assignmentExpression
 
   ae_LITERAL_VALUES:
@@ -1854,19 +1865,21 @@ contexts:
       set: ae_AFTER_VALUE
 
   ae_OBJECT_ARRAY_BINDING:
-    # This will work only when the assignment operator is on the same line. In
-    # fact I would consider this the single most treacherous thing in the whole
-    # syntax definition. While there are a variety of other similar cases where
-    # newline will break matching, this is the only one out of all of them that
-    # might actually occur in non-horrible code -- though I believe even this is
-    # probably pretty rare in practice.
+    # Of all the ‘only works without naughty linebreak’ cases, this is the most
+    # problematic, simply because unlike the others, it’s quite plausible that
+    # a binding pattern could span multiple lines. Not an everyday thing, sure,
+    # but I can imagine circumstances where it might make sense. I haven’t yet
+    # worked out the best way to deal with this, but I think what we could do
+    # is handle certain (normally illegal) tokens in obj/arr literals and
+    # switch to binding at that point. You’d have the wrong scopes at the start,
+    # but at least no ‘illegal’ sections.
     #
     # Note that ‘ae_AFTER_VALUE’ is fine since = is preestablished as the next
     # character. 
-    - match: '(?x) \{ (?= (?<brackets> [^\{\}] | \{ \g<brackets>* \} )* \}\s*=)'
+    - match: '(?x) \{ (?= (?<brackets> [^\{\}] | \{ \g<brackets>* \} )* \}\s*=[^=])'
       scope:  punctuation.definition.binding.object.begin
       set: [ ae_AFTER_VALUE, bindingObject ]
-    - match: '(?x) \[ (?= (?<brackets> [^\[\]] | \[ \g<brackets>* \] )* \]\s*=)'
+    - match: '(?x) \[ (?= (?<brackets> [^\[\]] | \[ \g<brackets>* \] )* \]\s*=[^=])'
       scope: punctuation.definition.binding.array.begin
       set: [ ae_AFTER_VALUE, bindingArray ]
 
@@ -1895,7 +1908,15 @@ contexts:
       scope: keyword.operator.spread
       set: [ ae_OBJECT_ARRAY_LITERAL_AFTER_SPREAD_MEMBER, assignmentExpression ]
     - match: '{{PLA_anything}}'
-      push: assignmentExpression
+      set: [ ae_OBJECT_ARRAY_LITERAL_AFTER_MEMBER, assignmentExpression ]
+
+  ae_OBJECT_ARRAY_LITERAL_AFTER_MEMBER:
+    # This context is a safety catch for recovering correct scope when it turns
+    # out this was really a multiline binding pattern.
+    - match:  '(?<=\])(?==)'
+      set: bindingArray_AFTER_ELEM
+    - match: '{{PLA_anything}}'
+      set: ae_OBJECT_ARRAY_LITERAL_AFTER_BRACKET_OPEN
 
   ae_OBJECT_ARRAY_LITERAL_AFTER_SPREAD_MEMBER:
     - match: '\]'
@@ -1998,10 +2019,7 @@ contexts:
     # a ... well, a token in a series of three tokens that resolves to a
     # reference and appears to be property access but actually is a composite
     # language keyword which may contain an arbitrary amount of whitespace and
-    # newlines. You know, outside of language development, there’s a word for
-    # abstruse, clever workarounds to existing constraints that don’t address
-    # the problem of the constraints themselves ... Anyway I’m just not sure why
-    # they chose new.target when typeof new+7(if 'kitten$') was still available.
+    # newlines.
     #
     # Congratulations on your new Wat()...
     #
@@ -2021,15 +2039,12 @@ contexts:
     #            new.target,      new . target, new.       target,new
     #            . target ,       new . target ,new.       new.target,
     #            new.target,     new.target,new.target    ,new.target,
-    #           new .target,new.target ,new. target ,new. target, new.
+    #           new .target, new.target,new. target ,new. target, new.
     #          target,new . target,new. target,new .target,new. target,
     #          new . target,new . target,new . target,new . target,new
     #        .target,new. target,new.target new .target ,new.target,new.
     #        target,new .target,new.target , new. target,new .target,new
-    #
-    #                        .target ...the Angkor Wat!
-    #      Alright alright I’m done. Sorry. Uhh ... what was I doing again?
-    #
+    #                          .target == ANGKOR WAT
     - match: >-
         (?x)
           (new) \s* (
@@ -2094,31 +2109,328 @@ contexts:
 
   bindingArray:
     - match: '\]'
-      scope: invalid.illegal.token
+      scope: punctuation.definition.binding.array.end
       pop: true
+    - match: ','
+      scope: punctuation.separator.array-element.binding
+    - match: '\.{3}'
+      scope: keyword.other.rest
+      set: bindingArray_AFTER_ELLIPSIS
+    - match: '{{allThreeIDs}}'
+      captures:
+        1: variable.other.readwrite.allCap
+        2: variable.other.readwrite.initCap
+        3: variable.other.readwrite
+      set: bindingArray_AFTER_ELEM
+    - match: '\['
+      scope: punctuation.definition.binding.array.begin
+      set: [ bindingArray_AFTER_ELEM, bindingArray ]
+    - match: '\{'
+      scope: punctuation.definition.binding.object.begin
+      set: [ bindingArray_AFTER_ELEM, bindingObject ]
     - include: other_illegal
-    # TODO #####################################################################
 
-  bindingObject:
-    - match: '\}'
-      scope: invalid.illegal.token
+  bindingArray_AFTER_ELEM:
+    - match: '\]'
+      scope: punctuation.definition.binding.array.end
       pop: true
+    - match: ','
+      scope: punctuation.separator.array-element.binding
+      set: bindingArray
+    - match: '='
+      scope: keyword.operator.assignment.conditional.default
+      push: assignmentExpression
     - include: other_illegal
-    # TODO #####################################################################
 
-  bindingArray_PARAM:
+  bindingArray_AFTER_ELLIPSIS:
+    - match: '{{allThreeIDs}}'
+      captures:
+        1: variable.other.readwrite.allCap
+        2: variable.other.readwrite.initCap
+        3: variable.other.readwrite
+      set: bindingArray_AFTER_REST_ELEM
     - match: '\]'
       scope: invalid.illegal.token
       pop: true
-    - include: other_illegal
-    # TODO #####################################################################
 
-  bindingObject_PARAM:
+  bindingArray_AFTER_REST_ELEM:
+    - match: '\]'
+      scope: punctuation.definition.binding.array.end
+      pop: true
+    - include: other_illegal
+
+  bindingObject:
+    - match: '\}'
+      scope: punctuation.definition.binding.object.end
+      pop: true
+    # BOUND PROPERTY ASSIGNMENT, NORMAL PROPERTY STYLE
+    - match: '({{identifierName}})\s*(:)'
+      captures:
+        1: entity.other.property-binding
+        2: punctuation.separator.property-binding
+      set: bindingObject_AFTER_PROPERTY
+    # BOUND PROPERTY ASSIGNMENT, SAME-NAME SHORTHAND
+    - match: '{{allThreeIDs}}'
+      captures:
+        1: variable.other.readwrite.allCap
+        2: variable.other.readwrite.initCap
+        3: variable.other.readwrite
+      set: bindingObject_AFTER_ELEM
+    # COMPUTED PROPERTY
+    - match: '\['
+      scope: punctuation.definition.accessor.begin
+      set: [ bindingObject_BEFORE_COLON, computedProp_AFTER_AE, assignmentExpression ]
+    - match: "'"
+      scope: punctuation.definition.string.quoted.single.begin
+      set: [ bindingObject_BEFORE_COLON, stringSingle_AFTER_OPEN ]
+    - match: '"'
+      scope: punctuation.definition.string.quoted.double.begin
+      set: [ bindingObject_BEFORE_COLON, stringDouble_AFTER_OPEN ]
+    # NUMERIC PROPERTY
+    - match: '({{decNum}})'
+      scope: constant.numeric.decimal
+      captures:
+        1: entity.name.method
+        2: punctuation.decimal
+        3: punctuation.decimal
+        4: punctuation.decimal
+        5: meta.numeric.exponent.e
+        6: meta.numeric.exponent.sign
+        7: meta.numeric.exponent.digit
+      set: bindingObject_BEFORE_COLON
+    - match: '({{binNum}})'
+      scope: constant.numeric.binary
+      captures:
+        1: entity.name.method
+        2: meta.numeric.prefix
+      set: bindingObject_BEFORE_COLON
+    - match: '({{octNum}})'
+      scope: constant.numeric.octal
+      captures:
+        1: entity.name.method
+        2: meta.numeric.prefix
+      set: bindingObject_BEFORE_COLON
+    - match: '({{hexNum}})'
+      scope: constant.numeric.hexadecimal
+      captures:
+        1: entity.name.method
+        2: meta.numeric.prefix
+      set: bindingObject_BEFORE_COLON
+    # REST PROPERTIES
+    - match: '\.{3}'
+      scope: keyword.other.rest
+      set: bindingObject_AFTER_ELLIPSIS
+    - include: other_illegal
+
+  bindingObject_BEFORE_COLON:
+    - match: ':'
+      scope: punctuation.separator.property-binding
+      set: bindingObject_AFTER_PROPERTY
     - match: '\}'
       scope: invalid.illegal.token
       pop: true
     - include: other_illegal
-    # TODO #####################################################################
+
+  bindingObject_AFTER_PROPERTY:
+    - match: '{{allThreeIDs}}'
+      captures:
+        1: variable.other.readwrite.allCap
+        2: variable.other.readwrite.initCap
+        3: variable.other.readwrite
+      set: bindingObject_AFTER_ELEM
+    - match: '\['
+      scope: punctuation.definition.binding.array.begin
+      set: [ bindingObject_AFTER_ELEM, bindingArray ]
+    - match: '\{'
+      scope: punctuation.definition.binding.object.begin
+      set: [ bindingObject_AFTER_ELEM, bindingObject ]
+    - match: '{{MAT_word_or_any_one_char}}'
+      scope: invalid.illegal.token
+      set: bindingObject_AFTER_ELEM
+
+  bindingObject_AFTER_ELEM:
+    - match: '\}'
+      scope: punctuation.definition.binding.object.end
+      pop: true
+    - match: ','
+      scope: punctuation.separator.object-member.binding
+      set: bindingObject
+    - match: '='
+      scope: keyword.operator.assignment.conditional.default
+      push: assignmentExpression
+
+  bindingObject_AFTER_ELLIPSIS:
+    - match: '{{allThreeIDs}}'
+      captures:
+        1: variable.other.readwrite.allCap
+        2: variable.other.readwrite.initCap
+        3: variable.other.readwrite
+      set: bindingObject_AFTER_REST_ELEM
+    - match: '\}'
+      scope: invalid.illegal.token
+      pop: true
+    - include: other_illegal
+
+  bindingObject_AFTER_REST_ELEM:
+    - match: '\}'
+      scope: punctuation.definition.binding.object.end
+      pop: true
+    - include: other_illegal
+
+  bindingArray_PARAM:
+    - match: '\]'
+      scope: punctuation.definition.binding.array.parameter.end
+      pop: true
+    - match: ','
+      scope: punctuation.separator.array-element.binding
+    - match: '\.{3}'
+      scope: keyword.other.rest
+      set: bindingArray_PARAM_AFTER_ELLIPSIS
+    - match: '{{identifier}}'
+      scope: variable.parameter
+      set: bindingArray_PARAM_AFTER_ELEM
+    - match: '\['
+      scope: punctuation.definition.binding.array.parameter.begin
+      set: [ bindingArray_PARAM_AFTER_ELEM, bindingArray_PARAM ]
+    - match: '\{'
+      scope: punctuation.definition.binding.object.parameter.begin
+      set: [ bindingArray_PARAM_AFTER_ELEM, bindingObject_PARAM ]
+    - include: other_illegal
+
+  bindingArray_PARAM_AFTER_ELEM:
+    - match: '\]'
+      scope: punctuation.definition.binding.array.parameter.end
+      pop: true
+    - match: ','
+      scope: punctuation.separator.array-element.binding
+      set: bindingArray_PARAM
+    - match: '='
+      scope: keyword.operator.assignment.conditional.default
+      push: assignmentExpression
+    - include: other_illegal
+
+  bindingArray_PARAM_AFTER_ELLIPSIS:
+    - match: '{{identifier}}'
+      scope: variable.parameter
+      set: bindingArray_PARAM_AFTER_REST_ELEM
+    - match: '\]'
+      scope: invalid.illegal.token
+      pop: true
+
+  bindingArray_PARAM_AFTER_REST_ELEM:
+    - match: '\]'
+      scope: punctuation.definition.binding.array.parameter.end
+      pop: true
+    - include: other_illegal
+
+  bindingObject_PARAM:
+    - match: '\}'
+      scope: punctuation.definition.binding.object.parameter.end
+      pop: true
+    # BOUND PROPERTY ASSIGNMENT, NORMAL PROPERTY STYLE
+    - match: '({{identifierName}})\s*(:)'
+      captures:
+        1: entity.other.property-binding.parameter
+        2: punctuation.separator.property-binding.parameter
+      set: bindingObject_PARAM_AFTER_PROPERTY
+    # BOUND PROPERTY ASSIGNMENT, SAME-NAME SHORTHAND
+    - match: '{{identifier}}'
+      scope: variable.parameter
+      set: bindingObject_PARAM_AFTER_ELEM
+    # COMPUTED PROPERTY
+    - match: '\['
+      scope: punctuation.definition.accessor.parameter.begin
+      set: [ bindingObject_PARAM_BEFORE_COLON, computedProp_AFTER_AE, assignmentExpression ]
+    - match: "'"
+      scope: punctuation.definition.string.quoted.single.parameter.begin
+      set: [ bindingObject_PARAM_BEFORE_COLON, stringSingle_AFTER_OPEN ]
+    - match: '"'
+      scope: punctuation.definition.string.quoted.double.parameter.begin
+      set: [ bindingObject_PARAM_BEFORE_COLON, stringDouble_AFTER_OPEN ]
+    # NUMERIC PROPERTY
+    - match: '({{decNum}})'
+      scope: constant.numeric.decimal
+      captures:
+        1: entity.name.method
+        2: punctuation.decimal
+        3: punctuation.decimal
+        4: punctuation.decimal
+        5: meta.numeric.exponent.e
+        6: meta.numeric.exponent.sign
+        7: meta.numeric.exponent.digit
+      set: bindingObject_PARAM_BEFORE_COLON
+    - match: '({{binNum}})'
+      scope: constant.numeric.binary
+      captures:
+        1: entity.name.method
+        2: meta.numeric.prefix
+      set: bindingObject_PARAM_BEFORE_COLON
+    - match: '({{octNum}})'
+      scope: constant.numeric.octal
+      captures:
+        1: entity.name.method
+        2: meta.numeric.prefix
+      set: bindingObject_PARAM_BEFORE_COLON
+    - match: '({{hexNum}})'
+      scope: constant.numeric.hexadecimal
+      captures:
+        1: entity.name.method
+        2: meta.numeric.prefix
+      set: bindingObject_PARAM_BEFORE_COLON
+    # REST PROPERTIES
+    - match: '\.{3}'
+      scope: keyword.other.rest
+      set: bindingObject_PARAM_AFTER_ELLIPSIS
+    - include: other_illegal
+
+  bindingObject_PARAM_BEFORE_COLON:
+    - match: ':'
+      scope: punctuation.separator.property-binding.parameter
+      set: bindingObject_PARAM_AFTER_PROPERTY
+    - match: '\}'
+      scope: invalid.illegal.token
+      pop: true
+    - include: other_illegal
+
+  bindingObject_PARAM_AFTER_PROPERTY:
+    - match: '{{identifier}}'
+      scope: variable.parameter
+      set: bindingObject_PARAM_AFTER_ELEM
+    - match: '\['
+      scope: punctuation.definition.binding.array.parameter.begin
+      set: [ bindingObject_PARAM_AFTER_ELEM, bindingArray_PARAM ]
+    - match: '\{'
+      scope: punctuation.definition.binding.object.parameter.begin
+      set: [ bindingObject_PARAM_AFTER_ELEM, bindingObject_PARAM ]
+    - match: '{{MAT_word_or_any_one_char}}'
+      scope: invalid.illegal.token
+      set: bindingObject_PARAM_AFTER_ELEM
+
+  bindingObject_PARAM_AFTER_ELEM:
+    - match: '\}'
+      scope: punctuation.definition.binding.object.parameter.end
+      pop: true
+    - match: ','
+      scope: punctuation.separator.object-member.binding
+      set: bindingObject_PARAM
+    - match: '='
+      scope: keyword.operator.assignment.conditional.default
+      push: assignmentExpression
+
+  bindingObject_PARAM_AFTER_ELLIPSIS:
+    - match: '{{identifier}}'
+      scope: variable.parameter
+      set: bindingObject_PARAM_AFTER_REST_ELEM
+    - match: '\}'
+      scope: invalid.illegal.token
+      pop: true
+    - include: other_illegal
+
+  bindingObject_PARAM_AFTER_REST_ELEM:
+    - match: '\}'
+      scope: punctuation.definition.binding.object.parameter.end
+      pop: true
+    - include: other_illegal
 
 # OBJECT LITERAL ###############################################################
 
@@ -2199,6 +2511,9 @@ contexts:
     - match: ','
       scope: punctuation.separator.parameter
       set: parameters
+    - match: '='
+      scope: keyword.operator.assignment.conditional.default
+      push: assignmentExpression
     - include: parameters_AFTER_REST_PARAM
 
   parameters_AFTER_ELLIPSIS:

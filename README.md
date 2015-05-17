@@ -4,7 +4,6 @@
 
 ## Remaining Syntax To Complete
 
- - Object and array binding patterns
  - Object literal and most class body syntax
  - Decorators
  - Regular Expressions
