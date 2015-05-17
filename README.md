@@ -47,10 +47,11 @@
  - entity.name.module.export
  - entity.name.module.import
  - entity.name.statement
- - entity.other.property
+ - entity.other.property-binding
+ - entity.other.property-binding.parameter
  - invalid.deprecated
  - invalid.illegal.newline
- - invalid.illegal.octal
+ - invalid.illegal.octal-escape
  - invalid.illegal.token
  - keyword.control.conditional.else
  - keyword.control.conditional.if
@@ -117,7 +118,8 @@
  - keyword.operator.comma
  - keyword.operator.comparison.equality.coercive
  - keyword.operator.comparison.equality.strict
- - keyword.operator.comparison.non
+ - keyword.operator.comparison.non-equality.coercive
+ - keyword.operator.comparison.non-equality.strict
  - keyword.operator.logical.and
  - keyword.operator.logical.not
  - keyword.operator.logical.or
@@ -139,15 +141,18 @@
  - keyword.other.rest
  - meta.comment.body
  - meta.comment.border
- - meta.comment.box
- - meta.directive.use
- - meta.idiomatic
+ - meta.comment.box-drawing
+ - meta.directive.use-strict
+ - meta.idiomatic-cast.boolean
  - meta.invocation
  - meta.numeric.exponent.digit
  - meta.numeric.exponent.e
  - meta.numeric.exponent.sign
  - meta.numeric.prefix
- - meta.symbol
+ - meta.symbol-helper.arrow
+ - meta.symbol-helper.class
+ - meta.symbol-helper.function
+ - meta.symbol-helper.generator
  - meta.whitespace
  - punctuation.decimal
  - punctuation.definition.accessor.begin
@@ -205,7 +210,8 @@
  - punctuation.definition.function.body.end
  - punctuation.definition.generator.body.begin
  - punctuation.definition.generator.body.end
- - punctuation.definition.module
+ - punctuation.definition.module-binding.begin
+ - punctuation.definition.module-binding.end
  - punctuation.definition.object.begin
  - punctuation.definition.object.end
  - punctuation.definition.parameters.catch.begin
@@ -228,15 +234,17 @@
  - punctuation.definition.string.quoted.single.parameter.begin
  - punctuation.definition.string.regexp.begin
  - punctuation.separator.argument
- - punctuation.separator.array
- - punctuation.separator.binding
- - punctuation.separator.case
- - punctuation.separator.label
- - punctuation.separator.loop
- - punctuation.separator.module
- - punctuation.separator.object
+ - punctuation.separator.array-element
+ - punctuation.separator.array-element.binding
+ - punctuation.separator.binding-binding
+ - punctuation.separator.case-statements
+ - punctuation.separator.label-statement
+ - punctuation.separator.loop-expression
+ - punctuation.separator.module-binding
+ - punctuation.separator.object-member.binding
  - punctuation.separator.parameter
- - punctuation.separator.property
+ - punctuation.separator.property-binding
+ - punctuation.separator.property-binding.parameter
  - punctuation.terminator.statement
  - source.es
  - storage.type.accessor.get
@@ -272,10 +280,13 @@
  - support.function.node.require
  - support.type.object.builtin
  - support.type.object.dom
- - support.type.object.functional
+ - support.type.object.dom-library
+ - support.type.object.functional-library
  - support.type.object.node
  - variable.language.arguments
- - variable.language.new
+ - variable.language.new-target.fake-accessor
+ - variable.language.new-target.fake-object
+ - variable.language.new-target.fake-property
  - variable.language.proto
  - variable.language.prototype
  - variable.language.super
