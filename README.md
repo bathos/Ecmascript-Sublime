@@ -269,7 +269,7 @@
  - punctuation.separator.property-binding.es
  - punctuation.separator.property-binding.parameter.es
  - punctuation.terminator.statement.es
- - source.es.es
+ - source.es
  - storage.type.accessor.get.es
  - storage.type.accessor.set.es
  - storage.type.async.es

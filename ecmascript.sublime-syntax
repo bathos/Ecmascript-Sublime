@@ -2,7 +2,7 @@
 ---
 name: Ecmascript Test
 file_extensions: [ js, es, es6 ]
-scope: source.es.es
+scope: source.es
 
 # es 20:15
 # though I walk through the valley of the shadow
