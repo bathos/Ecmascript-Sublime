@@ -2750,13 +2750,6 @@ contexts:
 
 # OBJECT & ARRAY LITERALS ######################################################
 
-  literalObject_OPEN:
-    - match: '\}'
-      scope: punctuation.definition.object.end.es
-      pop: true
-    # TODO: include all items from class body except static, plus '...' rest
-    # and properties. 
-
   literalArray_OPEN:
     - match: '\]'
       scope: punctuation.definition.array.end.es
@@ -2782,6 +2775,127 @@ contexts:
       scope: punctuation.definition.array.end.es
       pop: true
     - include: other_illegal
+
+  literalObject_OPEN:
+    - match: '\}'
+      scope: punctuation.definition.object.end.es
+      pop: true
+    # NORMAL METHODS
+    - match: '({{allThreeIDs}})\s*(\()'
+      captures:
+        1: entity.name.method.es
+        2: variable.other.readwrite.property.allCap.es
+        3: variable.other.readwrite.property.initCap.es
+        4: variable.other.readwrite.property.es
+        5: punctuation.definition.parameters.method.begin.es
+      set: [ literalObject_AFTER_AE, method_AFTER_PARAMS, parameters ]
+    # NORMAL PROPERTIES
+    - match: '(?:{{allThreeIDs}})\s*(:)'
+      captures:
+        1: variable.other.readwrite.property.allCap.es
+        2: variable.other.readwrite.property.initCap.es
+        3: variable.other.readwrite.property.es
+        4: punctuation.separator.key-value.es
+      set: [ literalObject_AFTER_AE, assignmentExpression ]
+    # IDENTIFIER REFERENCE (probably)
+    # We match references (shorthand properties) last because we must rely on
+    # other punctuation to identify ‘regular’ properties and methods.
+    - match: '{{allThreeIDs}}'
+      captures:
+        1: variable.other.readwrite.property.shorthand.allCap.es
+        2: variable.other.readwrite.property.shorthand.initCap.es
+        3: variable.other.readwrite.property.shorthand.es
+      set: literalObject_AFTER_SHORTHAND
+    # QUOTED PROPERTY
+    - match: "'"
+      scope: punctuation.definition.string.quoted.single.begin.es
+      set: [ literalObject_AFTER_SHORTHAND, stringSingle_AFTER_OPEN ]
+    - match: '"'
+      scope: punctuation.definition.string.quoted.double.begin.es
+      set: [ literalObject_AFTER_SHORTHAND, stringDouble_AFTER_OPEN ]
+    # NUMERIC PROPERTY
+    - match: '({{decNum}})'
+      scope: constant.numeric.decimal.es
+      captures:
+        1: entity.name.method.es
+        2: punctuation.decimal.es
+        3: punctuation.decimal.es
+        4: punctuation.decimal.es
+        5: meta.numeric.exponent.e.es
+        6: meta.numeric.exponent.sign.es
+        7: meta.numeric.exponent.digit.es
+      set: literalObject_AFTER_SHORTHAND
+    - match: '({{binNum}})'
+      scope: constant.numeric.binary.es
+      captures:
+        1: entity.name.method.es
+        2: meta.numeric.prefix.es
+      set: literalObject_AFTER_SHORTHAND
+    - match: '({{octNum}})'
+      scope: constant.numeric.octal.es
+      captures:
+        1: entity.name.method.es
+        2: meta.numeric.prefix.es
+      set: literalObject_AFTER_SHORTHAND
+    - match: '({{hexNum}})'
+      scope: constant.numeric.hexadecimal.es
+      captures:
+        1: entity.name.method.es
+        2: meta.numeric.prefix.es
+      set: literalObject_AFTER_SHORTHAND
+    # COMPUTED PROPERTY
+    - match: '\['
+      scope: punctuation.definition.accessor.begin.es
+      set: [ literalObject_AFTER_SHORTHAND, computedProp_AFTER_AE ]
+
+  literalObject_AFTER_SHORTHAND:
+    # Safety for " prop \n : " as well as for computed, string & num props
+    - match: ':'
+      scope: punctuation.separator.key-value.es
+      set: [ literalObject_AFTER_AE, assignmentExpression ]
+    - match: '\('
+      scope: punctuation.definition.parameters.method.begin.es
+      set: [ literalObject_AFTER_AE, method_AFTER_PARAMS, parameters ]
+    - include: literalObject_AFTER_AE
+
+  literalObject_AFTER_AE:
+    - match: ','
+      scope: punctuation.separator.object-member.es
+      set: literalObject_OPEN
+    - match: '{{PLA_anything}}'
+      set: literalObject_OPEN
+
+  computedProp_AFTER_AE:
+    # Also used for property access
+    - match: '\]'
+      scope: punctuation.definition.accessor.end.es
+      pop: true
+    - include: other_illegal
+
+# OBJECT & CLASS LITERAL METHODS ###############################################
+
+  # TODO #######################################################################
+
+  method_AFTER_NAME:
+    - match: '\('
+      scope: punctuation.definition.parameters.method.begin.es
+      set: [ method_AFTER_PARAMS, parameters ]
+    - include: other_illegal_pop
+
+  method_AFTER_PARAMS:
+    - match: '\)'
+      scope: punctuation.definition.parameters.method.end.es
+      pop: true
+    - include: other_illegal
+
+  accessorMethod_AFTER_GET:
+    - include: other_illegal_pop
+
+  accessorMethod_AFTER_SET:
+    - include: other_illegal_pop
+
+  generatorMethod_AFTER_ASTERISK:
+    - include: other_illegal_pop
 
 # BINDING PATTERNS #############################################################
 
@@ -3109,29 +3223,6 @@ contexts:
       scope: punctuation.definition.binding.object.parameter.end.es
       pop: true
     - include: other_illegal
-
-# OBJECT LITERAL ###############################################################
-
-  accessorMethod_AFTER_GET:
-    - include: other_illegal_pop
-
-  computedProp_AFTER_AE:
-    - match: '\]'
-      scope: punctuation.definition.accessor.end.es
-      pop: true
-    - include: other_illegal
-
-  accessorMethod_AFTER_SET:
-    - include: other_illegal_pop
-
-  generatorMethod_AFTER_ASTERISK:
-    - include: other_illegal_pop
-
-  method_AFTER_NAME:
-    - include: other_illegal_pop
-
-  method_AFTER_PAREN_OPEN:
-    - include: other_illegal_pop
 
 # PARAMETERS & ARGUMENTS #######################################################
 # Note: Arguments is inclusive of its final delimiter. Parameters is not.
