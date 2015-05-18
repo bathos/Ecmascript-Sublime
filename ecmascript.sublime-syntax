@@ -298,6 +298,10 @@ contexts:
       captures:
         1: entity.name.statement.es
         2: punctuation.separator.label-statement.es
+    # DECORATED CLASS DECLARATION
+    - match: '@'
+      scope: punctuation.definition.decorator.es
+      set: [ classDeclaration_AFTER_DECORATOR, decoratorExpression ]
     # EXPRESSION STATEMENT
     # Though expression statements are a subset of possible expressions, the
     # disallowed cases are all captured by previous matches. 
@@ -746,36 +750,34 @@ contexts:
   classDeclaration_AFTER_BRACE:
     - match: '\}'
       scope: punctuation.definition.class.body.end.es
+      pop: true
     # Semicolons in the class body are technically legal for uncertain reasons.
     - match: ';'
       scope: punctuation.terminator.statement.es
     - match: 'static{{idEnd}}'
       scope: storage.type.static.es
-      set: classDeclaration_AFTER_STATIC
-    - match: 'async{{idEnd}}'
-      scope: storage.type.async.es
-      set: classDeclaration_AFTER_ASYNC
-    - include: classDeclaration_AFTER_STATIC
+      set: classDeclaration_METHOD_COMMON
+    - match: 'constructor{{idEnd}}'
+      scope: entity.name.method.constructor.es
+      push: constructorMethod_AFTER_CONSTRUCTOR
+    - match: '@'
+      scope: punctuation.definition.decorator.es
+      push: decoratorExpression
+    - include: classDeclaration_METHOD_COMMON
 
-  classDeclaration_AFTER_STATIC:
-    - match: 'get{{idEnd}}'
-      scope: storage.type.accessor.get.es
-      push: accessorMethod_AFTER_GET
-    - match: 'set{{idEnd}}'
-      scope: storage.type.accessor.set.es
-      push: accessorMethod_AFTER_SET
-    - match: 'async{{idEnd}}'
-      scope: storage.type.async.es
-      set: classDeclaration_AFTER_ASYNC
-    - include: classDeclaration_AFTER_ASYNC
-
-  classDeclaration_AFTER_ASYNC:
+  classDeclaration_METHOD_COMMON:
     - match: '\*'
       scope: storage.type.function.generator.asterisk.es
-      set: generatorMethod_AFTER_ASTERISK
-    - match: '\['
-      scope: 'punctuation.definition.accessor.begin'
-      set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME, computedProp_AFTER_AE, assignmentExpression ]
+      set: [ classDeclaration_AFTER_BRACE, generatorMethod_AFTER_ASTERISK ]
+    - match: 'get{{idEnd}}'
+      scope: storage.type.accessor.get.es
+      set: [ classDeclaration_AFTER_BRACE, accessorMethod_AFTER_GET ]
+    - match: 'set{{idEnd}}'
+      scope: storage.type.accessor.set.es
+      set: [ classDeclaration_AFTER_BRACE, accessorMethod_AFTER_SET ]
+    - match: 'async{{idEnd}}'
+      scope: storage.type.async.es
+      set: [ classDeclaration_AFTER_BRACE, asyncMethod_AFTER_ASYNC ]
     - match: '{{identifier}}'
       scope: entity.name.method.es
       set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME ]
@@ -814,7 +816,19 @@ contexts:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
       set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME ]
-    - include: other_illegal
+    - match: '\['
+      scope: punctuation.definition.accessor.begin.es
+      set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME, computedProp_AFTER_AE, assignmentExpression ]
+    - include: other_illegal_pop
+
+  classDeclaration_AFTER_DECORATOR:
+    - match: '@'
+      scope: punctuation.definition.decorator.es
+      push: decoratorExpression
+    - match: 'class'
+      scope: storage.type.class
+      set: classDeclaration_AFTER_CLASS
+    - include: other_illegal_pop
 
   constLetVarDeclaration_AFTER_WORD:
     # The first four of these are used to assign scopes for using in the symbol
@@ -918,11 +932,8 @@ contexts:
     - include: statements
 
   generatorDeclaration_AFTER_ASTERISK:
-    - match: '{{allThreeIDs}}'
-      captures:
-        1: entity.name.function.generator.allCap.es
-        2: entity.name.function.generator.initCap.es
-        3: entity.name.function.generator.es
+    - match: '{{identifier}}'
+      scope: entity.name.function.generator.es
       set: generatorDeclaration_AFTER_NAME
     - include: other_illegal_pop
 
@@ -1018,11 +1029,8 @@ contexts:
     - match: '\('
       scope: punctuation.definition.parameters.generator.begin.es
       set: [ generatorDeclaration_AFTER_PARAMS, parameters ]
-    - match: '{{allThreeIDs}}'
-      captures:
-        1: entity.name.function.generator.allCap.es
-        2: entity.name.function.generator.initCap.es
-        3: entity.name.function.generator.es
+    - match: '{{identifier}}'
+      scope: entity.name.function.generator.es
       set: generatorDeclaration_AFTER_NAME
     - include: other_illegal_pop
 
@@ -1188,6 +1196,16 @@ contexts:
       scope: keyword.operator.comma.es
       push: assignmentExpression
     - include: else_pop
+
+  decoratorExpression:
+    # While the expression in a decorator is simply an assignment expression,
+    # realistically it will nearly always be an identifier, and it is something
+    # to which we would like to give a unique scope when possible. However to be
+    # safe we still need to continue on to the usual AE context.
+    - match: '(?!async{{idEnd}}){{identifier}}(?!\s*=){{idEnd}}'
+      scope: variable.other.readwrite.decorator.es
+      set: ae_AFTER_IDENTIFIER
+    - include: assignmentExpression
 
   # AE is what we generally think of when we say ‘expression’. Since we always
   # must arrive at expressions from the ‘statement level’, it’s worth noting
@@ -1883,14 +1901,14 @@ contexts:
     # switch to binding at that point. You’d have the wrong scopes at the start,
     # but at least no ‘illegal’ sections.
     #
-    # Note that ‘ae_AFTER_VALUE’ is fine since = is preestablished as the next
+    # Note that ‘ae_AFTER_THING’ is fine since = is preestablished as the next
     # character. 
     - match: '(?x) \{ (?= (?<brackets> [^\{\}] | \{ \g<brackets>* \} )* \}\s*=[^=])'
       scope:  punctuation.definition.binding.object.begin
-      set: [ ae_AFTER_VALUE, bindingObject ]
+      set: [ ae_AFTER_THING, bindingObject ]
     - match: '(?x) \[ (?= (?<brackets> [^\[\]] | \[ \g<brackets>* \] )* \]\s*=[^=])'
       scope: punctuation.definition.binding.array.begin.es
-      set: [ ae_AFTER_VALUE, bindingArray ]
+      set: [ ae_AFTER_THING, bindingArray ]
 
   ae_OBJECT_ARRAY_LITERAL:
     - match: '\{'
@@ -1956,6 +1974,12 @@ contexts:
         1: meta.idiomatic-cast.boolean.es
     - match: '!'
       scope: keyword.operator.logical.not.es
+    # The current strawman spec suggests this is the reasonable place for await.
+    # Syntactically, it isn’t like yield. I’m unsure if this is intended to be a
+    # no-linebreak-here situation. Babel currently gets upset by newlines before
+    # the operand, but the spec doesn’t say anything about this. 
+    - match: 'await{{idEnd}}'
+      scope: keyword.control.flow.await
 
   ae_STRING_REGEX:
     - match: "'"
@@ -2631,10 +2655,10 @@ contexts:
   ae_NO_IN_OBJECT_ARRAY_BINDING:
     - match: '(?x) \{ (?= (?<brackets> [^\{\}] | \{ \g<brackets>* \} )* \}\s*=[^=])'
       scope:  punctuation.definition.binding.object.begin
-      set: [ ae_NO_IN_AFTER_VALUE, bindingObject ]
+      set: [ ae_NO_IN_AFTER_THING, bindingObject ]
     - match: '(?x) \[ (?= (?<brackets> [^\[\]] | \[ \g<brackets>* \] )* \]\s*=[^=])'
       scope: punctuation.definition.binding.array.begin.es
-      set: [ ae_NO_IN_AFTER_VALUE, bindingArray ]
+      set: [ ae_NO_IN_AFTER_THING, bindingArray ]
   ae_NO_IN_OBJECT_ARRAY_LITERAL:
     - match: '\{'
       scope: punctuation.definition.object.begin.es
@@ -2780,6 +2804,19 @@ contexts:
     - match: '\}'
       scope: punctuation.definition.object.end.es
       pop: true
+    # PREFIXED METHODS
+    - match: '\*'
+      scope: storage.type.function.generator.asterisk.es
+      set: [ literalObject_AFTER_AE, generatorMethod_AFTER_ASTERISK ]
+    - match: 'get{{idEnd}}'
+      scope: storage.type.accessor.get.es
+      set: [ literalObject_AFTER_AE, accessorMethod_AFTER_GET ]
+    - match: 'set{{idEnd}}'
+      scope: storage.type.accessor.set.es
+      set: [ literalObject_AFTER_AE, accessorMethod_AFTER_SET ]
+    - match: 'async{{idEnd}}'
+      scope: storage.type.async.es
+      set: [ literalObject_AFTER_AE, asyncMethod_AFTER_ASYNC ]
     # NORMAL METHODS
     - match: '({{allThreeIDs}})\s*(\()'
       captures:
@@ -2809,47 +2846,54 @@ contexts:
     # QUOTED PROPERTY
     - match: "'"
       scope: punctuation.definition.string.quoted.single.begin.es
-      set: [ literalObject_AFTER_SHORTHAND, stringSingle_AFTER_OPEN ]
+      set: [ literalObject_AFTER_PROP, stringSingle_AFTER_OPEN ]
     - match: '"'
       scope: punctuation.definition.string.quoted.double.begin.es
-      set: [ literalObject_AFTER_SHORTHAND, stringDouble_AFTER_OPEN ]
+      set: [ literalObject_AFTER_PROP, stringDouble_AFTER_OPEN ]
     # NUMERIC PROPERTY
     - match: '({{decNum}})'
       scope: constant.numeric.decimal.es
       captures:
-        1: entity.name.method.es
+        1: variable.other.readwrite.property.es
         2: punctuation.decimal.es
         3: punctuation.decimal.es
         4: punctuation.decimal.es
         5: meta.numeric.exponent.e.es
         6: meta.numeric.exponent.sign.es
         7: meta.numeric.exponent.digit.es
-      set: literalObject_AFTER_SHORTHAND
+      set: literalObject_AFTER_PROP
     - match: '({{binNum}})'
       scope: constant.numeric.binary.es
       captures:
-        1: entity.name.method.es
+        1: variable.other.readwrite.property.es
         2: meta.numeric.prefix.es
-      set: literalObject_AFTER_SHORTHAND
+      set: literalObject_AFTER_PROP
     - match: '({{octNum}})'
       scope: constant.numeric.octal.es
       captures:
-        1: entity.name.method.es
+        1: variable.other.readwrite.property.es
         2: meta.numeric.prefix.es
-      set: literalObject_AFTER_SHORTHAND
+      set: literalObject_AFTER_PROP
     - match: '({{hexNum}})'
       scope: constant.numeric.hexadecimal.es
       captures:
-        1: entity.name.method.es
+        1: variable.other.readwrite.property.es
         2: meta.numeric.prefix.es
-      set: literalObject_AFTER_SHORTHAND
+      set: literalObject_AFTER_PROP
     # COMPUTED PROPERTY
     - match: '\['
       scope: punctuation.definition.accessor.begin.es
-      set: [ literalObject_AFTER_SHORTHAND, computedProp_AFTER_AE ]
+      set: [ literalObject_AFTER_PROP, computedProp_AFTER_AE, assignmentExpression ]
+    # ES7?
+    - match: '\.{3}'
+      scope: keyword.other.rest
+      set: literalObject_AFTER_ELLIPSIS
+    - match: '@'
+      scope: punctuation.definition.decorator.es
+      push: decoratorExpression
 
   literalObject_AFTER_SHORTHAND:
-    # Safety for " prop \n : " as well as for computed, string & num props
+    # Safety context for " prop \n : "
     - match: ':'
       scope: punctuation.separator.key-value.es
       set: [ literalObject_AFTER_AE, assignmentExpression ]
@@ -2858,12 +2902,39 @@ contexts:
       set: [ literalObject_AFTER_AE, method_AFTER_PARAMS, parameters ]
     - include: literalObject_AFTER_AE
 
+  literalObject_AFTER_PROP:
+    - match: ':'
+      scope: punctuation.separator.key-value.es
+      set: [ literalObject_AFTER_AE, assignmentExpression ]
+    - match: '\('
+      scope: punctuation.definition.parameters.method.begin.es
+      set: [ literalObject_AFTER_AE, method_AFTER_PARAMS, parameters ]
+    - include: other_illegal
+
   literalObject_AFTER_AE:
     - match: ','
       scope: punctuation.separator.object-member.es
       set: literalObject_OPEN
     - match: '{{PLA_anything}}'
       set: literalObject_OPEN
+
+  literalObject_AFTER_ELLIPSIS:
+    - match: '{{allThreeIDs}}'
+      captures:
+        1: variable.other.readwrite.property.shorthand.rest.allCap.es
+        2: variable.other.readwrite.property.shorthand.rest.initCap.es
+        3: variable.other.readwrite.property.shorthand.rest.es
+      set: literalObject_AFTER_REST_MEMBER
+    - match: '\}'
+      scope: invalid.illegal.token
+      pop: true
+    - include: other_illegal
+
+  literalObject_AFTER_REST_MEMBER:
+    - match: '\}'
+      scope: punctuation.definition.object.end.es
+      pop: true
+    - include: other_illegal
 
   computedProp_AFTER_AE:
     # Also used for property access
@@ -2874,8 +2945,6 @@ contexts:
 
 # OBJECT & CLASS LITERAL METHODS ###############################################
 
-  # TODO #######################################################################
-
   method_AFTER_NAME:
     - match: '\('
       scope: punctuation.definition.parameters.method.begin.es
@@ -2885,17 +2954,284 @@ contexts:
   method_AFTER_PARAMS:
     - match: '\)'
       scope: punctuation.definition.parameters.method.end.es
-      pop: true
+      set: method_BEFORE_BRACE
     - include: other_illegal
 
-  accessorMethod_AFTER_GET:
+  method_BEFORE_BRACE:
+    - match: '\{'
+      scope: punctuation.definition.method.body.begin.es
+      set: method_AFTER_BRACE
     - include: other_illegal_pop
+
+  method_AFTER_BRACE:
+    - match: '\}'
+      scope: punctuation.definition.method.body.end.es
+      pop: true
+    - include: useStrict
+    - include: statements
+
+  asyncMethod_AFTER_ASYNC:
+    - match: '{{identifier}}'
+      scope: entity.name.method.async
+      set: method_AFTER_NAME
+    - match: "'"
+      scope: punctuation.definition.string.quoted.single.begin.es
+      set: [ method_AFTER_NAME, stringSingle_AFTER_OPEN ]
+    - match: '"'
+      scope: punctuation.definition.string.quoted.double.begin.es
+      set: [ method_AFTER_NAME, stringDouble_AFTER_OPEN ]
+    - match: '({{decNum}})'
+      scope: constant.numeric.decimal.es
+      captures:
+        1: entity.name.method.es
+        2: punctuation.decimal.es
+        3: punctuation.decimal.es
+        4: punctuation.decimal.es
+        5: meta.numeric.exponent.e.es
+        6: meta.numeric.exponent.sign.es
+        7: meta.numeric.exponent.digit.es
+      set: method_AFTER_NAME
+    - match: '({{binNum}})'
+      scope: constant.numeric.binary.es
+      captures:
+        1: entity.name.method.es
+        2: meta.numeric.prefix.es
+      set: method_AFTER_NAME
+    - match: '({{octNum}})'
+      scope: constant.numeric.octal.es
+      captures:
+        1: entity.name.method.es
+        2: meta.numeric.prefix.es
+      set: method_AFTER_NAME
+    - match: '({{hexNum}})'
+      scope: constant.numeric.hexadecimal.es
+      captures:
+        1: entity.name.method.es
+        2: meta.numeric.prefix.es
+      set: method_AFTER_NAME
+    - match: '\['
+      scope: punctuation.definition.accessor.begin.es
+      set: [ method_AFTER_NAME, computedProp_AFTER_AE, assignmentExpression ]
+    - include: other_illegal_pop
+
+  accessorMethod_AFTER_GET:
+    - match: '{{identifier}}'
+      scope: entity.name.accessor.get
+      set: accessorMethod_AFTER_GET_NAME
+    - match: "'"
+      scope: punctuation.definition.string.quoted.single.begin.es
+      set: [ accessorMethod_AFTER_GET_NAME, stringSingle_AFTER_OPEN ]
+    - match: '"'
+      scope: punctuation.definition.string.quoted.double.begin.es
+      set: [ accessorMethod_AFTER_GET_NAME, stringDouble_AFTER_OPEN ]
+    - match: '({{decNum}})'
+      scope: constant.numeric.decimal.es
+      captures:
+        1: entity.name.method.es
+        2: punctuation.decimal.es
+        3: punctuation.decimal.es
+        4: punctuation.decimal.es
+        5: meta.numeric.exponent.e.es
+        6: meta.numeric.exponent.sign.es
+        7: meta.numeric.exponent.digit.es
+      set: accessorMethod_AFTER_GET_NAME
+    - match: '({{binNum}})'
+      scope: constant.numeric.binary.es
+      captures:
+        1: entity.name.method.es
+        2: meta.numeric.prefix.es
+      set: accessorMethod_AFTER_GET_NAME
+    - match: '({{octNum}})'
+      scope: constant.numeric.octal.es
+      captures:
+        1: entity.name.method.es
+        2: meta.numeric.prefix.es
+      set: accessorMethod_AFTER_GET_NAME
+    - match: '({{hexNum}})'
+      scope: constant.numeric.hexadecimal.es
+      captures:
+        1: entity.name.method.es
+        2: meta.numeric.prefix.es
+      set: accessorMethod_AFTER_GET_NAME
+    - match: '\['
+      scope: punctuation.definition.accessor.begin.es
+      set: [ accessorMethod_AFTER_GET_NAME, computedProp_AFTER_AE, assignmentExpression ]
+    - include: other_illegal_pop
+
+  accessorMethod_AFTER_GET_NAME:
+    - match: '\('
+      scope: punctuation.definition.parameters.accessor.begin.es
+      set: accessorMethod_AFTER_GET_PAREN_OPEN
+    - include: other_illegal_pop
+
+  accessorMethod_AFTER_GET_PAREN_OPEN:
+    - match: '\)'
+      scope: punctuation.definition.parameters.accessor.end.es
+      set: accessorMethod_BEFORE_BRACE
+    - include: other_illegal
 
   accessorMethod_AFTER_SET:
+    - match: '{{identifier}}'
+      scope: entity.name.accessor.set
+      set: accessorMethod_AFTER_SET_NAME
+    - match: "'"
+      scope: punctuation.definition.string.quoted.single.begin.es
+      set: [ accessorMethod_AFTER_SET_NAME, stringSingle_AFTER_OPEN ]
+    - match: '"'
+      scope: punctuation.definition.string.quoted.double.begin.es
+      set: [ accessorMethod_AFTER_SET_NAME, stringDouble_AFTER_OPEN ]
+    - match: '({{decNum}})'
+      scope: constant.numeric.decimal.es
+      captures:
+        1: entity.name.method.es
+        2: punctuation.decimal.es
+        3: punctuation.decimal.es
+        4: punctuation.decimal.es
+        5: meta.numeric.exponent.e.es
+        6: meta.numeric.exponent.sign.es
+        7: meta.numeric.exponent.digit.es
+      set: accessorMethod_AFTER_SET_NAME
+    - match: '({{binNum}})'
+      scope: constant.numeric.binary.es
+      captures:
+        1: entity.name.method.es
+        2: meta.numeric.prefix.es
+      set: accessorMethod_AFTER_SET_NAME
+    - match: '({{octNum}})'
+      scope: constant.numeric.octal.es
+      captures:
+        1: entity.name.method.es
+        2: meta.numeric.prefix.es
+      set: accessorMethod_AFTER_SET_NAME
+    - match: '({{hexNum}})'
+      scope: constant.numeric.hexadecimal.es
+      captures:
+        1: entity.name.method.es
+        2: meta.numeric.prefix.es
+      set: accessorMethod_AFTER_SET_NAME
+    - match: '\['
+      scope: punctuation.definition.accessor.begin.es
+      set: [ accessorMethod_AFTER_SET_NAME, computedProp_AFTER_AE, assignmentExpression ]
     - include: other_illegal_pop
 
-  generatorMethod_AFTER_ASTERISK:
+  accessorMethod_AFTER_SET_NAME:
+    - match: '\('
+      scope: punctuation.definition.parameters.accessor.begin.es
+      set: [ accessorMethod_AFTER_SET_PARAM, parameters ]
     - include: other_illegal_pop
+
+  accessorMethod_AFTER_SET_PARAM:
+    - match: '\)'
+      scope: punctuation.definition.parameters.accessor.end.es
+      set: accessorMethod_BEFORE_BRACE
+    - include: other_illegal
+
+  accessorMethod_BEFORE_BRACE:
+    - match: '\{'
+      scope: punctuation.definition.accessor.body.begin.es
+      set: accessorMethod_AFTER_BRACE
+    - include: other_illegal_pop
+
+  accessorMethod_AFTER_BRACE:
+    - match: '\}'
+      scope: punctuation.definition.accessor.body.end.es
+      pop: true
+    - include: useStrict
+    - include: statements
+
+  generatorMethod_AFTER_ASTERISK:
+    - match: '{{identifier}}'
+      scope: entity.name.method.generator.es
+      set: generatorMethod_AFTER_NAME
+    - match: "'"
+      scope: punctuation.definition.string.quoted.single.begin.es
+      set: [ generatorMethod_AFTER_NAME, stringSingle_AFTER_OPEN ]
+    - match: '"'
+      scope: punctuation.definition.string.quoted.double.begin.es
+      set: [ generatorMethod_AFTER_NAME, stringDouble_AFTER_OPEN ]
+    - match: '({{decNum}})'
+      scope: constant.numeric.decimal.es
+      captures:
+        1: entity.name.method.es
+        2: punctuation.decimal.es
+        3: punctuation.decimal.es
+        4: punctuation.decimal.es
+        5: meta.numeric.exponent.e.es
+        6: meta.numeric.exponent.sign.es
+        7: meta.numeric.exponent.digit.es
+      set: generatorMethod_AFTER_NAME
+    - match: '({{binNum}})'
+      scope: constant.numeric.binary.es
+      captures:
+        1: entity.name.method.es
+        2: meta.numeric.prefix.es
+      set: generatorMethod_AFTER_NAME
+    - match: '({{octNum}})'
+      scope: constant.numeric.octal.es
+      captures:
+        1: entity.name.method.es
+        2: meta.numeric.prefix.es
+      set: generatorMethod_AFTER_NAME
+    - match: '({{hexNum}})'
+      scope: constant.numeric.hexadecimal.es
+      captures:
+        1: entity.name.method.es
+        2: meta.numeric.prefix.es
+      set: generatorMethod_AFTER_NAME
+    - match: '\['
+      scope: punctuation.definition.accessor.begin.es
+      set: [ generatorMethod_AFTER_NAME, computedProp_AFTER_AE, assignmentExpression ]
+    - include: other_illegal_pop
+
+  generatorMethod_AFTER_NAME:
+    - match: '\('
+      scope: punctuation.definition.parameters.method.generator.begin.es
+      set: [ generatorMethod_AFTER_PARAMS, parameters ]
+    - include: other_illegal_pop
+
+  generatorMethod_AFTER_PARAMS:
+    - match: '\)'
+      scope: punctuation.definition.parameters.method.generator.end.es
+      set: generatorMethod_BEFORE_BRACE
+    - include: other_illegal
+
+  generatorMethod_BEFORE_BRACE:
+    - match: '\{'
+      scope: punctuation.definition.method.generator.body.begin.es
+      set: generatorMethod_AFTER_BRACE
+    - include: other_illegal_pop
+
+  generatorMethod_AFTER_BRACE:
+    - match: '\}'
+      scope: punctuation.definition.method.generator.body.end.es
+      pop: true
+    - include: useStrict
+    - include: statements
+
+  constructorMethod_AFTER_CONSTRUCTOR:
+    - match: '\('
+      scope: punctuation.definition.parameters.constructor.begin.es
+      set: [ constructorMethod_AFTER_PARAMS, parameters ]
+    - include: other_illegal_pop
+
+  constructorMethod_AFTER_PARAMS:
+    - match: '\)'
+      scope: punctuation.definition.parameters.constructor.end.es
+      set: constructorMethod_BEFORE_BRACE
+    - include: other_illegal
+
+  constructorMethod_BEFORE_BRACE:
+    - match: '\{'
+      scope: punctuation.definition.constructor.body.begin.es
+      set: constructorMethod_AFTER_BRACE
+    - include: other_illegal_pop
+
+  constructorMethod_AFTER_BRACE:
+    - match: '\}'
+      scope: punctuation.definition.constructor.body.end.es
+      pop: true
+    - include: useStrict
+    - include: statements
 
 # BINDING PATTERNS #############################################################
 

@@ -4,8 +4,8 @@
 
 ## Remaining Syntax To Complete
 
- - Object literal and most class body syntax
- - Decorators
+ - Nothing, actually. I guess that’s done?
+ - Well, it still needs to be tested a lot and I’m sure I forgot something.
 
 ## Other Stuff To Do
 
@@ -13,8 +13,27 @@
  - At least two themes
  - Build script to automate creating the "for in" expression section
  - Double-up certain scopes to increase compatibility with other syntax defs
- - General clean-up, bug fixing and refinements are inevitable as this is
-   pretty young yet
+ - Clean up and consolidation of patterns and contexts.
+
+If you’re poking around in here you might think it’s insane to have so many
+redundant components. In many cases, similar results could be achieved using
+meta_scopes on a deeper context stack, since multiple scopes can appear in a
+selector.
+
+To keep it brief...ish -- I’ll expound on this properly later -- the very un-DRY
+approach was the product of a lot of experimenting. Sublime syntax is powerful,
+but I might be trying to do some stuff that wasn’t anticipated. Taking a very
+‘grammatical’ approach is what lets us have all the new & disambiguated scopes
+to work with, but the price paid for syntactic precision is the need to pay
+special attention to failing as gracefully as possible when facing a bad token.
+There are a few techniques I’ve found to prevent or mitigate ‘bad input
+cascade,’ and the most important is keeping the context stack as shallow as is
+reasonable at any given time -- that is, preferring linear over vertical context
+transitions. This necessitates the repetition.
+
+That said there certainly are places where we could merge things, especially by
+making tertiary contexts that exist only as includes for building others which
+are actually visited.
 
 ## Scopes So Far
 
@@ -45,14 +64,17 @@
  - constant.numeric.octal.es
  - constant.other.character-class.predefined.regexp
  - constant.other.character-class.set.regexp
+ - entity.name.accessor.get.es
+ - entity.name.accessor.set.es
  - entity.name.class.es
  - entity.name.function.allCap.es
  - entity.name.function.es
- - entity.name.function.generator.allCap.es
  - entity.name.function.generator.es
- - entity.name.function.generator.initCap.es
  - entity.name.function.initCap.es
+ - entity.name.method.async.es
+ - entity.name.method.constructor.es
  - entity.name.method.es
+ - entity.name.method.generator.es
  - entity.name.module.export.es
  - entity.name.module.import.es
  - entity.name.statement.es
@@ -61,11 +83,11 @@
  - invalid.deprecated.es
  - invalid.illegal.newline.es
  - invalid.illegal.octal-escape.es
- - invalid.illegal.token
  - invalid.illegal.token.es
  - keyword.control.anchor.regexp
  - keyword.control.conditional.else.es
  - keyword.control.conditional.if.es
+ - keyword.control.flow.await.es
  - keyword.control.flow.break.es
  - keyword.control.flow.continue.es
  - keyword.control.flow.each.es
@@ -175,6 +197,8 @@
  - meta.whitespace.es
  - punctuation.decimal.es
  - punctuation.definition.accessor.begin.es
+ - punctuation.definition.accessor.body.begin.es
+ - punctuation.definition.accessor.body.end.es
  - punctuation.definition.accessor.end.es
  - punctuation.definition.accessor.parameter.begin.es
  - punctuation.definition.arguments.begin.es
@@ -212,6 +236,9 @@
  - punctuation.definition.comprehension.array.end.es
  - punctuation.definition.comprehension.generator.begin.es
  - punctuation.definition.comprehension.generator.end.es
+ - punctuation.definition.constructor.body.begin.es
+ - punctuation.definition.constructor.body.end.es
+ - punctuation.definition.decorator.es
  - punctuation.definition.expression.begin.es
  - punctuation.definition.expression.conditional.begin.es
  - punctuation.definition.expression.conditional.comprehension.array.begin.es
@@ -234,18 +261,30 @@
  - punctuation.definition.generator.body.end.es
  - punctuation.definition.group.begin.regexp
  - punctuation.definition.group.end.regexp
+ - punctuation.definition.method.body.begin.es
+ - punctuation.definition.method.body.end.es
+ - punctuation.definition.method.generator.body.begin.es
+ - punctuation.definition.method.generator.body.end.es
  - punctuation.definition.module-binding.begin.es
  - punctuation.definition.module-binding.end.es
  - punctuation.definition.object.begin.es
  - punctuation.definition.object.end.es
+ - punctuation.definition.parameters.accessor.begin.es
+ - punctuation.definition.parameters.accessor.end.es
  - punctuation.definition.parameters.catch.begin.es
  - punctuation.definition.parameters.catch.end.es
+ - punctuation.definition.parameters.constructor.begin.es
+ - punctuation.definition.parameters.constructor.end.es
  - punctuation.definition.parameters.function.arrow.begin.es
  - punctuation.definition.parameters.function.arrow.end.es
  - punctuation.definition.parameters.function.begin.es
  - punctuation.definition.parameters.function.end.es
  - punctuation.definition.parameters.generator.begin.es
  - punctuation.definition.parameters.generator.end.es
+ - punctuation.definition.parameters.method.begin.es
+ - punctuation.definition.parameters.method.end.es
+ - punctuation.definition.parameters.method.generator.begin.es
+ - punctuation.definition.parameters.method.generator.end.es
  - punctuation.definition.string.interpolated.begin.es
  - punctuation.definition.string.interpolated.element.begin.es
  - punctuation.definition.string.interpolated.element.end.es
@@ -263,10 +302,12 @@
  - punctuation.separator.array-element.es
  - punctuation.separator.binding-binding.es
  - punctuation.separator.case-statements.es
+ - punctuation.separator.key-value.es
  - punctuation.separator.label-statement.es
  - punctuation.separator.loop-expression.es
  - punctuation.separator.module-binding.es
  - punctuation.separator.object-member.binding.es
+ - punctuation.separator.object-member.es
  - punctuation.separator.parameter.es
  - punctuation.separator.property-binding.es
  - punctuation.separator.property-binding.parameter.es
@@ -319,6 +360,7 @@
  - variable.language.this.es
  - variable.other.readwrite.allCap.es
  - variable.other.readwrite.constructor.es
+ - variable.other.readwrite.decorator.es
  - variable.other.readwrite.es
  - variable.other.readwrite.export.es
  - variable.other.readwrite.import.es
@@ -328,6 +370,12 @@
  - variable.other.readwrite.property.initCap.es
  - variable.other.readwrite.property.proto.es
  - variable.other.readwrite.property.prototype.es
+ - variable.other.readwrite.property.shorthand.allCap.es
+ - variable.other.readwrite.property.shorthand.es
+ - variable.other.readwrite.property.shorthand.initCap.es
+ - variable.other.readwrite.property.shorthand.rest.allCap.es
+ - variable.other.readwrite.property.shorthand.rest.es
+ - variable.other.readwrite.property.shorthand.rest.initCap.es
  - variable.other.readwrite.tag.es
  - variable.parameter.catch.es
  - variable.parameter.es
