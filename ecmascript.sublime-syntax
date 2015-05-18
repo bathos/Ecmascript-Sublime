@@ -124,6 +124,7 @@ contexts:
       set: root
 
   root:
+    - include: useStrict
     # IMPORT DECLARATION
     - match: 'import{{idEnd}}'
       scope: storage.type.module.import.es
