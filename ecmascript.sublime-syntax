@@ -183,6 +183,14 @@ contexts:
       pop: true
     - include: else_pop
 
+  # Similar to above but used when a single statement in an if or do may have
+  # been an expression statement.
+  semicolon_maybe:
+    - match: ';'
+      scope: punctuation.terminator.statement.es
+      pop: true
+    - include: else_pop
+
   # Brand the evil token, but stand your ground.
   other_illegal:
     - match: '{{MAT_word_or_any_one_char}}'
@@ -317,7 +325,7 @@ contexts:
       scope: punctuation.definition.block.loop.begin.es
       set: doStatement_STMT_AFTER_BRACE
     - match: '{{PLA_anything}}'
-      set: [ doStatement_AFTER_STMT, statement ]
+      set: [ doStatement_AFTER_STMT, semicolon_maybe, statement ]
 
   doStatement_STMT_AFTER_BRACE:
     - match: '\}'
@@ -409,13 +417,13 @@ contexts:
       set: whileOrForStatement_STMT
     - match: 'var{{idEnd}}'
       scope: storage.type.variable.var.es
-      set: constLetVarDeclaration_AFTER_WORD
+      set: [ forStatement_EXP_LEGACY_INIT_AFTER_EXP, constLetVarDeclaration_AFTER_WORD ]
     - match: 'let{{idEnd}}'
       scope: storage.type.variable.let.es
-      set: constLetVarDeclaration_AFTER_WORD
+      set: [ forStatement_EXP_LEGACY_INIT_AFTER_EXP, constLetVarDeclaration_AFTER_WORD ]
     - match: 'const{{idEnd}}'
       scope: storage.type.constant.es
-      set: constLetVarDeclaration_AFTER_WORD
+      set: [ forStatement_EXP_LEGACY_INIT_AFTER_EXP, constLetVarDeclaration_AFTER_WORD ]
     - match: '{{PLA_anything}}'
       set: [ forStatement_EXP_LEGACY_INIT_AFTER_EXP, expression ]
 
@@ -503,7 +511,7 @@ contexts:
       scope: punctuation.definition.block.conditional.begin.es
       set: ifStatement_STMT_AFTER_BRACE
     - match: '{{PLA_anything}}'
-      set: [ ifStatement_AFTER_STMT, statement ]
+      set: [ ifStatement_AFTER_STMT, semicolon_maybe, statement ]
 
   ifStatement_STMT_AFTER_BRACE:
     - match: '\}'
