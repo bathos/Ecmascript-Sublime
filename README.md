@@ -12,6 +12,9 @@
  - Real readme w/ proper examples for each scope
  - At least two themes
  - Build script to automate creating the "for in" expression section
+ - Double-up certain scopes to increase compatibility with other syntax defs
+ - General clean-up, bug fixing and refinements are inevitable as this is
+   pretty young yet
 
 ## Scopes So Far
 
