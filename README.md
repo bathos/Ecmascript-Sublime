@@ -6,13 +6,12 @@
 
  - Object literal and most class body syntax
  - Decorators
- - Last steps for handling of ‘in’ vs ‘in’ after expression definitions have
-   been confirmed to be solid.
 
 ## Other Stuff To Do
 
  - Real readme w/ proper examples for each scope
  - At least two themes
+ - Build script to automate creating the "for in" expression section
 
 ## Scopes So Far
 

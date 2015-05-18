@@ -1067,7 +1067,7 @@ contexts:
   moduleDeclaration_AFTER_EXPORT_BINDING_SPECIFIER:
     - match: '\}'
       scope: punctuation.definition.module-binding.end.es
-      pop: moduleDeclaration_EXPORT_AFTER_BINDING
+      set: moduleDeclaration_EXPORT_AFTER_BINDING
     - match: ','
       scope: punctuation.separator.module-binding.es
       set: moduleDeclaration_EXPORT_BINDING_AFTER_BRACE
@@ -1886,43 +1886,10 @@ contexts:
   ae_OBJECT_ARRAY_LITERAL:
     - match: '\{'
       scope: punctuation.definition.object.begin.es
-      set: ae_OBJECT_ARRAY_LITERAL_AFTER_BRACE_OPEN
+      set: [ ae_OBJECT_ARRAY_LITERAL_END, literalObject_OPEN ]
     - match: '\['
       scope: punctuation.definition.array.begin.es
-      set: ae_OBJECT_ARRAY_LITERAL_AFTER_BRACKET_OPEN
-
-  ae_OBJECT_ARRAY_LITERAL_AFTER_BRACE_OPEN:
-    - match: '\}'
-      scope: punctuation.definition.object.end.es
-      set: ae_OBJECT_ARRAY_LITERAL_END
-    # TODO: include all items from class body except static, plus '...' rest
-    # and properties. 
-
-  ae_OBJECT_ARRAY_LITERAL_AFTER_BRACKET_OPEN:
-    - match: '\]'
-      scope: punctuation.definition.array.end.es
-      set: ae_OBJECT_ARRAY_LITERAL_END
-    - match: ','
-      scope: punctuation.separator.array-element.es
-    - match: '\.{3}'
-      scope: keyword.operator.spread.es
-      set: [ ae_OBJECT_ARRAY_LITERAL_AFTER_SPREAD_MEMBER, assignmentExpression ]
-    - match: '{{PLA_anything}}'
-      set: [ ae_OBJECT_ARRAY_LITERAL_AFTER_MEMBER, assignmentExpression ]
-
-  ae_OBJECT_ARRAY_LITERAL_AFTER_MEMBER:
-    # This context is a safety catch for recovering correct scope when it turns
-    # out this was really a multiline binding pattern.
-    - match:  '(?<=\])(?==)'
-      set: bindingArray_AFTER_ELEM
-    - match: '{{PLA_anything}}'
-      set: ae_OBJECT_ARRAY_LITERAL_AFTER_BRACKET_OPEN
-
-  ae_OBJECT_ARRAY_LITERAL_AFTER_SPREAD_MEMBER:
-    - match: '\]'
-      scope: punctuation.definition.array.end.es
-      set: ae_OBJECT_ARRAY_LITERAL_END
-    - include: other_illegal
+      set: [ ae_OBJECT_ARRAY_LITERAL_END, literalArray_OPEN ]
 
   ae_OBJECT_ARRAY_LITERAL_END:
     # Attempt recovery if this was actually a multiline binding pattern.
@@ -2100,11 +2067,712 @@ contexts:
       scope: invalid.illegal.token.es
       set: ae_AFTER_ACCESSOR_OPERATOR
 
-# TODO: DUPLICATE ALL OF ABOVE & CHANGE TRANSITIONS guh
+################################################################################
+################################################################################
+################################################################################
+#   DO NOT UPDATE THIS SECTION DIRECTLY -- IT SHOULD ALWAYS MIRROR THE ABOVE   #
+#   BUT WITH _NO_IN -- and no "in". (Though prefix ops can be reused). Just    #
+#   F&R and re-paste over this. I may just add a build script to handle this   #
+#   later.                                                                     #
+################################################################################
 
   assignmentExpression_NO_IN:
+    - include: assignmentExpression_NO_IN_CORE
+    - include: other_illegal_pop
+  assignmentExpression_NO_IN_CORE:
+    - include: ae_NO_IN_LITERAL_VALUES
+    - include: ae_NO_IN_NUMBERS
+    - include: ae_NO_IN_STRING_REGEX
+    - include: ae_NO_IN_ARRAY_COMPREHENSION
+    - include: ae_NO_IN_OBJECT_ARRAY_BINDING
+    - include: ae_NO_IN_OBJECT_ARRAY_LITERAL
+    - include: ae_NO_IN_YIELD_NEW
+    - include: ae_NO_IN_FUNCTION_GENERATOR_CLASS
     - include: ae_PREFIX_OPS
-    # TODO
+    - include: ae_NO_IN_ARROW
+    - include: ae_NO_IN_IDENTIFIERS
+    - include: ae_NO_IN_GENERATOR_COMPREHENSION
+    - include: ae_NO_IN_PARENTHESIZED
+  ae_NO_IN_AFTER_IDENTIFIER:
+    - match: '=>'
+      scope: storage.type.function.arrow.es
+      set: ae_NO_IN_ARROW_AFTER_ARROW
+    - include: ae_NO_IN_AFTER_THING
+  ae_NO_IN_AFTER_THING:
+    - match: '\('
+      scope: punctuation.definition.arguments.begin.es
+      push: arguments
+    - match: '`'
+      scope: punctuation.definition.string.interpolated.begin.es
+      set: [ ae_NO_IN_AFTER_VALUE, templateString_AFTER_OPEN ]
+    - include: ae_NO_IN_POSTFIX_OPS
+    - include: ae_NO_IN_INFIX_OPS_ASSIGNMENT
+    - include: ae_NO_IN_AFTER_VALUE
+  ae_NO_IN_AFTER_VALUE:
+    - match: '\.'
+      scope: keyword.operator.accessor.es
+      set: ae_NO_IN_AFTER_ACCESSOR_OPERATOR
+    - match: '\['
+      scope: punctuation.definition.accessor.begin.es
+      set: [ ae_NO_IN_AFTER_THING, computedProp_AFTER_AE, assignmentExpression_NO_IN ]
+    - include: ae_NO_IN_INFIX_OPS
+    - include: ae_NO_IN_AFTER_POSTFIX
+  ae_NO_IN_AFTER_POSTFIX:
+    - include: ae_NO_IN_INFIX_OPS
+    - include: else_pop
+  ae_NO_IN_AFTER_ACCESSOR_OPERATOR:
+    - match: '(({{identifierAllCaps}}))\s*(\()'
+      captures:
+        1: variable.other.readwrite.property.allCap.es
+        2: meta.invocation.es
+        3: punctuation.definition.arguments.begin.es
+      set: [ ae_NO_IN_AFTER_THING, arguments ]
+    - match: '(({{identifierInitCap}}))\s*(\()'
+      captures:
+        1: variable.other.readwrite.property.initCap.es
+        2: meta.invocation.es
+        3: punctuation.definition.arguments.begin.es
+      set: [ ae_NO_IN_AFTER_THING, arguments ]
+    - match: '(({{identifierName}}))\s*(\()'
+      captures:
+        1: variable.other.readwrite.property.es
+        2: meta.invocation.es
+        3: punctuation.definition.arguments.begin.es
+      set: [ ae_NO_IN_AFTER_THING, arguments ]
+    - match: '(prototype){{idEnd}}'
+      scope: variable.other.readwrite.property.prototype.es
+      captures:
+        1: variable.language.prototype.es # for compatibility
+      set: ae_NO_IN_AFTER_THING
+    - match: '(__proto__){{idEnd}}'
+      scope: variable.other.readwrite.property.proto.es
+      captures:
+        1: variable.language.proto.es # for compatibility
+      set: ae_NO_IN_AFTER_THING
+    - match: '{{identifierName}}'
+      scope: variable.other.readwrite.property.es
+      set: ae_NO_IN_AFTER_THING
+    - include: other_illegal_pop
+  ae_NO_IN_ARRAY_COMPREHENSION:
+    - match: '(\[)\s*(for){{idEnd}}'
+      captures:
+        1: punctuation.definition.comprehension.array.begin.es
+        2: keyword.control.loop.for.comprehension.array.es
+      set: ae_NO_IN_ARRAY_COMPREHENSION_AFTER_FOR
+  ae_NO_IN_ARRAY_COMPREHENSION_AFTER_FOR:
+    - match: '\('
+      scope: punctuation.definition.expression.loop.comprehension.array.begin.es
+      set: [ ae_NO_IN_ARRAY_COMPREHENSION_AFTER_LHSE, assignmentExpression_NO_IN ]
+    - match: '{{MAT_word_or_any_one_char}}'
+      scope: invalid.illegal.token.es
+      set: ae_NO_IN_ARRAY_COMPREHENSION_BEFORE_CLOSE
+  ae_NO_IN_ARRAY_COMPREHENSION_AFTER_LHSE:
+    - match: 'of{{idEnd}}'
+      scope: keyword.control.loop.of.comprehension.array.es
+      set: [ ae_NO_IN_ARRAY_COMPREHENSION_AFTER_EXP_BODY, expression ]
+    - match: '{{MAT_word_or_any_one_char}}'
+      scope: invalid.illegal.token.es
+      set: ae_NO_IN_ARRAY_COMPREHENSION_AFTER_EXP_BODY
+  ae_NO_IN_ARRAY_COMPREHENSION_AFTER_EXP_BODY:
+    - match: '\)'
+      scope: punctuation.definition.expression.loop.comprehension.array.begin.es
+      set: ae_NO_IN_ARRAY_COMPREHENSION_AFTER_EXP
+    - match: '{{MAT_word_or_any_one_char}}'
+      scope: invalid.illegal.token.es
+      set: ae_NO_IN_ARRAY_COMPREHENSION_BEFORE_CLOSE
+  ae_NO_IN_ARRAY_COMPREHENSION_AFTER_EXP:
+    - match: 'if{{idEnd}}'
+      scope: keyword.control.loop.conditional.if.comprehension.array.es
+      set: ae_NO_IN_ARRAY_COMPREHENSION_AFTER_IF
+    - match: 'for{{idEnd}}'
+      scope: keyword.control.loop.for.comprehension.array.es
+      set: ae_NO_IN_ARRAY_COMPREHENSION_AFTER_FOR
+    - match: '{{PLA_anything}}'
+      set: [ ae_NO_IN_ARRAY_COMPREHENSION_BEFORE_CLOSE, expression ]
+    - match: '{{MAT_word_or_any_one_char}}'
+      scope: invalid.illegal.token.es
+      set: ae_NO_IN_ARRAY_COMPREHENSION_BEFORE_CLOSE
+  ae_NO_IN_ARRAY_COMPREHENSION_AFTER_IF:
+    - match: '\('
+      scope: punctuation.definition.expression.conditional.comprehension.array.begin.es
+      set: [ ae_NO_IN_ARRAY_COMPREHENSION_AFTER_IF_EXP, expression ]
+    - match: '{{MAT_word_or_any_one_char}}'
+      scope: invalid.illegal.token.es
+      set: ae_NO_IN_ARRAY_COMPREHENSION_AFTER_IF_EXP
+  ae_NO_IN_ARRAY_COMPREHENSION_AFTER_IF_EXP:
+    - match: '\)'
+      scope: punctuation.definition.expression.conditional.comprehension.array.begin.es
+      set: ae_NO_IN_ARRAY_COMPREHENSION_AFTER_EXP
+    - match: '{{MAT_word_or_any_one_char}}'
+      scope: invalid.illegal.token.es
+      set: ae_NO_IN_ARRAY_COMPREHENSION_BEFORE_CLOSE
+  ae_NO_IN_ARRAY_COMPREHENSION_BEFORE_CLOSE:
+    - match: '\]'
+      scope: punctuation.definition.comprehension.array.end.es
+      set: ae_NO_IN_AFTER_VALUE
+    - include: other_illegal
+  ae_NO_IN_ARROW:
+    - match: '(?x) \( (?= (?<parens> [^\(\)] | \( \g<parens>* \) )* \)\s*=> )'
+      scope: punctuation.definition.parameters.function.arrow.begin.es
+      set: [ ae_NO_IN_ARROW_AFTER_PARAMS, parameters ]
+    - match: '(async)\s*(\()'
+      captures:
+        1: storage.type.async.es
+        2: punctuation.definition.parameters.function.arrow.begin.es
+      set: [ ae_NO_IN_ARROW_AFTER_PARAMS, parameters ]
+  ae_NO_IN_ARROW_AFTER_PARAMS:
+    - match: '\)'
+      scope: punctuation.definition.parameters.function.arrow.end.es
+      set: ae_NO_IN_ARROW_BEFORE_ARROW
+    - include: other_illegal_pop
+  ae_NO_IN_ARROW_BEFORE_ARROW:
+    - match: '=>'
+      scope: storage.type.function.arrow.es
+      set: ae_NO_IN_ARROW_AFTER_ARROW
+    - include: other_illegal_pop
+  ae_NO_IN_ARROW_AFTER_ARROW:
+    - match: '\{'
+      scope: punctuation.definition.function.arrow.body.begin.es
+      set: ae_NO_IN_ARROW_AFTER_BRACE
+    - include: assignmentExpression_NO_IN
+  ae_NO_IN_ARROW_AFTER_BRACE:
+    - match: '\}'
+      scope: punctuation.definition.function.arrow.body.end.es
+      set: ae_NO_IN_AFTER_THING
+    - include: useStrict
+    - include: statements
+    - include: other_illegal
+  ae_NO_IN_CLASS_AFTER_CLASS:
+    - match: '\{'
+      scope: punctuation.definition.class.body.begin.es
+      set: [ ae_NO_IN_AFTER_THING, classDeclaration_AFTER_BRACE ]
+    - match: 'extends{{idEnd}}'
+      scope: keyword.other.extends.es
+      set: [ ae_NO_IN_AFTER_THING, classDeclaration_AFTER_HERITAGE, assignmentExpression_NO_IN ]
+    - match: '{{identifier}}'
+      scope: entity.name.class.es
+      set: [ ae_NO_IN_AFTER_THING, classDeclaration_AFTER_NAME ]
+    - include: other_illegal_pop
+  ae_NO_IN_FUNCTION_GENERATOR_CLASS:
+    - match: '(function)\s*(\*)'
+      captures:
+        1: storage.type.function.generator.expression.es
+        2: storage.type.function.generator.asterisk.expression.es
+      set: ae_NO_IN_GENERATOR_AFTER_ASTERISK
+    - match: '(async)?\s*(function){{idEnd}}'
+      captures:
+        1: storage.type.async.expression.es
+        2: storage.type.function.expression.es
+      set: ae_NO_IN_FUNCTION_AFTER_FUNCTION
+    - match: 'class{{idEnd}}'
+      scope: storage.type.class.expression.es
+      set: ae_NO_IN_CLASS_AFTER_CLASS
+  ae_NO_IN_FUNCTION_AFTER_FUNCTION:
+    - match: '\('
+      scope: punctuation.definition.parameters.function.begin.es
+      set: [ ae_NO_IN_AFTER_THING, functionDeclaration_AFTER_PARAMS, parameters ]
+    - match: '{{identifier}}'
+      scope: entity.name.function.es
+      set: [ ae_NO_IN_AFTER_THING, functionDeclaration_AFTER_NAME ]
+    - include: other_illegal_pop
+  ae_NO_IN_GENERATOR_AFTER_ASTERISK:
+    - match: '\('
+      scope: punctuation.definition.parameters.generator.begin.es
+      set: [ ae_NO_IN_AFTER_THING, generatorDeclaration_AFTER_PARAMS, parameters ]
+    - match: '{{identifier}}'
+      scope: entity.name.function.generator.es
+      set: [ ae_NO_IN_AFTER_THING, generatorDeclaration_AFTER_NAME ]
+    - include: other_illegal_pop
+  ae_NO_IN_GENERATOR_COMPREHENSION:
+    - match: '(\()\s*(for){{idEnd}}'
+      captures:
+        1: punctuation.definition.comprehension.generator.begin.es
+        2: keyword.control.loop.for.comprehension.generator.es
+      set: ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_FOR
+  ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_FOR:
+    - match: '\('
+      scope: punctuation.definition.expression.loop.comprehension.generator.begin.es
+      set: [ ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_LHSE, assignmentExpression_NO_IN ]
+    - match: '{{MAT_word_or_any_one_char}}'
+      scope: invalid.illegal.token.es
+      set: ae_NO_IN_GENERATOR_COMPREHENSION_BEFORE_CLOSE
+  ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_LHSE:
+    - match: 'of{{idEnd}}'
+      scope: keyword.control.loop.of.comprehension.generator.es
+      set: [ ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_EXP_BODY, expression ]
+    - match: '{{MAT_word_or_any_one_char}}'
+      scope: invalid.illegal.token.es
+      set: ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_EXP_BODY
+  ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_EXP_BODY:
+    - match: '\)'
+      scope: punctuation.definition.expression.loop.comprehension.generator.begin.es
+      set: ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_EXP
+    - match: '{{MAT_word_or_any_one_char}}'
+      scope: invalid.illegal.token.es
+      set: ae_NO_IN_GENERATOR_COMPREHENSION_BEFORE_CLOSE
+  ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_EXP:
+    - match: 'if{{idEnd}}'
+      scope: keyword.control.loop.conditional.if.comprehension.generator.es
+      set: ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_IF
+    - match: 'for{{idEnd}}'
+      scope: keyword.control.loop.for.comprehension.generator.es
+      set: ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_FOR
+    - match: '{{PLA_anything}}'
+      set: [ ae_NO_IN_GENERATOR_COMPREHENSION_BEFORE_CLOSE, expression ]
+    - match: '{{MAT_word_or_any_one_char}}'
+      scope: invalid.illegal.token.es
+      set: ae_NO_IN_GENERATOR_COMPREHENSION_BEFORE_CLOSE
+  ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_IF:
+    - match: '\('
+      scope: punctuation.definition.expression.conditional.comprehension.generator.begin.es
+      set: [ ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_IF_EXP, expression ]
+    - match: '{{MAT_word_or_any_one_char}}'
+      scope: invalid.illegal.token.es
+      set: ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_IF_EXP
+  ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_IF_EXP:
+    - match: '\)'
+      scope: punctuation.definition.expression.conditional.comprehension.generator.begin.es
+      set: ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_EXP
+    - match: '{{MAT_word_or_any_one_char}}'
+      scope: invalid.illegal.token.es
+      set: ae_NO_IN_GENERATOR_COMPREHENSION_BEFORE_CLOSE
+  ae_NO_IN_GENERATOR_COMPREHENSION_BEFORE_CLOSE:
+    - match: '\)'
+      scope: punctuation.definition.comprehension.generator.end.es
+      set: ae_NO_IN_AFTER_THING
+    - match: '\('
+      scope: invalid.illegal.token.es
+      set: ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_EXP_BODY
+    - include: other_illegal
+  ae_NO_IN_IDENTIFIERS:
+    - include: ae_NO_IN_IDENTIFIERS_LANGUAGE
+    - match: '({{identifier}})\s*(=>)'
+      captures:
+        1: variable.parameter.es
+        2: storage.type.function.arrow.es
+      set: ae_NO_IN_ARROW_AFTER_ARROW
+    - include: ae_NO_IN_IDENTIFIERS_INTRINSIC
+    - include: ae_NO_IN_IDENTIFIERS_ENVIRONMENTAL
+    - match: '(({{identifierAllCapsStrict}}))\s*(\()'
+      captures:
+        1: variable.other.readwrite.allCap.es
+        2: meta.invocation.es
+        3: punctuation.definition.arguments.begin.es
+      set: [ ae_NO_IN_AFTER_THING, arguments ]
+    - match: '{{identifierAllCapsStrict}}'
+      scope: variable.other.readwrite.allCap.es
+      set: ae_NO_IN_AFTER_IDENTIFIER
+    - match: '(({{identifierInitCapStrict}}))\s*(\()'
+      captures:
+        1: variable.other.readwrite.initCap.es
+        2: meta.invocation.es
+        3: punctuation.definition.arguments.begin.es
+      set: [ ae_NO_IN_AFTER_THING, arguments ]
+    - match: '{{identifierInitCapStrict}}'
+      scope: variable.other.readwrite.initCap.es
+      set: ae_NO_IN_AFTER_IDENTIFIER
+    - match: '(({{identifier}}))\s*(\()'
+      captures:
+        1: variable.other.readwrite.es
+        2: meta.invocation.es
+        3: punctuation.definition.arguments.begin.es
+      set: [ ae_NO_IN_AFTER_THING, arguments ]
+    - match: '{{identifier}}'
+      scope: variable.other.readwrite.es
+      set: ae_NO_IN_AFTER_IDENTIFIER
+  ae_NO_IN_IDENTIFIERS_LANGUAGE:
+    - match: '((this))\s*(\()'
+      captures:
+        1: variable.language.this.es
+        2: meta.invocation.es
+        3: punctuation.definition.arguments.begin.es
+      set: [ ae_NO_IN_AFTER_THING, arguments ]
+    - match: 'this{{idEnd}}'
+      scope: variable.language.this.es
+      set: ae_NO_IN_AFTER_THING
+    - match: '((super))\s*(\()'
+      captures:
+        1: variable.language.super.es
+        2: meta.invocation.es
+        3: punctuation.definition.arguments.begin.es
+      set: [ ae_NO_IN_AFTER_THING, arguments ]
+    - match: 'super{{idEnd}}'
+      scope: variable.language.super.es
+      set: ae_NO_IN_AFTER_THING
+    - match: 'arguments'
+      scope: variable.language.arguments.es
+      set: ae_NO_IN_AFTER_THING
+  ae_NO_IN_IDENTIFIERS_ENVIRONMENTAL:
+    - match: '(((Buffer))\s*)(\()'
+      captures:
+        1: variable.other.readwrite.constructor.es
+        2: meta.invocation.es
+        3: support.class.node.es
+        4: punctuation.definition.arguments.begin.es
+      set: [ ae_NO_IN_AFTER_THING, arguments ]
+    - match: '(Buffer){{idEnd}}'
+      scope: variable.other.readwrite.constructor.es
+      captures:
+        1: support.class.node.es
+      set: ae_NO_IN_AFTER_THING
+    - match: '((require))\s*(\()'
+      captures:
+        1: meta.invocation.es
+        2: support.function.node.require.es
+        3: punctuation.definition.arguments.begin.es
+      set: [ ae_NO_IN_AFTER_THING, arguments ]
+    - match: '(global|GLOBAL|process|__(?:dir|file)name|module|exports|require){{idEnd}}'
+      scope: support.type.object.node.es
+      set: ae_NO_IN_AFTER_THING 
+    - match: '(_|R){{idEnd}}'
+      scope: support.type.object.functional-library.es
+      set: ae_NO_IN_AFTER_THING
+    - match: '\${{idEnd}}'
+      scope: support.type.object.dom-library.es
+      set: ae_NO_IN_AFTER_THING 
+    - match: '(document|frames|history|location|navigator|screen|window){{idEnd}}'
+      scope: support.type.object.dom.es
+      set: ae_NO_IN_AFTER_THING
+  ae_NO_IN_IDENTIFIERS_INTRINSIC:
+    - match: '(?x) ((({{intrinsicConstructors}}))\s*)(\()'
+      captures:
+        1: variable.other.readwrite.constructor.es
+        2: meta.invocation.es
+        3: support.class.builtin.es
+        4: punctuation.definition.arguments.begin.es
+      set: [ ae_NO_IN_AFTER_THING, arguments ]
+    - match: '(?x) ({{intrinsicConstructors}}){{idEnd}}'
+      scope: variable.other.readwrite.constructor.es
+      captures:
+        1: support.class.builtin.es
+      set: ae_NO_IN_AFTER_THING
+    - match: '(?:console|Intl|JSON|Math|SIMD){{idEnd}}'
+      scope: support.type.object.builtin.es
+      set: ae_NO_IN_AFTER_THING
+    - match: '(?x) (( {{intrinsicFunctions}} ))\s*(\()'
+      captures:
+        1: meta.invocation.es
+        2: support.function.builtin.es
+        3: punctuation.definition.arguments.begin.es
+      set: [ ae_NO_IN_AFTER_THING, arguments ]
+    - match: '(?x) ({{intrinsicFunctions}}){{idEnd}}'
+      scope: support.function.builtin.es
+      set: ae_NO_IN_AFTER_THING
+  ae_NO_IN_INFIX_OPS:
+    - match: '\?'
+      scope: keyword.operator.ternary.if.es
+      set: ae_NO_IN_TERNARY_AFTER_QUESTION
+    - match: '\+(?!=)'
+      scope: keyword.operator.arithmetic.addition.es
+      set: assignmentExpression_NO_IN
+    - match: '-(?!=)'
+      scope: keyword.operator.arithmetic.subtraction.es
+      set: assignmentExpression_NO_IN
+    - match: '\*\*(?!=)'
+      scope: keyword.operator.arithmetic.exponentiation.es
+      set: assignmentExpression_NO_IN
+    - match: '\*(?![=\*])'
+      scope: keyword.operator.arithmetic.multiplication.es
+      set: assignmentExpression_NO_IN
+    - match: '\/(?!=)'
+      scope: keyword.operator.arithmetic.division.es
+      set: assignmentExpression_NO_IN
+    - match: '%(?!=)'
+      scope: keyword.operator.arithmetic.modulo.es
+      set: assignmentExpression_NO_IN
+    - match: '==='
+      scope: keyword.operator.comparison.equality.strict.es
+      set: assignmentExpression_NO_IN
+    - match: '=='
+      scope: keyword.operator.comparison.equality.coercive.es
+      set: assignmentExpression_NO_IN
+    - match: '!=='
+      scope: keyword.operator.comparison.non-equality.strict.es
+      set: assignmentExpression_NO_IN
+    - match: '!='
+      scope: keyword.operator.comparison.non-equality.coercive.es
+      set: assignmentExpression_NO_IN
+    - match: '<='
+      scope: keyword.operator.relational.lte.es
+      set: assignmentExpression_NO_IN
+    - match: '<'
+      scope: keyword.operator.relational.lt.es
+      set: assignmentExpression_NO_IN
+    - match: '>='
+      scope: keyword.operator.relational.gte.es
+      set: assignmentExpression_NO_IN
+    - match: '>'
+      scope: keyword.operator.relational.gt.es
+      set: assignmentExpression_NO_IN
+    - match: 'instanceof{{idEnd}}'
+      scope: keyword.operator.relational.instanceof.es
+      set: assignmentExpression_NO_IN
+    - match: '&&'
+      scope: keyword.operator.logical.and.es
+      set: assignmentExpression_NO_IN
+    - match: '\|\|(?!=)'
+      scope: keyword.operator.logical.or.es
+      set: assignmentExpression_NO_IN
+    - match: '&(?!=)'
+      scope: keyword.operator.bitwise.logical.and.es
+      set: assignmentExpression_NO_IN
+    - match: '\|(?![=\|])'
+      scope: keyword.operator.bitwise.logical.or.es
+      set: assignmentExpression_NO_IN
+    - match: '\^(?!=)'
+      scope: keyword.operator.bitwise.logical.xor.es
+      set: assignmentExpression_NO_IN
+    - match: '<<(?!=)'
+      scope: keyword.operator.bitwise.shift.left.es
+      set: assignmentExpression_NO_IN
+    - match: '>>>(?!=)'
+      scope: keyword.operator.bitwise.shift.right.unsigned.es
+      set: assignmentExpression_NO_IN
+    - match: '>>(?![=>])'
+      scope: keyword.operator.bitwise.shift.right.es
+      set: assignmentExpression_NO_IN
+  ae_NO_IN_INFIX_OPS_ASSIGNMENT:
+    - match: '=(?!=)'
+      scope: keyword.operator.assignment.es
+      set: assignmentExpression_NO_IN
+    - match: '\+='
+      scope: keyword.operator.assignment.augmented.arithmetic.addition.es
+      set: assignmentExpression_NO_IN
+    - match: '-='
+      scope: keyword.operator.assignment.augmented.arithmetic.subtraction.es
+      set: assignmentExpression_NO_IN
+    - match: '\*\*='
+      scope: keyword.operator.assignment.augmented.arithmetic.exponentiation.es
+      set: assignmentExpression_NO_IN
+    - match: '\*='
+      scope: keyword.operator.assignment.augmented.arithmetic.multiplication.es
+      set: assignmentExpression_NO_IN
+    - match: '\/='
+      scope: keyword.operator.assignment.augmented.arithmetic.division.es
+      set: assignmentExpression_NO_IN
+    - match: '%='
+      scope: keyword.operator.assignment.augmented.arithmetic.modulo.es
+      set: assignmentExpression_NO_IN
+    - match: '\|\|='
+      scope: keyword.operator.assignment.conditional.mallet.es
+      set: assignmentExpression_NO_IN
+    - match: '&='
+      scope: keyword.operator.assignment.augmented.bitwise.logical.and.es
+      set: assignmentExpression_NO_IN
+    - match: '\^='
+      scope: keyword.operator.assignment.augmented.bitwise.logical.xor.es
+      set: assignmentExpression_NO_IN
+    - match: '\|='
+      scope: keyword.operator.assignment.augmented.bitwise.logical.or.es
+      set: assignmentExpression_NO_IN
+    - match: '<<='
+      scope: keyword.operator.assignment.augmented.bitwise.shift.left.es
+      set: assignmentExpression_NO_IN
+    - match: '>>>='
+      scope: keyword.operator.assignment.augmented.bitwise.shift.right.unsigned.es
+      set: assignmentExpression_NO_IN
+    - match: '>>='
+      scope: keyword.operator.assignment.augmented.bitwise.shift.right.es
+      set: assignmentExpression_NO_IN
+  ae_NO_IN_LITERAL_VALUES:
+    - match: 'NaN'
+      scope: constant.language.nan.es
+      set: ae_NO_IN_AFTER_VALUE
+    - match: 'null'
+      scope: constant.language.null.es
+      set: ae_NO_IN_AFTER_VALUE
+    - match: 'true'
+      scope: constant.language.boolean.true.es
+      set: ae_NO_IN_AFTER_VALUE
+    - match: 'false'
+      scope: constant.language.boolean.false.es
+      set: ae_NO_IN_AFTER_VALUE
+    - match: 'Infinity'
+      scope: constant.language.infinity.es
+      set: ae_NO_IN_AFTER_VALUE
+    - match: 'undefined'
+      scope: constant.language.undefined.es
+      set: ae_NO_IN_AFTER_VALUE
+  ae_NO_IN_NUMBERS:
+    - match: '{{decNum}}'
+      scope: constant.numeric.decimal.es
+      captures:
+        1: punctuation.decimal.es
+        2: punctuation.decimal.es
+        3: punctuation.decimal.es
+        4: meta.numeric.exponent.e.es
+        5: meta.numeric.exponent.sign.es
+        6: meta.numeric.exponent.digit.es
+      set: ae_NO_IN_AFTER_VALUE
+    - match: '{{binNum}}'
+      scope: constant.numeric.binary.es
+      captures:
+        1: meta.numeric.prefix.es
+      set: ae_NO_IN_AFTER_VALUE
+    - match: '{{octNum}}'
+      scope: constant.numeric.octal.es
+      captures:
+        1: meta.numeric.prefix.es
+      set: ae_NO_IN_AFTER_VALUE
+    - match: '{{hexNum}}'
+      scope: constant.numeric.hexadecimal.es
+      captures:
+        1: meta.numeric.prefix.es
+      set: ae_NO_IN_AFTER_VALUE
+  ae_NO_IN_OBJECT_ARRAY_BINDING:
+    - match: '(?x) \{ (?= (?<brackets> [^\{\}] | \{ \g<brackets>* \} )* \}\s*=[^=])'
+      scope:  punctuation.definition.binding.object.begin
+      set: [ ae_NO_IN_AFTER_VALUE, bindingObject ]
+    - match: '(?x) \[ (?= (?<brackets> [^\[\]] | \[ \g<brackets>* \] )* \]\s*=[^=])'
+      scope: punctuation.definition.binding.array.begin.es
+      set: [ ae_NO_IN_AFTER_VALUE, bindingArray ]
+  ae_NO_IN_OBJECT_ARRAY_LITERAL:
+    - match: '\{'
+      scope: punctuation.definition.object.begin.es
+      set: [ ae_NO_IN_OBJECT_ARRAY_LITERAL_END, literalObject_OPEN ]
+    - match: '\['
+      scope: punctuation.definition.array.begin.es
+      set: [ ae_NO_IN_OBJECT_ARRAY_LITERAL_END, literalArray_OPEN ]
+  ae_NO_IN_OBJECT_ARRAY_LITERAL_END:
+    - match: '=(?!=)'
+      scope: keyword.operator.assignment.es
+      set: assignmentExpression_NO_IN
+    - include: ae_NO_IN_AFTER_VALUE
+  ae_NO_IN_PARENTHESIZED:
+    - match: '\('
+      scope: punctuation.definition.expression.begin.es
+      set: ae_NO_IN_PARENTHESIZED_AFTER_OPEN
+  ae_NO_IN_PARENTHESIZED_AFTER_OPEN:
+    - match: '\)'
+      scope: punctuation.definition.expression.end.es
+      set: ae_NO_IN_AFTER_IDENTIFIER
+    - match: '{{PLA_anything}}'
+      push: expression
+  ae_NO_IN_POSTFIX_OPS:
+    - match: '\+\+'
+      scope: keyword.operator.arithmetic.increment.postfix.es
+      set: ae_NO_IN_AFTER_POSTFIX
+    - match: '--'
+      scope: keyword.operator.arithmetic.decrement.postfix.es
+      set: ae_NO_IN_AFTER_POSTFIX
+  ae_NO_IN_STRING_REGEX:
+    - match: "'"
+      scope: punctuation.definition.string.quoted.single.begin.es
+      set: [ ae_NO_IN_AFTER_VALUE, stringSingle_AFTER_OPEN ]
+    - match: '"'
+      scope: punctuation.definition.string.quoted.double.begin.es
+      set: [ ae_NO_IN_AFTER_VALUE, stringDouble_AFTER_OPEN ]
+    - match: '`'
+      scope: punctuation.definition.string.interpolated.begin.es
+      set: [ ae_NO_IN_AFTER_VALUE, templateString_AFTER_OPEN ]
+    - match: '\/'
+      scope: punctuation.definition.string.regexp.begin.es
+      set: [ ae_NO_IN_AFTER_VALUE, regex_AFTER_OPEN ]
+    - match: '(({{identifier}}))\s*(`)'
+      captures:
+        1: variable.other.readwrite.tag.es
+        2: punctuation.definition.string.interpolated.begin.es
+      set: [ ae_NO_IN_AFTER_VALUE, templateString_AFTER_OPEN ]
+  ae_NO_IN_TERNARY_AFTER_QUESTION:
+    - match: ':'
+      scope: invalid.illegal.token.es
+      set: assignmentExpression_NO_IN
+    - match: '{{PLA_anything}}'
+      set: [ ae_NO_IN_TERNARY_AFTER_IF_CASE, assignmentExpression_NO_IN ]
+  ae_NO_IN_TERNARY_AFTER_IF_CASE:
+    - match:  ':'
+      scope: keyword.operator.ternary.else.es
+      set: assignmentExpression_NO_IN
+    - include: other_illegal_pop
+  ae_NO_IN_YIELD_NEW:
+    - match: >-
+        (?x)
+          (new) \s* (
+            (
+              ( Buffer ) |
+              ( {{intrinsicConstructors}} ) |
+              {{identifier}}
+            )
+          ){{idEnd}}'
+      captures:
+        1: keyword.operator.new.es
+        2: variable.other.readwrite.constructor.es
+        3: meta.invocation.es
+        4: support.class.node.es
+        5: support.class.builtin.es
+      set: ae_NO_IN_AFTER_THING
+    - match: '(new)\s*(\.)'
+      captures:
+        1: variable.language.new-target.fake-object.es
+        2: variable.language.new-target.fake-accessor.es
+      set: ae_NO_IN_YIELD_NEW_AFTER_NEW_WAT
+    - match: 'new{{idEnd}}'
+      scope: keyword.operator.new.es
+      set: ae_NO_IN_YIELD_NEW_AFTER_NEW_OPERATOR
+    - match: 'yield{{idEnd}}'
+      scope: keyword.control.flow.yield.es
+      set: ae_NO_IN_YIELD_NEW_AFTER_YIELD
+  ae_NO_IN_YIELD_NEW_AFTER_YIELD:
+    - match: '\*'
+      scope: keyword.control.flow.yield.iterate.es
+      set: assignmentExpression_NO_IN
+    - match: '$'
+      pop: true
+    - include: assignmentExpression_NO_IN_CORE
+    - include: else_pop
+  ae_NO_IN_YIELD_NEW_AFTER_NEW_OPERATOR:
+    - match: '\.'
+      scope: variable.language.new-target.fake-accessor.es
+      set: ae_NO_IN_YIELD_NEW_AFTER_NEW_WAT
+    - include: assignmentExpression_NO_IN
+  ae_NO_IN_YIELD_NEW_AFTER_NEW_WAT:
+    - match: 'target{{idEnd}}'
+      scope: variable.language.new-target.fake-property.es
+      set: ae_NO_IN_AFTER_THING
+    - match: '{{MAT_word_or_any_one_char}}'
+      scope: invalid.illegal.token.es
+      set: ae_NO_IN_AFTER_ACCESSOR_OPERATOR
+
+# END OF REPETITION
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+
+# OBJECT & ARRAY LITERALS ######################################################
+
+  literalObject_OPEN:
+    - match: '\}'
+      scope: punctuation.definition.object.end.es
+      pop: true
+    # TODO: include all items from class body except static, plus '...' rest
+    # and properties. 
+
+  literalArray_OPEN:
+    - match: '\]'
+      scope: punctuation.definition.array.end.es
+      pop: true
+    - match: ','
+      scope: punctuation.separator.array-element.es
+    - match: '\.{3}'
+      scope: keyword.operator.spread.es
+      set: [ literalArray_AFTER_SPREAD_MEMBER, assignmentExpression ]
+    - match: '{{PLA_anything}}'
+      set: [ literalArray_AFTER_MEMBER, assignmentExpression ]
+
+  literalArray_AFTER_MEMBER:
+    # This context is a safety catch for recovering correct scope when it turns
+    # out this was really a multiline binding pattern.
+    - match:  '(?<=\])(?==)'
+      set: bindingArray_AFTER_ELEM
+    - match: '{{PLA_anything}}'
+      set: literalArray_OPEN
+
+  literalArray_AFTER_SPREAD_MEMBER:
+    - match: '\]'
+      scope: punctuation.definition.array.end.es
+      pop: true
+    - include: other_illegal
 
 # BINDING PATTERNS #############################################################
 
