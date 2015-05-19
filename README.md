@@ -56,7 +56,7 @@ to cutting out the common build step of YAML -> heinous XML, Sublime syntax
 introduced a ‘context’ system for controlling what kinds of matches could take
 place at a given juncture.
 
-Contexts exist in a FIFO stack. They can be pushed, popped, or ‘set’ (pop-push).
+Contexts exist in a FILO stack. They can be pushed, popped, or ‘set’ (pop-push).
 As in tmLanguage, matching cannot look past the current line, but using contexts
 bypasses some of the old consequences of that constraint, allowing more advanced
 and accurate scope assignment.
