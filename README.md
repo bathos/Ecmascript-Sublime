@@ -71,8 +71,8 @@ etc -- the things that the braces mean.
 
 It goes a bit beyond that, too. If you like, you can color if statements
 differently from loop statements for example. Generators, methods, and accessors
-are also individuated. In fact there are far, far more specific scopes available
-than anyone would ever reasonably use, but that point was to allow the theme
+are also individuated. In fact there are far more very specific scopes available
+than anyone would ever reasonably use, but the point is to allow the theme
 designer to choose exactly which elements share colors (most good themes seem to
 have relatively small palettes, really). 
 
