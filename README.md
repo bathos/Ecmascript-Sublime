@@ -197,12 +197,12 @@ tweaked.
  - entity.name.accessor.get.es
  - entity.name.accessor.set.es
  - entity.name.class.es
+ - entity.name.constructor.es
  - entity.name.function.allCap.es
  - entity.name.function.es
  - entity.name.function.generator.es
  - entity.name.function.initCap.es
  - entity.name.method.async
- - entity.name.method.constructor.es
  - entity.name.method.es
  - entity.name.method.generator.es
  - entity.name.module.export.es
@@ -451,6 +451,7 @@ tweaked.
  - storage.modifier.accessor.get.es
  - storage.modifier.async.es
  - storage.modifier.extends.es
+ - storage.modifier.static.es
  - storage.type.accessor.set.es
  - storage.type.async.expression.es
  - storage.type.class
@@ -470,7 +471,6 @@ tweaked.
  - storage.type.module.from.es
  - storage.type.module.import.es
  - storage.type.module.namespace.es
- - storage.type.static.es
  - storage.type.variable.let.es
  - storage.type.variable.var.es
  - string.interpolated.es
@@ -647,10 +647,12 @@ asinine. That is, if a person really wrote this:
 ... they don’t *deserve* syntax highlighting. So consider it a feature.
 
 However even in these cases, Ecmascript Sublime will make a noble attempt at
-recovering. In the example above, the `label` would be an identifier, but the
-colon would be understood correctly. The binding pattern would be an array, but
+recovering. In the example above. The binding pattern would be an array, but
 when it hit the `=4` it would correct the remainder. The `(c)` would be an
-expression, but at the arrow it would figure out where it really is, etc.
+expression, but at the arrow it would figure out where it really is, etc. But
+not everything can be salvaged: the `label` would be an identifier, but the
+colon would seem to be invalid because at that point we have to assume we’re in
+an context expecting this series of tokens to resolve to an expression.
 
 These are some of the cases where a technically-legal-but-obnoxious linebreaks
 can cause mismatching, where the pipe represents a problematic linebreak:

@@ -755,10 +755,10 @@ contexts:
     - match: ';'
       scope: punctuation.terminator.statement.es
     - match: 'static{{idEnd}}'
-      scope: storage.type.static.es
+      scope: storage.modifier.static.es
       set: classDeclaration_METHOD_COMMON
     - match: 'constructor{{idEnd}}'
-      scope: entity.name.method.constructor.es
+      scope: entity.name.constructor.es
       push: constructorMethod_AFTER_CONSTRUCTOR
     - match: '@'
       scope: punctuation.definition.decorator.es
@@ -773,10 +773,10 @@ contexts:
       scope: storage.modifier.accessor.get.es
       set: [ classDeclaration_AFTER_BRACE, accessorMethod_AFTER_GET ]
     - match: 'set{{idEnd}}'
-      scope: storage.type.accessor.set.es
+      scope: storage.modifier.accessor.set.es
       set: [ classDeclaration_AFTER_BRACE, accessorMethod_AFTER_SET ]
     - match: 'async{{idEnd}}'
-      scope: storage.modifier.async.es
+      scope: storage.modifier.async.method.es
       set: [ classDeclaration_AFTER_BRACE, asyncMethod_AFTER_ASYNC ]
     - match: '{{identifier}}'
       scope: entity.name.method.es
@@ -1744,25 +1744,6 @@ contexts:
     - match: '!='
       scope: keyword.operator.comparison.non-equality.coercive.es
       set: assignmentExpression
-    # RELATIONAL
-    - match: '<='
-      scope: keyword.operator.relational.lte.es
-      set: assignmentExpression
-    - match: '<'
-      scope: keyword.operator.relational.lt.es
-      set: assignmentExpression
-    - match: '>='
-      scope: keyword.operator.relational.gte.es
-      set: assignmentExpression
-    - match: '>'
-      scope: keyword.operator.relational.gt.es
-      set: assignmentExpression
-    - match: 'instanceof{{idEnd}}'
-      scope: keyword.operator.relational.instanceof.es
-      set: assignmentExpression
-    - match: 'in{{idEnd}}'
-      scope: keyword.operator.relational.in.es
-      set: assignmentExpression
     # LOGICAL
     - match: '&&'
       scope: keyword.operator.logical.and.es
@@ -1789,6 +1770,25 @@ contexts:
       set: assignmentExpression
     - match: '>>(?![=>])'
       scope: keyword.operator.bitwise.shift.right.es
+      set: assignmentExpression
+    # RELATIONAL
+    - match: '<='
+      scope: keyword.operator.relational.lte.es
+      set: assignmentExpression
+    - match: '<'
+      scope: keyword.operator.relational.lt.es
+      set: assignmentExpression
+    - match: '>='
+      scope: keyword.operator.relational.gte.es
+      set: assignmentExpression
+    - match: '>'
+      scope: keyword.operator.relational.gt.es
+      set: assignmentExpression
+    - match: 'instanceof{{idEnd}}'
+      scope: keyword.operator.relational.instanceof.es
+      set: assignmentExpression
+    - match: 'in{{idEnd}}'
+      scope: keyword.operator.relational.in.es
       set: assignmentExpression
 
   ae_INFIX_OPS_ASSIGNMENT:
@@ -2048,13 +2048,11 @@ contexts:
     #                          .target == ANGKOR WAT
     - match: >-
         (?x)
-          (new) \s* (
-            (
-              ( Buffer ) |
-              ( {{intrinsicConstructors}} ) |
-              {{identifier}}
-            )
-          ){{idEnd}}'
+          (new) \s+ ((
+            ( Buffer ) |
+            ( {{intrinsicConstructors}} ) |
+            {{identifier}}
+          )){{idEnd}}
       captures:
         1: keyword.operator.new.es
         2: variable.other.readwrite.es
@@ -2525,21 +2523,6 @@ contexts:
     - match: '!='
       scope: keyword.operator.comparison.non-equality.coercive.es
       set: assignmentExpression_NO_IN
-    - match: '<='
-      scope: keyword.operator.relational.lte.es
-      set: assignmentExpression_NO_IN
-    - match: '<'
-      scope: keyword.operator.relational.lt.es
-      set: assignmentExpression_NO_IN
-    - match: '>='
-      scope: keyword.operator.relational.gte.es
-      set: assignmentExpression_NO_IN
-    - match: '>'
-      scope: keyword.operator.relational.gt.es
-      set: assignmentExpression_NO_IN
-    - match: 'instanceof{{idEnd}}'
-      scope: keyword.operator.relational.instanceof.es
-      set: assignmentExpression_NO_IN
     - match: '&&'
       scope: keyword.operator.logical.and.es
       set: assignmentExpression_NO_IN
@@ -2563,6 +2546,21 @@ contexts:
       set: assignmentExpression_NO_IN
     - match: '>>(?![=>])'
       scope: keyword.operator.bitwise.shift.right.es
+      set: assignmentExpression_NO_IN
+    - match: '<='
+      scope: keyword.operator.relational.lte.es
+      set: assignmentExpression_NO_IN
+    - match: '<'
+      scope: keyword.operator.relational.lt.es
+      set: assignmentExpression_NO_IN
+    - match: '>='
+      scope: keyword.operator.relational.gte.es
+      set: assignmentExpression_NO_IN
+    - match: '>'
+      scope: keyword.operator.relational.gt.es
+      set: assignmentExpression_NO_IN
+    - match: 'instanceof{{idEnd}}'
+      scope: keyword.operator.relational.instanceof.es
       set: assignmentExpression_NO_IN
   ae_NO_IN_INFIX_OPS_ASSIGNMENT:
     - match: '=(?!=)'
@@ -2720,13 +2718,13 @@ contexts:
   ae_NO_IN_YIELD_NEW:
     - match: >-
         (?x)
-          (new) \s* (
+          (new) \s+ (
             (
               ( Buffer ) |
               ( {{intrinsicConstructors}} ) |
               {{identifier}}
             )
-          ){{idEnd}}'
+          ){{idEnd}}
       captures:
         1: keyword.operator.new.es
         2: variable.other.readwrite.es
@@ -2812,7 +2810,7 @@ contexts:
       scope: storage.modifier.accessor.get.es
       set: [ literalObject_AFTER_AE, accessorMethod_AFTER_GET ]
     - match: 'set{{idEnd}}'
-      scope: storage.type.accessor.set.es
+      scope: storage.modifier.accessor.set.es
       set: [ literalObject_AFTER_AE, accessorMethod_AFTER_SET ]
     - match: 'async{{idEnd}}'
       scope: storage.modifier.async.es
@@ -3137,6 +3135,9 @@ contexts:
       scope: punctuation.definition.accessor.body.end.es
       pop: true
     - include: useStrict
+    - match: '(return){{idEnd}}'
+      scope: keyword.control.flow.return.accessor.es
+      push: returnStatement
     - include: statements
 
   generatorMethod_AFTER_ASTERISK:
