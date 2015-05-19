@@ -88,6 +88,11 @@ good way to give some idea of what can be done:
 
 ![Color barf example](https://github.com/bathos/Ecmascript-Sublime/raw/master/example-barf.png)
 
+And from the first theme I’m working on, which is at least a little more
+reasonable hopefully:
+
+![Color barf example](https://github.com/bathos/Ecmascript-Sublime/raw/master/example-okay.png)
+
 ## Feature Coverage
 
 In addition to everything in the final draft of ES6, I’ve included support for
@@ -189,14 +194,14 @@ tweaked.
  - constant.numeric.octal.es
  - constant.other.character-class.predefined.regexp
  - constant.other.character-class.set.regexp
- - entity.name.accessor.get.es
- - entity.name.accessor.set.es
+ - entity.name.accessor.get
+ - entity.name.accessor.set
  - entity.name.class.es
  - entity.name.function.allCap.es
  - entity.name.function.es
  - entity.name.function.generator.es
  - entity.name.function.initCap.es
- - entity.name.method.async.es
+ - entity.name.method.async
  - entity.name.method.constructor.es
  - entity.name.method.es
  - entity.name.method.generator.es
@@ -208,11 +213,12 @@ tweaked.
  - invalid.deprecated.es
  - invalid.illegal.newline.es
  - invalid.illegal.octal-escape.es
+ - invalid.illegal.token
  - invalid.illegal.token.es
  - keyword.control.anchor.regexp
  - keyword.control.conditional.else.es
  - keyword.control.conditional.if.es
- - keyword.control.flow.await.es
+ - keyword.control.flow.await
  - keyword.control.flow.break.es
  - keyword.control.flow.continue.es
  - keyword.control.flow.each.es
@@ -291,6 +297,7 @@ tweaked.
  - keyword.operator.relational.instanceof.es
  - keyword.operator.relational.lt.es
  - keyword.operator.relational.lte.es
+ - keyword.operator.spread
  - keyword.operator.spread.es
  - keyword.operator.ternary.else.es
  - keyword.operator.ternary.if.es
@@ -299,8 +306,8 @@ tweaked.
  - keyword.operator.unary.void.es
  - keyword.other.back-reference.regexp
  - keyword.other.debugger.es
- - keyword.other.extends.es
  - keyword.other.rest.es
+ - keyword.other.rest.parameter.es
  - meta.comment.body.es
  - meta.comment.border.es
  - meta.comment.box-drawing.es
@@ -310,6 +317,7 @@ tweaked.
  - meta.group.capturing.regexp
  - meta.group.non-capturing.regexp
  - meta.idiomatic-cast.boolean.es
+ - meta.instantiation.es
  - meta.invocation.es
  - meta.numeric.exponent.digit.es
  - meta.numeric.exponent.e.es
@@ -424,6 +432,7 @@ tweaked.
  - punctuation.definition.string.regexp.end.es
  - punctuation.separator.argument.es
  - punctuation.separator.array-element.binding.es
+ - punctuation.separator.array-element.binding.parameter.es
  - punctuation.separator.array-element.es
  - punctuation.separator.binding-binding.es
  - punctuation.separator.case-statements.es
@@ -432,16 +441,19 @@ tweaked.
  - punctuation.separator.loop-expression.es
  - punctuation.separator.module-binding.es
  - punctuation.separator.object-member.binding.es
+ - punctuation.separator.object-member.binding.parameter.es
  - punctuation.separator.object-member.es
  - punctuation.separator.parameter.es
  - punctuation.separator.property-binding.es
  - punctuation.separator.property-binding.parameter.es
  - punctuation.terminator.statement.es
  - source.es
- - storage.type.accessor.get.es
+ - storage.modifier.accessor.get.es
+ - storage.modifier.async.es
+ - storage.modifier.extends.es
  - storage.type.accessor.set.es
- - storage.type.async.es
  - storage.type.async.expression.es
+ - storage.type.class
  - storage.type.class.es
  - storage.type.class.expression.es
  - storage.type.constant.es
@@ -470,11 +482,11 @@ tweaked.
  - support.class.node.es
  - support.function.builtin.es
  - support.function.node.require.es
- - support.type.object.builtin.es
- - support.type.object.dom-library.es
- - support.type.object.dom.es
- - support.type.object.functional-library.es
- - support.type.object.node.es
+ - support.variable.builtin.es
+ - support.variable.dom-library.es
+ - support.variable.dom.es
+ - support.variable.functional-library.es
+ - support.variable.node.es
  - variable.language.arguments.es
  - variable.language.new-target.fake-accessor.es
  - variable.language.new-target.fake-object.es
@@ -484,7 +496,6 @@ tweaked.
  - variable.language.super.es
  - variable.language.this.es
  - variable.other.readwrite.allCap.es
- - variable.other.readwrite.constructor.es
  - variable.other.readwrite.decorator.es
  - variable.other.readwrite.es
  - variable.other.readwrite.export.es
