@@ -10,16 +10,16 @@ A sublime-syntax language definition for Ecmascript / Javascript / ES6 / ES2015
 
 > Sublime syntax is only currently only available in Sublime Text’s dev channel.
 
-<!-- MarkdownTOC -->
+<!-- MarkdownTOC autolink=true bracket=round -->
 
-- [Remaining Work][remaining-work]
-- [Why Bother][why-bother]
-- [Feature Coverage][feature-coverage]
-- [SublimeText Symbols][sublimetext-symbols]
-- [Themes][themes]
-- [Scopes][scopes]
-- [About the Scope Conventions][about-the-scope-conventions]
-- [More Infobarf for Someone Hypothetically Curious About the Definition Itself][more-infobarf-for-someone-hypothetically-curious-about-the-definition-itself]
+- [Remaining Work](#remaining-work)
+- [Why Bother](#why-bother)
+- [Feature Coverage](#feature-coverage)
+- [SublimeText Symbols](#sublimetext-symbols)
+- [Themes](#themes)
+- [Scopes](#scopes)
+- [About the Scope Conventions](#about-the-scope-conventions)
+- [More Infobarf for Someone Hypothetically Curious About the Definition Itself](#more-infobarf-for-someone-hypothetically-curious-about-the-definition-itself)
 
 <!-- /MarkdownTOC -->
 
