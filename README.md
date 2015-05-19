@@ -130,12 +130,12 @@ directly assigned as part of a var, let or const statement. In this last case
 it will display the name of the variable the expression was bound to, and this
 can include arrow functions.
 
-Note that only expressions that appear as the righthand side of a declaration
-will be added to the list, so `const x = () => {}` is added as ‘arrow x’ but
-`x = () => {}` is not.
+Note that only expressions that appear as the initializer in a variable or
+constant declaration will be added to the list, so `const x = () => {}` is added
+as ‘arrow x,’ but `x = () => {}` is not.
 
 All of these are local-only except classes. If people want the others to be
-global (except default exports obviously) we can change that. This is what made
+global (except default exports obviously), we can change that. This is what made
 sense to me, but I pretty much only ever use the local list myself so I wasn’t
 sure what habitual global users would like to see.
 

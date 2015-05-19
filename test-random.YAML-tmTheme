@@ -1,0 +1,1193 @@
+# [PackageDev] target_format: plist, ext: tmTheme
+name: Test (All Scopes Random)
+uuid: e8d260af-1a10-492f-806c-1455cc463d9d
+
+settings:
+- settings:
+    activeGuide: '#A89DCB'
+    background: '#000000'
+    bracketsBackground: '#8DDA7F'
+    bracketsOptions: background
+    caret: '#AAC1C2'
+    foreground: '#FFFFFF'
+    guide: '#444444'
+    gutter: '#222222'
+    invisibles: '#E438B9'
+    lineHighlight: '#EB90AA'
+    multiEditHighlight: '#9CFAEA'
+    searchHighlight: '#F54DFC'
+    selection: '#6DFE5A'
+    stackGuide: '#FE2141'
+
+- name: '#0D25F2'
+  scope: comment.block
+  settings:
+    foreground: '#0D842C'
+- name: '#0DE2C8'
+  scope: comment.line
+  settings:
+    foreground: '#0F39D7'
+- name: '#108AF1'
+  scope: comment.line.shebang
+  settings:
+    foreground: '#1183CD'
+- name: '#11D059'
+  scope: constant.character.escape.control-char.regexp
+  settings:
+    foreground: '#12B0F5'
+- name: '#12DE77'
+  scope: constant.character.escape
+  settings:
+    foreground: '#13942D'
+- name: '#14852D'
+  scope: constant.character.escape.hexadecimal
+  settings:
+    foreground: '#14C4F6'
+- name: '#164F85'
+  scope: constant.character.escape.hexadecimal.regexp
+  settings:
+    foreground: '#167E18'
+- name: '#175C76'
+  scope: constant.character.escape.newline
+  settings:
+    foreground: '#178CDE'
+- name: '#17BF23'
+  scope: constant.character.escape.null
+  settings:
+    foreground: '#1942DA'
+- name: '#1953E3'
+  scope: constant.character.escape.null.regexp
+  settings:
+    foreground: '#1BB187'
+- name: '#1C66EE'
+  scope: constant.character.escape.pointless
+  settings:
+    foreground: '#1C89EF'
+- name: '#1CB6AD'
+  scope: constant.character.escape.pointless.regexp
+  settings:
+    foreground: '#1CFC8D'
+- name: '#1D5D74'
+  scope: constant.character.escape.regexp
+  settings:
+    foreground: '#1EDEAF'
+- name: '#1F9452'
+  scope: constant.character.escape.unicode
+  settings:
+    foreground: '#1FF324'
+- name: '#20E23A'
+  scope: constant.character.escape.unicode.regexp
+  settings:
+    foreground: '#20F02D'
+- name: '#2166EF'
+  scope: constant.language.boolean.false
+  settings:
+    foreground: '#21FD3A'
+- name: '#22FD61'
+  scope: constant.language.boolean.true
+  settings:
+    foreground: '#230E93'
+- name: '#23FE64'
+  scope: constant.language.infinity
+  settings:
+    foreground: '#241AD8'
+- name: '#252CCE'
+  scope: constant.language.nan
+  settings:
+    foreground: '#2564E3'
+- name: '#25B2CB'
+  scope: constant.language.null
+  settings:
+    foreground: '#25C89E'
+- name: '#26B253'
+  scope: constant.language.undefined
+  settings:
+    foreground: '#27685D'
+- name: '#283129'
+  scope: constant.numeric.binary
+  settings:
+    foreground: '#285D5B'
+- name: '#2866F3'
+  scope: constant.numeric.decimal
+  settings:
+    foreground: '#28A0AB'
+- name: '#2923F8'
+  scope: constant.numeric.hexadecimal
+  settings:
+    foreground: '#2A39B2'
+- name: '#2AC979'
+  scope: constant.numeric.octal
+  settings:
+    foreground: '#2AD506'
+- name: '#2B3BFA'
+  scope: constant.other.character-class.predefined.regexp
+  settings:
+    foreground: '#2B45EA'
+- name: '#2B62BD'
+  scope: constant.other.character-class.set.regexp
+  settings:
+    foreground: '#2B69A9'
+- name: '#2BAFE8'
+  scope: entity.name.accessor.get
+  settings:
+    foreground: '#2BD4AB'
+- name: '#2EC9B9'
+  scope: entity.name.accessor.set
+  settings:
+    foreground: '#2EF6F3'
+- name: '#2F109A'
+  scope: entity.name.class
+  settings:
+    foreground: '#30ED05'
+- name: '#31DDF6'
+  scope: entity.name.function.allCap
+  settings:
+    foreground: '#32256D'
+- name: '#32E636'
+  scope: entity.name.function
+  settings:
+    foreground: '#32EFD8'
+- name: '#340C86'
+  scope: entity.name.function.generator
+  settings:
+    foreground: '#3493EC'
+- name: '#34C42D'
+  scope: entity.name.function.initCap
+  settings:
+    foreground: '#355CD3'
+- name: '#369031'
+  scope: entity.name.method.async
+  settings:
+    foreground: '#36C32D'
+- name: '#370A71'
+  scope: entity.name.method.constructor
+  settings:
+    foreground: '#3773E2'
+- name: '#3852F9'
+  scope: entity.name.method
+  settings:
+    foreground: '#38A2E5'
+- name: '#391CA8'
+  scope: entity.name.method.generator
+  settings:
+    foreground: '#393C57'
+- name: '#3946E8'
+  scope: entity.name.module.export
+  settings:
+    foreground: '#396C78'
+- name: '#3A87C0'
+  scope: entity.name.module.import
+  settings:
+    foreground: '#3AB1D4'
+- name: '#3AC23A'
+  scope: entity.name.statement
+  settings:
+    foreground: '#3B895B'
+- name: '#3B8D81'
+  scope: entity.other.property-binding
+  settings:
+    foreground: '#3BECFA'
+- name: '#3BF39E'
+  scope: entity.other.property-binding.parameter
+  settings:
+    foreground: '#3C9856'
+- name: '#3CF172'
+  scope: invalid.deprecated
+  settings:
+    foreground: '#3D883C'
+- name: '#3DD9C0'
+  scope: invalid.illegal.newline
+  settings:
+    foreground: '#3EF07A'
+- name: '#3F1FDE'
+  scope: invalid.illegal.octal-escape
+  settings:
+    foreground: '#3F8EDC'
+- name: '#413DBA'
+  scope: invalid.illegal.token
+  settings:
+    foreground: '#41536E'
+- name: '#41D7EE'
+  scope: keyword.control.anchor.regexp
+  settings:
+    foreground: '#420368'
+- name: '#426F77'
+  scope: keyword.control.conditional.else
+  settings:
+    foreground: '#427728'
+- name: '#4287F3'
+  scope: keyword.control.conditional.if
+  settings:
+    foreground: '#429D27'
+- name: '#42DAED'
+  scope: keyword.control.flow.await
+  settings:
+    foreground: '#43E096'
+- name: '#449AFC'
+  scope: keyword.control.flow.break
+  settings:
+    foreground: '#44BCAF'
+- name: '#45130E'
+  scope: keyword.control.flow.continue
+  settings:
+    foreground: '#454F7B'
+- name: '#457381'
+  scope: keyword.control.flow.each
+  settings:
+    foreground: '#45F75B'
+- name: '#4607EC'
+  scope: keyword.control.flow.return
+  settings:
+    foreground: '#46D5ED'
+- name: '#46FAFC'
+  scope: keyword.control.flow.throw
+  settings:
+    foreground: '#478DA3'
+- name: '#479B71'
+  scope: keyword.control.flow.yield
+  settings:
+    foreground: '#47D961'
+- name: '#47F9FD'
+  scope: keyword.control.flow.yield.iterate
+  settings:
+    foreground: '#4953C5'
+- name: '#4AE1FF'
+  scope: keyword.control.loop.conditional.if.comprehension.array
+  settings:
+    foreground: '#4BE3E4'
+- name: '#4C279C'
+  scope: keyword.control.loop.conditional.if.comprehension.generator
+  settings:
+    foreground: '#4D3856'
+- name: '#4DA123'
+  scope: keyword.control.loop.do
+  settings:
+    foreground: '#4E8CEA'
+- name: '#4E9538'
+  scope: keyword.control.loop.for.comprehension.array
+  settings:
+    foreground: '#4EA92D'
+- name: '#4F44DA'
+  scope: keyword.control.loop.for.comprehension.generator
+  settings:
+    foreground: '#4FD28E'
+- name: '#4FEE46'
+  scope: keyword.control.loop.for
+  settings:
+    foreground: '#50C351'
+- name: '#50E840'
+  scope: keyword.control.loop.in
+  settings:
+    foreground: '#50FB4A'
+- name: '#51BC61'
+  scope: keyword.control.loop.of.comprehension.array
+  settings:
+    foreground: '#51E29F'
+- name: '#51E96C'
+  scope: keyword.control.loop.of.comprehension.generator
+  settings:
+    foreground: '#52EFEB'
+- name: '#52F33B'
+  scope: keyword.control.loop.of
+  settings:
+    foreground: '#538927'
+- name: '#539293'
+  scope: keyword.control.loop.while
+  settings:
+    foreground: '#561EB5'
+- name: '#5665BB'
+  scope: keyword.control.switch.case.default
+  settings:
+    foreground: '#56CD24'
+- name: '#56F5B8'
+  scope: keyword.control.switch.case
+  settings:
+    foreground: '#584AFB'
+- name: '#58C49C'
+  scope: keyword.control.switch
+  settings:
+    foreground: '#597694'
+- name: '#59D897'
+  scope: keyword.control.trycatch.catch
+  settings:
+    foreground: '#59DABC'
+- name: '#5A63A4'
+  scope: keyword.control.trycatch.finally
+  settings:
+    foreground: '#5AA40B'
+- name: '#5AB8E1'
+  scope: keyword.control.trycatch.try
+  settings:
+    foreground: '#5B83F9'
+- name: '#5BA0C1'
+  scope: keyword.control.with
+  settings:
+    foreground: '#5C87C3'
+- name: '#5CD862'
+  scope: keyword.operator.accessor
+  settings:
+    foreground: '#5CEE59'
+- name: '#5D0451'
+  scope: keyword.operator.arithmetic.addition
+  settings:
+    foreground: '#5DE394'
+- name: '#5E87ED'
+  scope: keyword.operator.arithmetic.decrement.postfix
+  settings:
+    foreground: '#6025BB'
+- name: '#6091F8'
+  scope: keyword.operator.arithmetic.decrement.prefix
+  settings:
+    foreground: '#6143D8'
+- name: '#6170F7'
+  scope: keyword.operator.arithmetic.division
+  settings:
+    foreground: '#61C083'
+- name: '#61CCFE'
+  scope: keyword.operator.arithmetic.exponentiation
+  settings:
+    foreground: '#6285DE'
+- name: '#62EB39'
+  scope: keyword.operator.arithmetic.increment.postfix
+  settings:
+    foreground: '#62F81B'
+- name: '#63F07C'
+  scope: keyword.operator.arithmetic.increment.prefix
+  settings:
+    foreground: '#64CFD7'
+- name: '#64E723'
+  scope: keyword.operator.arithmetic.modulo
+  settings:
+    foreground: '#651875'
+- name: '#6536E5'
+  scope: keyword.operator.arithmetic.multiplication
+  settings:
+    foreground: '#65889C'
+- name: '#65DDCB'
+  scope: keyword.operator.arithmetic.sign.negative
+  settings:
+    foreground: '#6656F1'
+- name: '#6674B7'
+  scope: keyword.operator.arithmetic.sign.positive
+  settings:
+    foreground: '#667B7A'
+- name: '#6682E9'
+  scope: keyword.operator.arithmetic.subtraction
+  settings:
+    foreground: '#67864F'
+- name: '#6793D8'
+  scope: keyword.operator.assignment.augmented.arithmetic.addition
+  settings:
+    foreground: '#67B7D2'
+- name: '#6912FA'
+  scope: keyword.operator.assignment.augmented.arithmetic.division
+  settings:
+    foreground: '#6968EF'
+- name: '#6A81FB'
+  scope: keyword.operator.assignment.augmented.arithmetic.exponentiation
+  settings:
+    foreground: '#6BAA9B'
+- name: '#6BBC16'
+  scope: keyword.operator.assignment.augmented.arithmetic.modulo
+  settings:
+    foreground: '#6BC999'
+- name: '#6CF848'
+  scope: keyword.operator.assignment.augmented.arithmetic.multiplication
+  settings:
+    foreground: '#6D80FA'
+- name: '#6DB3C0'
+  scope: keyword.operator.assignment.augmented.arithmetic.subtraction
+  settings:
+    foreground: '#6EAD1A'
+- name: '#6FDAD0'
+  scope: keyword.operator.assignment.augmented.bitwise.logical.and
+  settings:
+    foreground: '#704F19'
+- name: '#70680A'
+  scope: keyword.operator.assignment.augmented.bitwise.logical.or
+  settings:
+    foreground: '#70B0FB'
+- name: '#71CC95'
+  scope: keyword.operator.assignment.augmented.bitwise.logical.xor
+  settings:
+    foreground: '#720EAB'
+- name: '#7261A5'
+  scope: keyword.operator.assignment.augmented.bitwise.shift.left
+  settings:
+    foreground: '#72F894'
+- name: '#731EFE'
+  scope: keyword.operator.assignment.augmented.bitwise.shift.right
+  settings:
+    foreground: '#744218'
+- name: '#7452CC'
+  scope: keyword.operator.assignment.augmented.bitwise.shift.right.unsigned
+  settings:
+    foreground: '#745A7F'
+- name: '#760740'
+  scope: keyword.operator.assignment.conditional.default
+  settings:
+    foreground: '#7613BE'
+- name: '#776EAF'
+  scope: keyword.operator.assignment.conditional.mallet
+  settings:
+    foreground: '#789AB9'
+- name: '#7997C6'
+  scope: keyword.operator.assignment
+  settings:
+    foreground: '#7AB9FE'
+- name: '#7ACF99'
+  scope: keyword.operator.bitwise.logical.and
+  settings:
+    foreground: '#7BED20'
+- name: '#7C5EEE'
+  scope: keyword.operator.bitwise.logical.not
+  settings:
+    foreground: '#7C93D3'
+- name: '#7CB0AD'
+  scope: keyword.operator.bitwise.logical.or
+  settings:
+    foreground: '#7CDEB0'
+- name: '#7CE57D'
+  scope: keyword.operator.bitwise.logical.xor
+  settings:
+    foreground: '#7DE858'
+- name: '#805FDB'
+  scope: keyword.operator.bitwise.shift.left
+  settings:
+    foreground: '#80A07A'
+- name: '#80FFD0'
+  scope: keyword.operator.bitwise.shift.right
+  settings:
+    foreground: '#81694E'
+- name: '#817C7F'
+  scope: keyword.operator.bitwise.shift.right.unsigned
+  settings:
+    foreground: '#81BAAD'
+- name: '#824EC1'
+  scope: keyword.operator.comma
+  settings:
+    foreground: '#8279F0'
+- name: '#82B140'
+  scope: keyword.operator.comparison.equality.coercive
+  settings:
+    foreground: '#84B241'
+- name: '#851CA5'
+  scope: keyword.operator.comparison.equality.strict
+  settings:
+    foreground: '#852EB0'
+- name: '#85AC33'
+  scope: keyword.operator.comparison.non-equality.coercive
+  settings:
+    foreground: '#85B253'
+- name: '#85D4BB'
+  scope: keyword.operator.comparison.non-equality.strict
+  settings:
+    foreground: '#865986'
+- name: '#86E057'
+  scope: keyword.operator.logical.and
+  settings:
+    foreground: '#87F08A'
+- name: '#88EF67'
+  scope: keyword.operator.logical.not
+  settings:
+    foreground: '#8916E7'
+- name: '#8ACA06'
+  scope: keyword.operator.logical.or
+  settings:
+    foreground: '#8ACD74'
+- name: '#8B0ABD'
+  scope: keyword.operator.negation.regexp
+  settings:
+    foreground: '#8B6E17'
+- name: '#8BC997'
+  scope: keyword.operator.new
+  settings:
+    foreground: '#8C5D74'
+- name: '#8CC0AD'
+  scope: keyword.operator.or.regexp
+  settings:
+    foreground: '#8D2F83'
+- name: '#8D33E1'
+  scope: keyword.operator.quantifier.regexp
+  settings:
+    foreground: '#8D8331'
+- name: '#8DF147'
+  scope: keyword.operator.relational.gt
+  settings:
+    foreground: '#8DFABB'
+- name: '#8F02C5'
+  scope: keyword.operator.relational.gte
+  settings:
+    foreground: '#8F8759'
+- name: '#8F93F0'
+  scope: keyword.operator.relational.in
+  settings:
+    foreground: '#8FC5DB'
+- name: '#90E323'
+  scope: keyword.operator.relational.instanceof
+  settings:
+    foreground: '#90EA13'
+- name: '#90F2D8'
+  scope: keyword.operator.relational.lt
+  settings:
+    foreground: '#919BE8'
+- name: '#91C2DF'
+  scope: keyword.operator.relational.lte
+  settings:
+    foreground: '#91CB2A'
+- name: '#91CDE5'
+  scope: keyword.operator.spread
+  settings:
+    foreground: '#924483'
+- name: '#925CC6'
+  scope: keyword.operator.ternary.else
+  settings:
+    foreground: '#93689B'
+- name: '#939CAD'
+  scope: keyword.operator.ternary.if
+  settings:
+    foreground: '#93BDCE'
+- name: '#93DFF9'
+  scope: keyword.operator.unary.delete
+  settings:
+    foreground: '#93E790'
+- name: '#94BE98'
+  scope: keyword.operator.unary.typeof
+  settings:
+    foreground: '#94EBC5'
+- name: '#954412'
+  scope: keyword.operator.unary.void
+  settings:
+    foreground: '#95ABC3'
+- name: '#95BE5F'
+  scope: keyword.other.back-reference.regexp
+  settings:
+    foreground: '#95CBC0'
+- name: '#963DAA'
+  scope: keyword.other.debugger
+  settings:
+    foreground: '#96F5D3'
+- name: '#97C8A0'
+  scope: keyword.other.extends
+  settings:
+    foreground: '#99D8E8'
+- name: '#9A4AD2'
+  scope: keyword.other.rest
+  settings:
+    foreground: '#9A8EC1'
+- name: '#9AA5C7'
+  scope: meta.comment.body
+  settings:
+    foreground: '#9ABEA4'
+- name: '#9AD099'
+  scope: meta.comment.border
+  settings:
+    foreground: '#9B0E1C'
+- name: '#9B3309'
+  scope: meta.comment.box-drawing
+  settings:
+    foreground: '#9B36AD'
+- name: '#9BDCE7'
+  scope: meta.directive.use-strict
+  settings:
+    foreground: '#9C4FD5'
+- name: '#9C68F0'
+  scope: meta.group.assertion.negative.regexp
+  settings:
+    foreground: '#9CE0E3'
+- name: '#9DB159'
+  scope: meta.group.assertion.positive.regexp
+  settings:
+    foreground: '#9E3044'
+- name: '#9EC55B'
+  scope: meta.group.capturing.regexp
+  settings:
+    foreground: '#9EE9E2'
+- name: '#9F45D1'
+  scope: meta.group.non-capturing.regexp
+  settings:
+    foreground: '#9F5794'
+- name: '#A1F7B8'
+  scope: meta.idiomatic-cast.boolean
+  settings:
+    foreground: '#A2E2DF'
+- name: '#A372D2'
+  scope: meta.invocation
+  settings:
+    foreground: '#A3C8E4'
+- name: '#A3DDBE'
+  scope: meta.numeric.exponent.digit
+  settings:
+    foreground: '#A427E5'
+- name: '#A4513A'
+  scope: meta.numeric.exponent.e
+  settings:
+    foreground: '#A54B72'
+- name: '#A551E5'
+  scope: meta.numeric.exponent.sign
+  settings:
+    foreground: '#A553D7'
+- name: '#A5B4B2'
+  scope: meta.numeric.prefix
+  settings:
+    foreground: '#A5C0BC'
+- name: '#A63F05'
+  scope: punctuation.decimal
+  settings:
+    foreground: '#A694F2'
+- name: '#A6F451'
+  scope: punctuation.definition.accessor
+  settings:
+    foreground: '#A7DCE1'
+- name: '#A864A8'
+  scope: punctuation.definition.accessor.body
+  settings:
+    foreground: '#A8E426'
+- name: '#A9A2FC'
+  scope: punctuation.definition.accessor.parameter
+  settings:
+    foreground: '#A9EFBD'
+- name: '#AA0E10'
+  scope: punctuation.definition.arguments
+  settings:
+    foreground: '#AAED5D'
+- name: '#ABAACD'
+  scope: punctuation.definition.array
+  settings:
+    foreground: '#AC72FA'
+- name: '#ACBABE'
+  scope: punctuation.definition.binding.array
+  settings:
+    foreground: '#AD1FC6'
+- name: '#AD55D7'
+  scope: punctuation.definition.binding.array.parameter
+  settings:
+    foreground: '#AD948F'
+- name: '#AD9F23'
+  scope: punctuation.definition.binding.object
+  settings:
+    foreground: '#ADC758'
+- name: '#AE88E7'
+  scope: punctuation.definition.binding.object.parameter
+  settings:
+    foreground: '#AEF24F'
+- name: '#AFC8B7'
+  scope: punctuation.definition.block
+  settings:
+    foreground: '#AFE463'
+- name: '#AFFA8D'
+  scope: punctuation.definition.block.conditional
+  settings:
+    foreground: '#AFFDA3'
+- name: '#AFFE9A'
+  scope: punctuation.definition.block.loop
+  settings:
+    foreground: '#B0A72D'
+- name: '#B0B7DE'
+  scope: punctuation.definition.block.switch
+  settings:
+    foreground: '#B19A4C'
+- name: '#B19EE9'
+  scope: punctuation.definition.block.trycatch
+  settings:
+    foreground: '#B1C50E'
+- name: '#B1F837'
+  scope: punctuation.definition.block.with
+  settings:
+    foreground: '#B29BE3'
+- name: '#B335D5'
+  scope: punctuation.definition.character-class.begin.regexp
+  settings:
+    foreground: '#B33C6D'
+- name: '#B363B0'
+  scope: punctuation.definition.character-class.dash.regexp
+  settings:
+    foreground: '#B3A2DC'
+- name: '#B3ACD3'
+  scope: punctuation.definition.character-class.end.regexp
+  settings:
+    foreground: '#B3BD7A'
+- name: '#B41CD8'
+  scope: punctuation.definition.class.body
+  settings:
+    foreground: '#B4AF70'
+- name: '#B4C08A'
+  scope: punctuation.definition.comment
+  settings:
+    foreground: '#B4E2F0'
+- name: '#B5886F'
+  scope: punctuation.definition.comprehension.array
+  settings:
+    foreground: '#B59CA3'
+- name: '#B645E1'
+  scope: punctuation.definition.comprehension.generator
+  settings:
+    foreground: '#B68968'
+- name: '#B6D659'
+  scope: punctuation.definition.constructor.body
+  settings:
+    foreground: '#B6FD2D'
+- name: '#B776DC'
+  scope: punctuation.definition.decorator
+  settings:
+    foreground: '#B79368'
+- name: '#B7DB11'
+  scope: punctuation.definition.expression
+  settings:
+    foreground: '#B86FCA'
+- name: '#B8DBFC'
+  scope: punctuation.definition.expression.conditional
+  settings:
+    foreground: '#B8DEFD'
+- name: '#B97BF5'
+  scope: punctuation.definition.expression.conditional.comprehension.array
+  settings:
+    foreground: '#B995D4'
+- name: '#B9A63A'
+  scope: punctuation.definition.expression.conditional.comprehension.generator
+  settings:
+    foreground: '#B9B1B4'
+- name: '#B9C964'
+  scope: punctuation.definition.expression.loop
+  settings:
+    foreground: '#B9EFD5'
+- name: '#BA857D'
+  scope: punctuation.definition.expression.loop.comprehension.array
+  settings:
+    foreground: '#BACD73'
+- name: '#BB939C'
+  scope: punctuation.definition.expression.loop.comprehension.generator
+  settings:
+    foreground: '#BCE8D6'
+- name: '#BD1961'
+  scope: punctuation.definition.expression.switch
+  settings:
+    foreground: '#BD84E6'
+- name: '#BDC460'
+  scope: punctuation.definition.expression.with
+  settings:
+    foreground: '#BE0C09'
+- name: '#BE531E'
+  scope: punctuation.definition.function.arrow.body
+  settings:
+    foreground: '#BE9C26'
+- name: '#BEE1B5'
+  scope: punctuation.definition.function.body
+  settings:
+    foreground: '#BF24F4'
+- name: '#BFA7E5'
+  scope: punctuation.definition.generator.body
+  settings:
+    foreground: '#BFACE2'
+- name: '#BFD184'
+  scope: punctuation.definition.group.begin.regexp
+  settings:
+    foreground: '#C0194A'
+- name: '#C03221'
+  scope: punctuation.definition.group.end.regexp
+  settings:
+    foreground: '#C099CD'
+- name: '#C0FD7D'
+  scope: punctuation.definition.method.body
+  settings:
+    foreground: '#C10189'
+- name: '#C1AF59'
+  scope: punctuation.definition.method.generator.body
+  settings:
+    foreground: '#C1B5A5'
+- name: '#C20EFD'
+  scope: punctuation.definition.module-binding
+  settings:
+    foreground: '#C219D1'
+- name: '#C23CC5'
+  scope: punctuation.definition.object
+  settings:
+    foreground: '#C2BC6F'
+- name: '#C2D270'
+  scope: punctuation.definition.parameters.accessor
+  settings:
+    foreground: '#C2DD07'
+- name: '#C36FC8'
+  scope: punctuation.definition.parameters.catch
+  settings:
+    foreground: '#C3F71C'
+- name: '#C4097F'
+  scope: punctuation.definition.parameters.constructor
+  settings:
+    foreground: '#C48B56'
+- name: '#C4DDF8'
+  scope: punctuation.definition.parameters.function.arrow
+  settings:
+    foreground: '#C503EA'
+- name: '#C568B7'
+  scope: punctuation.definition.parameters.function
+  settings:
+    foreground: '#C5C3DB'
+- name: '#C5E6D5'
+  scope: punctuation.definition.parameters.generator
+  settings:
+    foreground: '#C61F42'
+- name: '#C63DF4'
+  scope: punctuation.definition.parameters.method
+  settings:
+    foreground: '#C6548A'
+- name: '#C6AD46'
+  scope: punctuation.definition.parameters.method.generator
+  settings:
+    foreground: '#C7E4E0'
+- name: '#C7E576'
+  scope: punctuation.definition.string.interpolated
+  settings:
+    foreground: '#C8088F'
+- name: '#C8AAD1'
+  scope: punctuation.definition.string.interpolated.element
+  settings:
+    foreground: '#C949CB'
+- name: '#C9D16A'
+  scope: punctuation.definition.string.quoted.double
+  settings:
+    foreground: '#C9F67C'
+- name: '#CAE5F1'
+  scope: punctuation.definition.string.quoted.double.parameter
+  settings:
+    foreground: '#CB0883'
+- name: '#CB2DAB'
+  scope: punctuation.definition.string.quoted.single
+  settings:
+    foreground: '#CC011B'
+- name: '#CC0F02'
+  scope: punctuation.definition.string.quoted.single.parameter
+  settings:
+    foreground: '#CC9213'
+- name: '#CCF471'
+  scope: punctuation.definition.string.regexp
+  settings:
+    foreground: '#CD9395'
+- name: '#CDAE1B'
+  scope: punctuation.separator.argument
+  settings:
+    foreground: '#CF8BA3'
+- name: '#CF8E62'
+  scope: punctuation.separator.array-element.binding
+  settings:
+    foreground: '#CFEDAC'
+- name: '#CFF33F'
+  scope: punctuation.separator.array-element
+  settings:
+    foreground: '#D0E1F8'
+- name: '#D0EE2A'
+  scope: punctuation.separator.binding-binding
+  settings:
+    foreground: '#D0EE48'
+- name: '#D16ECA'
+  scope: punctuation.separator.case-statements
+  settings:
+    foreground: '#D16F2F'
+- name: '#D1809D'
+  scope: punctuation.separator.key-value
+  settings:
+    foreground: '#D1BEB1'
+- name: '#D1D363'
+  scope: punctuation.separator.label-statement
+  settings:
+    foreground: '#D2084E'
+- name: '#D2767E'
+  scope: punctuation.separator.loop-expression
+  settings:
+    foreground: '#D27AAE'
+- name: '#D38047'
+  scope: punctuation.separator.module-binding
+  settings:
+    foreground: '#D4224A'
+- name: '#D43FFD'
+  scope: punctuation.separator.object-member.binding
+  settings:
+    foreground: '#D48E3C'
+- name: '#D4A627'
+  scope: punctuation.separator.object-member
+  settings:
+    foreground: '#D4D786'
+- name: '#D4FE96'
+  scope: punctuation.separator.parameter
+  settings:
+    foreground: '#D50316'
+- name: '#D50763'
+  scope: punctuation.separator.property-binding
+  settings:
+    foreground: '#D52282'
+- name: '#D53CC3'
+  scope: punctuation.separator.property-binding.parameter
+  settings:
+    foreground: '#D59EDB'
+- name: '#D5C972'
+  scope: punctuation.terminator.statement
+  settings:
+    foreground: '#D651B2'
+- name: '#D6926A'
+  scope: storage.type.accessor.get
+  settings:
+    foreground: '#D6A361'
+- name: '#D6E378'
+  scope: storage.type.accessor.set
+  settings:
+    foreground: '#D6E42F'
+- name: '#D6E462'
+  scope: storage.type.async
+  settings:
+    foreground: '#D6F58E'
+- name: '#D70E6E'
+  scope: storage.type.async.expression
+  settings:
+    foreground: '#D7473E'
+- name: '#D7629D'
+  scope: storage.type.class
+  settings:
+    foreground: '#D76E0C'
+- name: '#D8583A'
+  scope: storage.type.class.expression
+  settings:
+    foreground: '#D961D4'
+- name: '#D973F1'
+  scope: storage.type.constant
+  settings:
+    foreground: '#D99997'
+- name: '#D9E06D'
+  scope: storage.type.function.arrow
+  settings:
+    foreground: '#DA43EC'
+- name: '#DA4470'
+  scope: storage.type.function
+  settings:
+    foreground: '#DA7EE2'
+- name: '#DADCB2'
+  scope: storage.type.function.expression
+  settings:
+    foreground: '#DBE19C'
+- name: '#DD4CB1'
+  scope: storage.type.function.generator.asterisk
+  settings:
+    foreground: '#DD4FDF'
+- name: '#DDB270'
+  scope: storage.type.function.generator.asterisk.expression
+  settings:
+    foreground: '#DDBBF1'
+- name: '#DDDCF4'
+  scope: storage.type.function.generator
+  settings:
+    foreground: '#DDDFFC'
+- name: '#DDE2D6'
+  scope: storage.type.function.generator.expression
+  settings:
+    foreground: '#DDE7CD'
+- name: '#DE4CC4'
+  scope: storage.type.module.as
+  settings:
+    foreground: '#DF60C9'
+- name: '#DF7192'
+  scope: storage.type.module.default
+  settings:
+    foreground: '#DF99FB'
+- name: '#E0C199'
+  scope: storage.type.module.export
+  settings:
+    foreground: '#E1306C'
+- name: '#E186FC'
+  scope: storage.type.module.from
+  settings:
+    foreground: '#E1A962'
+- name: '#E1B680'
+  scope: storage.type.module.import
+  settings:
+    foreground: '#E226C5'
+- name: '#E26AE8'
+  scope: storage.type.module.namespace
+  settings:
+    foreground: '#E290D3'
+- name: '#E2E847'
+  scope: storage.type.static
+  settings:
+    foreground: '#E3582F'
+- name: '#E387CF'
+  scope: storage.type.variable.let
+  settings:
+    foreground: '#E41482'
+- name: '#E44BC5'
+  scope: storage.type.variable.var
+  settings:
+    foreground: '#E46B7B'
+- name: '#E4DEDD'
+  scope: string.interpolated
+  settings:
+    foreground: '#E4E12B'
+- name: '#E51F99'
+  scope: string.quoted.double
+  settings:
+    foreground: '#E58488'
+- name: '#E628A3'
+  scope: string.quoted.single
+  settings:
+    foreground: '#E63B12'
+- name: '#E69ECE'
+  scope: string.regexp
+  settings:
+    foreground: '#E6FE5F'
+- name: '#E75A71'
+  scope: string.regexp.flags
+  settings:
+    foreground: '#E7C195'
+- name: '#E7D1BE'
+  scope: support.class.builtin
+  settings:
+    foreground: '#E7FA9F'
+- name: '#E806D6'
+  scope: support.class.node
+  settings:
+    foreground: '#E889C6'
+- name: '#E8B9B5'
+  scope: support.function.builtin
+  settings:
+    foreground: '#E90D3A'
+- name: '#E9166B'
+  scope: support.function.node.require
+  settings:
+    foreground: '#E9C2AA'
+- name: '#E9D514'
+  scope: support.type.object.builtin
+  settings:
+    foreground: '#E9E3B0'
+- name: '#EA1036'
+  scope: support.type.object.dom-library
+  settings:
+    foreground: '#EAE6FA'
+- name: '#EB80A3'
+  scope: support.type.object.dom
+  settings:
+    foreground: '#EBBB8B'
+- name: '#EBEAFF'
+  scope: support.type.object.functional-library
+  settings:
+    foreground: '#EBF9B4'
+- name: '#EC7814'
+  scope: support.type.object.node
+  settings:
+    foreground: '#ECE9B9'
+- name: '#EDEA51'
+  scope: variable.language.arguments
+  settings:
+    foreground: '#EEE5E0'
+- name: '#EFD0B5'
+  scope: variable.language.new-target.fake-accessor
+  settings:
+    foreground: '#F04291'
+- name: '#F0B7F3'
+  scope: variable.language.new-target.fake-object
+  settings:
+    foreground: '#F153EB'
+- name: '#F178D9'
+  scope: variable.language.new-target.fake-property
+  settings:
+    foreground: '#F1908C'
+- name: '#F1C73F'
+  scope: variable.language.proto
+  settings:
+    foreground: '#F238EC'
+- name: '#F274F0'
+  scope: variable.language.prototype
+  settings:
+    foreground: '#F2C0AF'
+- name: '#F2D7F8'
+  scope: variable.language.super
+  settings:
+    foreground: '#F2FA43'
+- name: '#F3AE1F'
+  scope: variable.language.this
+  settings:
+    foreground: '#F4778B'
+- name: '#F4B408'
+  scope: variable.other.readwrite.allCap
+  settings:
+    foreground: '#F4C884'
+- name: '#F4DFA5'
+  scope: variable.other.readwrite.constructor
+  settings:
+    foreground: '#F586ED'
+- name: '#F5E8EA'
+  scope: variable.other.readwrite.decorator
+  settings:
+    foreground: '#F660D1'
+- name: '#F689AE'
+  scope: variable.other.readwrite
+  settings:
+    foreground: '#F6F851'
+- name: '#F6F8A0'
+  scope: variable.other.readwrite.export
+  settings:
+    foreground: '#F6FBA8'
+- name: '#F750C7'
+  scope: variable.other.readwrite.import
+  settings:
+    foreground: '#F7EDD0'
+- name: '#F88F9B'
+  scope: variable.other.readwrite.initCap
+  settings:
+    foreground: '#F89073'
+- name: '#F8F537'
+  scope: variable.other.readwrite.property.allCap
+  settings:
+    foreground: '#F95026'
+- name: '#F970DB'
+  scope: variable.other.readwrite.property
+  settings:
+    foreground: '#FA3B36'
+- name: '#FA5D21'
+  scope: variable.other.readwrite.property.initCap
+  settings:
+    foreground: '#FAAC21'
+- name: '#FB3010'
+  scope: variable.other.readwrite.property.proto
+  settings:
+    foreground: '#FB3425'
+- name: '#FB910C'
+  scope: variable.other.readwrite.property.prototype
+  settings:
+    foreground: '#FBA5DA'
+- name: '#FBF86D'
+  scope: variable.other.readwrite.property.shorthand.allCap
+  settings:
+    foreground: '#FBFEFC'
+- name: '#FC1729'
+  scope: variable.other.readwrite.property.shorthand
+  settings:
+    foreground: '#FC8EE4'
+- name: '#FCBAEB'
+  scope: variable.other.readwrite.property.shorthand.initCap
+  settings:
+    foreground: '#FCF690'
+- name: '#FCF9DC'
+  scope: variable.other.readwrite.property.shorthand.rest.allCap
+  settings:
+    foreground: '#FD23F0'
+- name: '#FDBCC5'
+  scope: variable.other.readwrite.property.shorthand.rest
+  settings:
+    foreground: '#FDF2D6'
+- name: '#FDFAED'
+  scope: variable.other.readwrite.property.shorthand.rest.initCap
+  settings:
+    foreground: '#FE79B2'
+- name: '#FE7D39'
+  scope: variable.other.readwrite.tag
+  settings:
+    foreground: '#FEBB27'
+- name: '#FECB41'
+  scope: variable.parameter.catch
+  settings:
+    foreground: '#FF3272'
+- name: '#FF387E'
+  scope: variable.parameter
+  settings:
+    foreground: '#FF7B86'
+- name: '#FFF64C'
+  scope: variable.parameter.rest
+  settings:
+    foreground: '#FFF8EC"'
