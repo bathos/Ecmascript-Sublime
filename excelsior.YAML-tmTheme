@@ -1,0 +1,346 @@
+# [PackageDev] target_format: plist, ext: tmTheme
+name: Excelsior
+uuid: 0ab48683-c74c-4eef-8efe-a320e080a8b8
+
+settings:
+- settings:
+    foreground: '#BEBBB0'
+    background: '#252525'
+    gutter: '#323232'
+    caret: '#C9C9C3'
+
+    bracketContentsOptions: 'stippled_underline'
+    bracketsOptions: 'stippled_underline'
+
+    guide: '#323334'
+    stackGuide: '#3B3C3D'
+    activeGuide: '#48494A'
+
+    multiEditHighlight: '#A5EB5144'
+    searchHighlight: '#E9EE5F99'
+    selection: '#575757'
+
+# GENERIC TMLANGUAGE BASE SCOPES ###############################################
+
+- scope: comment
+  settings:
+    foreground: '#758B99'
+    fontStyle: 'italic'
+- scope: constant
+  settings:
+    foreground: '#665BF5'
+- scope: constant.character
+  settings:
+    foreground: '#7EA31C'
+- scope: entity
+  settings:
+    foreground: '#EE8600'
+- scope: entity.name.tag
+  settings:
+    foreground: '#ADE9C6'
+- scope: invalid
+  settings:
+    background: '#7F225A'
+    foreground: '#BD5393'
+- scope: keyword
+  settings:
+    foreground: '#6C949D'
+- scope: keyword.operator
+  settings:
+    foreground: '#9F5ACF'
+- scope: markup
+  settings:
+    foreground: '#8D8D8D'
+- scope: markup.underline
+  settings:
+    background: '#3B3A3A'
+- scope: markup.bold
+  settings:
+    fontStyle: 'bold'
+- scope: markup.heading
+  settings:
+    background: '#2C1D3D'
+    foreground: '#7765B1'
+- scope: markup.italic
+  settings:
+    fontStyle: 'italic'
+- scope: markup.list
+  settings:
+    background: '#514E41'
+    foreground: '#C5BD95'
+- scope: markup.quote
+  settings:
+    background: '#3B5D5D'
+    foreground: '#B4C8C8'
+- scope: markup.raw
+  settings:
+    background: '#524C09'
+    foreground: '#DFD562'
+- scope: storage
+  settings:
+    foreground: '#FFAC0C'
+    fontStyle: 'italic'
+- scope: storage.modifier
+  settings:
+    foreground: '#C55C16'
+- scope: string
+  settings:
+    foreground: '#30B679'
+- scope: string.regexp
+  settings:
+    foreground: '#369F42'
+- scope: support
+  settings:
+    foreground: '#C85799'
+- scope: support.function
+  settings:
+    foreground: '#C3F2AE'
+- scope: support.variable
+  settings:
+    foreground: '#C3F2AE'
+- scope: variable
+  settings:
+    foreground: '#F2F1C4'
+- scope: variable.language
+  settings:
+    foreground: '#D2A0D9'
+    fontStyle: 'italic'
+- scope: variable.parameter
+  settings:
+    foreground: '#F4E98F'
+
+# META #########################################################################
+
+- scope: comment.line.shebang
+  settings:
+    background: '#369F42'
+    foreground: '#9FE948'
+
+- scope: meta.comment.box-drawing
+  settings:
+    foreground: '#444B68'
+
+- scope: meta.directive.use-strict
+  settings:
+    background: '#363831'
+    foreground: '#B2BD95'
+    fontStyle: 'italic'
+
+# STATEMENTS ###################################################################
+
+- name: Block, Switch & Conditional Statement
+  scope: >-
+    keyword.control.conditional,
+    keyword.control.switch,
+    punctuation.definition.block,
+    punctuation.definition.expression.conditional,
+    punctuation.definition.expression.switch,
+    punctuation.separator.case-statements
+  settings:
+    foreground: '#CAB18C'
+
+- name: Loop Statements
+  scope: >-
+    keyword.control.loop,
+    punctuation.definition.block.loop,
+    punctuation.definition.expression.loop,
+    punctuation.separator.loop-expression
+  settings:
+    foreground: '#A79DE1'
+
+- name: Try Statements
+  scope: >-
+    keyword.control.trycatch,
+    punctuation.definition.block.trycatch,
+    punctuation.definition.parameters.catch
+  settings:
+    foreground: '#E68CBB'
+
+- name: Try Statement; Catch Parameter
+  scope: >-
+    variable.parameter.catch
+  settings:
+    foreground: '#DC5C9F'
+
+- name: Deprecated Statements
+  scope: >-
+    keyword.other.debugger,
+    keyword.control.with,
+    punctuation.definition.block.with,
+    punctuation.definition.expression.with
+  settings:
+    foreground: '#EB5368'
+
+# DECLARATIONS, METHODS ETC ####################################################
+
+- name: Var, Let, Const Declarations
+  scope: >-
+    storage.type.constant,
+    storage.type.variable,
+    punctuation.separator.binding-binding
+  settings:
+    foreground: '#F4E98F'
+
+- name: Binding Patterns
+  scope: >-
+    keyword.other.rest,
+    punctuation.definition.binding,
+    punctuation.separator.array-element.binding,
+    punctuation.separator.object-member.binding
+  settings:
+    foreground: '#C6AA5E'
+
+- name: Parameter Comma, Rest & Binding Patterns
+  scope:
+    keyword.operator.assignment.conditional.default,
+    keyword.other.rest.parameter,
+    punctuation.definition.binding.array.parameter,
+    punctuation.definition.binding.object.parameter,
+    punctuation.separator.array-element.binding.parameter,
+    punctuation.separator.object-member.binding.parameter,
+    punctuation.separator.parameter
+  settings:
+    foreground: '#BDA11E'
+
+- name: Async & Await
+  scope: >-
+    keyword.control.flow.await,
+    storage.modifier.async
+  settings:
+    foreground: '#FFCE0C'
+
+- name: Function Keyword
+  scope: storage.type.function
+  settings:
+    foreground: '#FFAC0C'
+
+- name: Function & Return
+  scope: >-
+    entity.name.function,
+    keyword.control.flow.return,
+    punctuation.definition.function.body,
+    punctuation.definition.parameters.function
+  settings:
+    foreground: '#EE8600'
+
+- name: Generator Keyword
+  scope: >-
+    storage.type.function.generator
+  settings:
+    foreground: '#EAFD1A'
+
+- name: Generator & Yield
+  scope: >-
+    entity.name.function.generator,
+    keyword.control.flow.yield,
+    punctuation.definition.generator.body,
+    punctuation.definition.parameters.generator
+  settings:
+    foreground: '#73C10E'
+
+- name: Class & Object Literal
+  scope: >-
+    entity.name.class,
+    entity.name.constructor,
+    punctuation.definition.class.body,
+    punctuation.definition.constructor.body,
+    punctuation.definition.object,
+    punctuation.definition.parameters.constructor,
+    punctuation.separator.key-value,
+    storage.modifier.extends,
+    storage.type.class
+  settings:
+    foreground: '#F97D97'
+
+- name: Class Name
+  scope: entity.name.class
+  settings:
+    fontStyle: 'bold'
+
+- name: Constructor
+  scope: entity.name.constructor
+  settings:
+    fontStyle: 'italic'
+
+- name: Static
+  scope: storage.modifier.static
+  settings:
+    foreground: '#FE8D8D'
+
+- name: Async Method
+  scope: storage.modifier.async
+  settings:
+    foreground: '#FFAC62'
+
+- name: Accessor Keyword
+  scope: >-
+    storage.modifier.accessor
+  settings:
+    foreground: '#ADE9C6'
+
+- name: Accessor
+  scope: >-
+    entity.name.accessor,
+    keyword.control.flow.return.accessor,
+    punctuation.definition.parameters.accessor,
+    punctuation.definition.accessor.body
+  settings:
+    foreground: '#72DAAD'
+
+- name: Method
+  scope: >-
+    entity.name.method,
+    punctuation.definition.method.body,
+    punctuation.definition.parameters.method
+  settings:
+    foreground: '#F4805B'
+
+- name: Generator Method
+  scope: >-
+    entity.name.method.generator,
+    punctuation.definition.method.generator.body,
+    punctuation.definition.parameters.method.generator
+  settings:
+    foreground: '#8FB239'
+
+# EXPRESSIONS ##################################################################
+
+- name: Expression Group
+  scope: punctuation.definition.expression
+  settings:
+    foreground: '#FFCE0C'
+
+- name: Property & Accessor Punctuation
+  scope: >-
+    keyword.operator.accessor,
+    punctuation.definition.accessor
+  settings:
+    foreground: '#ADE9C6'
+
+- name: Instantiation & Capitalized Identifiers
+  scope: >-
+    variable.other meta.instantiation,
+    variable.other.readwrite.initCap
+  settings:
+    foreground: '#E9ACD0'
+
+- name: Invocation
+  scope: >-
+    punctuation.definition.arguments,
+    punctuation.separator.argument,
+    variable.other meta.invocation
+  settings:
+    foreground: '#ADE9C6'
+
+- name: Undefined
+  scope: constant.language.undefined
+  settings:
+    foreground: '#B0B0B0'
+    fontStyle: 'italic'
+
+- name: Number Components
+  scope: >-
+    meta.numeric.exponent,
+    meta.numeric.prefix
+  settings:
+    foreground: '#5C37FA'
