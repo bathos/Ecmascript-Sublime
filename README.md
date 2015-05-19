@@ -78,7 +78,7 @@ have relatively small palettes, really).
 
 However there are good reasons one might prefer one of the other choices for
 syntax highlighting. For one, maybe you like a theme that plays better with one
-of the others. But also, there are differences with the approach taken that may
+of the others. There are also differences with the approaches taken that may
 or may not suit your style. And finally, Ecmascript Sublime is a lot more rigid
 by nature, so invalid token sequences will not often pass unnoticed -- you may
 find this useful, or you may find it bothersome.
