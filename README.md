@@ -83,6 +83,11 @@ or may not suit your style. And finally, Ecmascript Sublime is a lot more rigid
 by nature, so invalid token sequences will not often pass unnoticed -- you may
 find this useful, or you may find it bothersome.
 
+Although there’s no real theme yet, assigning random colors to all scopes is a
+good way to give some idea of what can be done:
+
+![Color barf example](https://github.com/bathos/Ecmascript-Sublime/raw/master/example-barf.png)
+
 ## Feature Coverage
 
 In addition to everything in the final draft of ES6, I’ve included support for

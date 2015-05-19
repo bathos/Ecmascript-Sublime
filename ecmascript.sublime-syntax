@@ -2850,6 +2850,13 @@ contexts:
     - match: '"'
       scope: punctuation.definition.string.quoted.double.begin.es
       set: [ literalObject_AFTER_PROP, stringDouble_AFTER_OPEN ]
+    # ES7?
+    - match: '\.{3}'
+      scope: keyword.operator.spread
+      set: literalObject_AFTER_ELLIPSIS
+    - match: '@'
+      scope: punctuation.definition.decorator.es
+      push: decoratorExpression
     # NUMERIC PROPERTY
     - match: '({{decNum}})'
       scope: constant.numeric.decimal.es
@@ -2884,13 +2891,6 @@ contexts:
     - match: '\['
       scope: punctuation.definition.accessor.begin.es
       set: [ literalObject_AFTER_PROP, computedProp_AFTER_AE, assignmentExpression ]
-    # ES7?
-    - match: '\.{3}'
-      scope: keyword.other.rest
-      set: literalObject_AFTER_ELLIPSIS
-    - match: '@'
-      scope: punctuation.definition.decorator.es
-      push: decoratorExpression
 
   literalObject_AFTER_SHORTHAND:
     # Safety context for " prop \n : "
@@ -3314,6 +3314,11 @@ contexts:
     - match: '"'
       scope: punctuation.definition.string.quoted.double.begin.es
       set: [ bindingObject_BEFORE_COLON, stringDouble_AFTER_OPEN ]
+    # REST PROPERTIES
+    - match: '\.{3}'
+      scope: keyword.other.rest.es
+      set: bindingObject_AFTER_ELLIPSIS
+    - include: other_illegal
     # NUMERIC PROPERTY
     - match: '({{decNum}})'
       scope: constant.numeric.decimal.es
@@ -3344,11 +3349,6 @@ contexts:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
       set: bindingObject_BEFORE_COLON
-    # REST PROPERTIES
-    - match: '\.{3}'
-      scope: keyword.other.rest.es
-      set: bindingObject_AFTER_ELLIPSIS
-    - include: other_illegal
 
   bindingObject_BEFORE_COLON:
     - match: ':'
@@ -3475,6 +3475,11 @@ contexts:
     - match: '"'
       scope: punctuation.definition.string.quoted.double.parameter.begin.es
       set: [ bindingObject_PARAM_BEFORE_COLON, stringDouble_AFTER_OPEN ]
+    # REST PROPERTIES
+    - match: '\.{3}'
+      scope: keyword.other.rest.es
+      set: bindingObject_PARAM_AFTER_ELLIPSIS
+    - include: other_illegal
     # NUMERIC PROPERTY
     - match: '({{decNum}})'
       scope: constant.numeric.decimal.es
@@ -3505,11 +3510,6 @@ contexts:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
       set: bindingObject_PARAM_BEFORE_COLON
-    # REST PROPERTIES
-    - match: '\.{3}'
-      scope: keyword.other.rest.es
-      set: bindingObject_PARAM_AFTER_ELLIPSIS
-    - include: other_illegal
 
   bindingObject_PARAM_BEFORE_COLON:
     - match: ':'
