@@ -126,7 +126,7 @@ myself it wasn’t a priority. (Pull reqs welcome.)
 ## SublimeText Symbols
 
 A Sublime syntax definition involves more than the definition proper. These
-other items use the tmPreferences format to describe how automatic identation
+other items use the tmPreferences format to describe how automatic indentation
 works, as well as how the "symbol list" is populated.
 
 If you haven’t used Sublime symbol navigation before, I recommend checking it
@@ -194,8 +194,8 @@ tweaked.
  - constant.numeric.octal.es
  - constant.other.character-class.predefined.regexp
  - constant.other.character-class.set.regexp
- - entity.name.accessor.get
- - entity.name.accessor.set
+ - entity.name.accessor.get.es
+ - entity.name.accessor.set.es
  - entity.name.class.es
  - entity.name.function.allCap.es
  - entity.name.function.es

@@ -3016,7 +3016,7 @@ contexts:
 
   accessorMethod_AFTER_GET:
     - match: '{{identifier}}'
-      scope: entity.name.accessor.get
+      scope: entity.name.accessor.get.es
       set: accessorMethod_AFTER_GET_NAME
     - match: "'"
       scope: punctuation.definition.string.quoted.single.begin.es
@@ -3072,7 +3072,7 @@ contexts:
 
   accessorMethod_AFTER_SET:
     - match: '{{identifier}}'
-      scope: entity.name.accessor.set
+      scope: entity.name.accessor.set.es
       set: accessorMethod_AFTER_SET_NAME
     - match: "'"
       scope: punctuation.definition.string.quoted.single.begin.es
