@@ -432,7 +432,7 @@
 			<key>name</key>
 			<string>Function &amp; Return</string>
 			<key>scope</key>
-			<string>entity.name.function, keyword.control.flow.return, punctuation.definition.function.body, punctuation.definition.parameters.function</string>
+			<string>entity.name.function, keyword.control.flow.return, punctuation.definition.function.body, punctuation.definition.function.arrow.body, punctuation.definition.parameters.function</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -496,13 +496,24 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>Static</string>
+			<string>Static, Obj Shorthand &amp; Comma</string>
 			<key>scope</key>
-			<string>storage.modifier.static</string>
+			<string>punctuation.separator.object-member, storage.modifier.static, variable.other.readwrite.property.shorthand</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
 				<string>#FE8D8D</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Object Literal Property</string>
+			<key>scope</key>
+			<string>variable.other.readwrite.property.object-literal</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#F4CAB5</string>
 			</dict>
 		</dict>
 		<dict>

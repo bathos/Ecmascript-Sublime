@@ -77,7 +77,7 @@ variables:
   # Note, Symbol is not a real constructor -- but even ECMA 262 calls it one. 
   intrinsicConstructors: >-
     Array(?:Buffer)? | Boolean | Date | DataView |
-    (?:Eval|Range|Reference|Syntax|Type|URI)Error |
+    (?:Eval|Range|Reference|Syntax|Type|URI)?Error |
     Float(?:32|64)Array | Function | Int(?:8|16|32)Array |
     Number | Object | Promise | Proxy | Reflect | RegExp | String |
     Symbol | Uint(?:8(?:Clamped)?|16|32)Array | (?:Weak)?(?:Map|Set)
@@ -2052,13 +2052,41 @@ contexts:
             ( Buffer ) |
             ( {{intrinsicConstructors}} ) |
             {{identifier}}
-          )){{idEnd}}
+          )){{idEnd}}(?!\s*\.)
       captures:
         1: keyword.operator.new.es
         2: variable.other.readwrite.es
         3: meta.instantiation.es
         4: support.class.node.es
         5: support.class.builtin.es
+      set: ae_AFTER_THING
+    # When the constructor is a property it’s tougher. Rather than creating a
+    # new set of contexts for this case, we’ll handle up to the fifth level and
+    # consider anything else a rare enough edge case to not worry about.
+    - match: >-
+        (?x)
+          (new) \s+
+          (?: ({{identifier}}) (\.) )
+          (?: ({{identifier}}) (\.) 
+            (?: ({{identifier}}) (\.) 
+              (?:
+                ({{identifier}}) (\.)
+              )?
+            )?
+          )?
+          (({{identifier}}))(?!\s*\.)
+      captures:
+        1: keyword.operator.new.es
+        2: variable.other.readwrite.es
+        3: keyword.operator.accessor.es
+        4: variable.other.readwrite.es
+        5: keyword.operator.accessor.es
+        6: variable.other.readwrite.es
+        7: keyword.operator.accessor.es
+        8: variable.other.readwrite.es
+        9: keyword.operator.accessor.es
+        10: variable.other.readwrite.es
+        11: meta.instantiation.es
       set: ae_AFTER_THING
     - match: '(new)\s*(\.)'
       captures:
@@ -2718,19 +2746,45 @@ contexts:
   ae_NO_IN_YIELD_NEW:
     - match: >-
         (?x)
-          (new) \s+ (
-            (
-              ( Buffer ) |
-              ( {{intrinsicConstructors}} ) |
-              {{identifier}}
-            )
-          ){{idEnd}}
+          (new) \s+ ((
+            ( Buffer ) |
+            ( {{intrinsicConstructors}} ) |
+            {{identifier}}
+          )){{idEnd}}(?!\s*\.)
       captures:
         1: keyword.operator.new.es
         2: variable.other.readwrite.es
         3: meta.instantiation.es
         4: support.class.node.es
         5: support.class.builtin.es
+      set: ae_NO_IN_AFTER_THING
+    # When the constructor is a property it’s tougher. Rather than creating a
+    # new set of contexts for this case, we’ll handle up to the fifth level and
+    # consider anything else a rare enough edge case to not worry about.
+    - match: >-
+        (?x)
+          (new) \s+
+          (?: ({{identifier}}) (\.) )
+          (?: ({{identifier}}) (\.) 
+            (?: ({{identifier}}) (\.) 
+              (?:
+                ({{identifier}}) (\.)
+              )?
+            )?
+          )?
+          (({{identifier}}))(?!\s*\.)
+      captures:
+        1: keyword.operator.new.es
+        2: variable.other.readwrite.es
+        3: keyword.operator.accessor.es
+        4: variable.other.readwrite.es
+        5: keyword.operator.accessor.es
+        6: variable.other.readwrite.es
+        7: keyword.operator.accessor.es
+        8: variable.other.readwrite.es
+        9: keyword.operator.accessor.es
+        10: variable.other.readwrite.es
+        11: meta.instantiation.es
       set: ae_NO_IN_AFTER_THING
     - match: '(new)\s*(\.)'
       captures:
@@ -2806,9 +2860,19 @@ contexts:
     - match: '\*'
       scope: storage.type.function.generator.asterisk.es
       set: [ literalObject_AFTER_AE, generatorMethod_AFTER_ASTERISK ]
+    - match: '(get)\s*(:)'
+      captures:
+        1: variable.other.readwrite.property.es
+        2: punctuation.separator.key-value.es
+      set: [ literalObject_AFTER_AE, assignmentExpression ]
     - match: 'get{{idEnd}}'
       scope: storage.modifier.accessor.get.es
       set: [ literalObject_AFTER_AE, accessorMethod_AFTER_GET ]
+    - match: '(set)\s*(:)'
+      captures:
+        1: variable.other.readwrite.property.es
+        2: punctuation.separator.key-value.es
+      set: [ literalObject_AFTER_AE, assignmentExpression ]
     - match: 'set{{idEnd}}'
       scope: storage.modifier.accessor.set.es
       set: [ literalObject_AFTER_AE, accessorMethod_AFTER_SET ]
@@ -2827,9 +2891,9 @@ contexts:
     # NORMAL PROPERTIES
     - match: '(?:{{allThreeIDs}})\s*(:)'
       captures:
-        1: variable.other.readwrite.property.allCap.es
-        2: variable.other.readwrite.property.initCap.es
-        3: variable.other.readwrite.property.es
+        1: variable.other.readwrite.property.object-literal.allCap.es
+        2: variable.other.readwrite.property.object-literal.initCap.es
+        3: variable.other.readwrite.property.object-literal.es
         4: punctuation.separator.key-value.es
       set: [ literalObject_AFTER_AE, assignmentExpression ]
     # IDENTIFIER REFERENCE (probably)
@@ -2840,6 +2904,10 @@ contexts:
         1: variable.other.readwrite.property.shorthand.allCap.es
         2: variable.other.readwrite.property.shorthand.initCap.es
         3: variable.other.readwrite.property.shorthand.es
+      set: literalObject_AFTER_SHORTHAND
+    # NORMALLY ILLEGAL NAME
+    - match: '{{identifierName}}'
+      scope: variable.other.readwrite.property.object-literal.es
       set: literalObject_AFTER_SHORTHAND
     # QUOTED PROPERTY
     - match: "'"
@@ -2859,7 +2927,7 @@ contexts:
     - match: '({{decNum}})'
       scope: constant.numeric.decimal.es
       captures:
-        1: variable.other.readwrite.property.es
+        1: variable.other.readwrite.property.object-literal.es
         2: punctuation.decimal.es
         3: punctuation.decimal.es
         4: punctuation.decimal.es
@@ -2870,19 +2938,19 @@ contexts:
     - match: '({{binNum}})'
       scope: constant.numeric.binary.es
       captures:
-        1: variable.other.readwrite.property.es
+        1: variable.other.readwrite.property.object-literal.es
         2: meta.numeric.prefix.es
       set: literalObject_AFTER_PROP
     - match: '({{octNum}})'
       scope: constant.numeric.octal.es
       captures:
-        1: variable.other.readwrite.property.es
+        1: variable.other.readwrite.property.object-literal.es
         2: meta.numeric.prefix.es
       set: literalObject_AFTER_PROP
     - match: '({{hexNum}})'
       scope: constant.numeric.hexadecimal.es
       captures:
-        1: variable.other.readwrite.property.es
+        1: variable.other.readwrite.propertyobject-literal..es
         2: meta.numeric.prefix.es
       set: literalObject_AFTER_PROP
     # COMPUTED PROPERTY
@@ -3054,6 +3122,7 @@ contexts:
     - match: '\['
       scope: punctuation.definition.accessor.begin.es
       set: [ accessorMethod_AFTER_GET_NAME, computedProp_AFTER_AE, assignmentExpression ]
+    # Possibly this is an object property.
     - include: other_illegal_pop
 
   accessorMethod_AFTER_GET_NAME:

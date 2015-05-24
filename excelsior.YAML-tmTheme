@@ -219,6 +219,7 @@ settings:
     entity.name.function,
     keyword.control.flow.return,
     punctuation.definition.function.body,
+    punctuation.definition.function.arrow.body,
     punctuation.definition.parameters.function
   settings:
     foreground: '#EE8600'
@@ -262,10 +263,19 @@ settings:
   settings:
     fontStyle: 'italic'
 
-- name: Static
-  scope: storage.modifier.static
+- name: Static, Obj Shorthand & Comma
+  scope: >-
+    punctuation.separator.object-member,
+    storage.modifier.static,
+    variable.other.readwrite.property.shorthand
   settings:
     foreground: '#FE8D8D'
+
+- name: Object Literal Property
+  scope: >-
+    variable.other.readwrite.property.object-literal
+  settings:
+    foreground: '#F4CAB5'
 
 - name: Async Method
   scope: storage.modifier.async
