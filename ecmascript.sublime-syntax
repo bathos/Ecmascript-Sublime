@@ -1974,6 +1974,8 @@ contexts:
         1: meta.idiomatic-cast.boolean.es
     - match: '!'
       scope: keyword.operator.logical.not.es
+    - match: '::'
+      scope: keyword.operator.bind.es
     # The current strawman spec suggests this is the reasonable place for await.
     # Syntactically, it isn’t like yield. I’m unsure if this is intended to be a
     # no-linebreak-here situation. Babel currently gets upset by newlines before

@@ -117,12 +117,23 @@ The following candidate ES7 features, as they stand today anyway, are covered:
  - class and method decorators
  - trailing commas where they don’t belong at all ugh
  - object literal spread and object binding pattern rest
+ - bind operator
 
-There are a handful of optional ES7 Babel transforms I haven’t done yet:
+There are two optional ES7 Babel transforms I haven’t done yet:
 
  - class properties
  - export extensions
- - bind operator (this one is VERY cool, didn’t know about it till today!)
+
+To be honest I don’t think class properties has a very great chance of entering
+ES7 in its current form, so I’m hesitant to implement it yet. Class syntax is
+a subset of object literal syntax + allowance of the `static` keyword; the
+equals-sign syntax (as opposed to a more obvious colon syntax) seems like an
+unlikely departure. Plus, they’re totally useless language cruft. If someone
+wants it though let me know and I’ll add it; barring that, this will wait for a
+more mature spec if it emerges.
+
+Export extensions is more immediately deserving but the spec has not yet added
+a grammar section. Waiting for that.
 
 I didn’t include JSX. If you use JSX, you should use Babel Sublime, which
 handles that in depth. I’m not opposed to adding it, but since I don’t use it
