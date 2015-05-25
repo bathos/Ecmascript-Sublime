@@ -88,7 +88,8 @@ settings:
     foreground: '#30B679'
 - scope: string.regexp
   settings:
-    foreground: '#369F42'
+    background: '#7BB6640B'
+    foreground: '#32C042'
 - scope: support
   settings:
     foreground: '#C85799'
@@ -313,6 +314,14 @@ settings:
   settings:
     foreground: '#8FB239'
 
+- name: Decorator
+  scope: >-
+    punctuation.definition.decorator,
+    variable.other.readwrite.decorator
+  settings:
+    fontStyle: 'italic'
+    foreground: '#597873'
+
 # EXPRESSIONS ##################################################################
 
 - name: Expression Group
@@ -354,3 +363,128 @@ settings:
     meta.numeric.prefix
   settings:
     foreground: '#5C37FA'
+
+# REGEX ########################################################################
+
+- name: Regex Char Classes (Predefined) & Punctuation
+  scope: >-
+    string.regexp constant.other.character-class.predefined,
+    string.regexp constant.other.character-class punctuation
+  settings:
+    foreground: '#8ABA8A'
+
+- name: Regex Char Classes (Predefined) & Escapes
+  scope: >-
+    string.regexp constant.other.character-class.predefined,
+    string.regexp constant.character.escape,
+    string.regexp keyword.other.back-reference
+  settings:
+    fontStyle: 'bold'
+
+- name: Regex Char Escapes
+  scope: string.regexp constant.character.escape
+  settings:
+    foreground: '#73D226'
+
+- name: Regex Char Classes (Content)
+  scope: string.regexp constant.other.character-class.set
+  settings:
+    foreground: '#6DBC72'
+
+- name: Regex Backrefs
+  scope: string.regexp keyword.other.back-reference
+  settings:
+    background: '#173A0A'
+    foreground: '#37BC46'
+
+- name: Regex Quantifiers
+  scope: >-
+    keyword.operator.quantifier.regexp
+  settings:
+    foreground: '#7D9B6D'
+
+- name: Group Punctuation
+  scope: string.regexp meta.group punctuation
+  settings:
+    foreground: '#59A233'
+
+- name: Regex Positive Assertions
+  scope: >-
+    keyword.control.anchor.regexp,
+    string.regexp punctuation.definition.assertion.positive
+  settings:
+    foreground: '#75CEA4'
+
+- name: Regex Positive Assertion Text
+  scope: meta.group.assertion.positive.regexp
+  settings:
+    foreground: '#5FC983'
+
+- name: Regex Negative Assertions & Char Class Negation
+  scope: >-
+    keyword.operator.negation.regexp,
+    string.regexp punctuation.definition.assertion.negative
+  settings:
+    foreground: '#ED804A'
+
+- name: Regex Negative Assertion Text
+  scope: meta.group.assertion.negative.regexp
+  settings:
+    foreground: '#AF9547'
+
+- name: Regex Capturing Groups 1
+  scope: >-
+    meta.group.capturing.regexp
+  settings:
+    background: '#7BB66420'
+- name: Regex Capturing Groups 2
+  scope: >-
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+  settings:
+    background: '#7BB66435'
+- name: Regex Capturing Groups 3
+  scope: >-
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+  settings:
+    background: '#7BB6644A'
+- name: Regex Capturing Groups 4
+  scope: >-
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+  settings:
+    background: '#7BB6645F'
+- name: Regex Capturing Groups 5
+  scope: >-
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+  settings:
+    background: '#7BB66474'
+- name: Regex Capturing Groups 6+
+  scope: >-
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+  settings:
+    background: '#7BB664 89'
+
+- name: Regex Outer Punc
+  scope: punctuation.definition.string.regexp
+  settings:
+    foreground: '#496549'
+
+- name: Regex Flags
+  scope: string.regexp.flags
+  settings:
+    fontStyle: italic
+    foreground: '#406E40'

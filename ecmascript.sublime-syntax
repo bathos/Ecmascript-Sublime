@@ -1,6 +1,6 @@
 %YAML 1.2
 ---
-name: Ecmascript Test
+name: Ecmascript
 file_extensions: [ js, es, es6 ]
 scope: source.es
 
@@ -3724,13 +3724,6 @@ contexts:
     - match: '(?=[\n\/])'
       pop: true
 
-  regex_ANY_CHILD_GROUP:
-    - match: '\)'
-      scope: punctuation.definition.group.end.regexp
-      pop: true
-    - include: regex_ANY_CHILD_CONTEXT
-    - include: regex_COMMON_NOT_IN_CLASS_SET
-
   regex_COMMON_NOT_IN_CLASS_SET:
     - include: regex_COMMON
     # DISJUNCTION
@@ -3745,17 +3738,17 @@ contexts:
       push: regexp_AFTER_BRACKET
     # ASSERTIONS
     - match: '\(\?!'
-      scope: punctuation.definition.group.begin.regexp
+      scope: punctuation.definition.assertion.negative.begin.regexp
       push: regex_AFTER_ASSERTION_NEGATIVE_OPEN
     - match: '\(\?='
-      scope: punctuation.definition.group.begin.regexp
+      scope: punctuation.definition.assertion.positive.begin.regexp
       push: regex_AFTER_ASSERTION_POSITIVE_OPEN
     # GROUPS
     - match: '\(\?:'
-      scope: punctuation.definition.group.begin.regexp
+      scope: punctuation.definition.group.non-capturing.begin.regexp
       push: regex_AFTER_NON_CAPTURE_OPEN
     - match: '\('
-      scope: punctuation.definition.group.begin.regexp
+      scope: punctuation.definition.group.capturing.begin.regexp
       push: regex_AFTER_CAPTURE_OPEN
 
   regex_COMMON:
@@ -3804,22 +3797,38 @@ contexts:
   regex_AFTER_ASSERTION_NEGATIVE_OPEN:
     - meta_scope: meta.group.assertion.negative.regexp
     - meta_include_prototype: false
-    - include: regex_ANY_CHILD_GROUP
+    - match: '\)'
+      scope: punctuation.definition.assertion.negative.end.regexp
+      pop: true
+    - include: regex_ANY_CHILD_CONTEXT
+    - include: regex_COMMON_NOT_IN_CLASS_SET
 
   regex_AFTER_ASSERTION_POSITIVE_OPEN:
     - meta_scope: meta.group.assertion.positive.regexp
     - meta_include_prototype: false
-    - include: regex_ANY_CHILD_GROUP
+    - match: '\)'
+      scope: punctuation.definition.assertion.positive.end.regexp
+      pop: true
+    - include: regex_ANY_CHILD_CONTEXT
+    - include: regex_COMMON_NOT_IN_CLASS_SET
 
   regex_AFTER_NON_CAPTURE_OPEN:
     - meta_scope: meta.group.non-capturing.regexp
     - meta_include_prototype: false
-    - include: regex_ANY_CHILD_GROUP
+    - match: '\)'
+      scope: punctuation.definition.group.non-capturing.end.regexp
+      pop: true
+    - include: regex_ANY_CHILD_CONTEXT
+    - include: regex_COMMON_NOT_IN_CLASS_SET
 
   regex_AFTER_CAPTURE_OPEN:
     - meta_scope: meta.group.capturing.regexp
     - meta_include_prototype: false
-    - include: regex_ANY_CHILD_GROUP
+    - match: '\)'
+      scope: punctuation.definition.group.capturing.end.regexp
+      pop: true
+    - include: regex_ANY_CHILD_CONTEXT
+    - include: regex_COMMON_NOT_IN_CLASS_SET
 
   regex_AFTER_PATTERN:
     - meta_include_prototype: false
