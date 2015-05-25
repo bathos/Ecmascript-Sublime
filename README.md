@@ -91,7 +91,13 @@ good way to give some idea of what can be done:
 And from the first theme I’m working on, which is at least a little more
 reasonable hopefully:
 
-![Color barf example](https://github.com/bathos/Ecmascript-Sublime/raw/master/example-okay.png)
+![Early Excelsior example](https://github.com/bathos/Ecmascript-Sublime/raw/master/example-okay.png)
+
+**May 25**: "Excelsior" theme is coming along. I set out to make this one mainly
+a demo of what’s possible, but I’m actually really happy with how it’s turning
+out. Cool new thing: regex capture group coloring:
+
+![Excelsior regex example](https://github.com/bathos/Ecmascript-Sublime/raw/master/example-regex.png)
 
 ## Feature Coverage
 
@@ -652,7 +658,7 @@ when it hit the `=4` it would correct the remainder. The `(c)` would be an
 expression, but at the arrow it would figure out where it really is, etc. But
 not everything can be salvaged: the `label` would be an identifier, but the
 colon would seem to be invalid because at that point we have to assume we’re in
-an context expecting this series of tokens to resolve to an expression.
+a context expecting this series of tokens to resolve to an expression.
 
 These are some of the cases where a technically-legal-but-obnoxious linebreaks
 can cause mismatching, where the pipe represents a problematic linebreak:
