@@ -3,10 +3,9 @@
 A sublime-syntax language definition for Ecmascript / Javascript / ES6 / ES2015
 / Babel or what have you.
 
-> This is not yet ready for use, only testing! However, the syntax definition
-  itself is tentatively complete. I will inevitably discover bugs and oversights
-  as I test and begin on the themes, but if you’re a theme designer please feel
-  free to take it for a ride at this point.
+Although a fair amount of work remains before I’m ready to call this ‘1.0.0’,
+the definition and first theme (Excelsior) are now robust enough to consider
+this ‘released.’
 
 > Sublime syntax is only currently only available in Sublime Text’s dev channel.
 
