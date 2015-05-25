@@ -656,6 +656,17 @@
 		</dict>
 		<dict>
 			<key>name</key>
+			<string>Template String Element</string>
+			<key>scope</key>
+			<string>punctuation.definition.string.interpolated.element</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#89C0B6</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
 			<string>Regex Char Classes (Predefined) &amp; Punctuation</string>
 			<key>scope</key>
 			<string>string.regexp constant.other.character-class.predefined, string.regexp constant.other.character-class punctuation</string>

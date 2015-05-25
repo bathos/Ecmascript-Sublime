@@ -364,6 +364,13 @@ settings:
   settings:
     foreground: '#5C37FA'
 
+# OTHER / EXPRESSION ###########################################################
+
+- name: Template String Element
+  scope: punctuation.definition.string.interpolated.element
+  settings:
+    foreground: '#89C0B6'
+
 # REGEX ########################################################################
 
 - name: Regex Char Classes (Predefined) & Punctuation
