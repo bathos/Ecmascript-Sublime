@@ -570,7 +570,6 @@ existing themes, especially those targetting JSNext and Babel Sublime.
  - keyword.other.js
  - meta.brace.curly.js
  - meta.brace.round.js
- - meta.brace.sqaure.js
  - meta.brace.square.js
  - meta.delimiter.comma.js
  - meta.function-call

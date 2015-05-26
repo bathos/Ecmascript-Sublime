@@ -1513,7 +1513,7 @@ contexts:
     - match: '((\[))'
       captures:
         1: punctuation.definition.accessor.begin.es
-        2: meta.brace.sqaure.js # ^BS
+        2: meta.brace.square.js # ^BS
       set: [ ae_AFTER_THING, computedProp_AFTER_AE, assignmentExpression ]
     - include: ae_INFIX_OPS
     - include: ae_AFTER_POSTFIX
@@ -2485,7 +2485,7 @@ contexts:
     - match: '((\[))'
       captures:
         1: punctuation.definition.accessor.begin.es
-        2: meta.brace.sqaure.js
+        2: meta.brace.square.js
       set: [ ae_NO_IN_AFTER_THING, computedProp_AFTER_AE, assignmentExpression_NO_IN ]
     - include: ae_NO_IN_INFIX_OPS
     - include: ae_NO_IN_AFTER_POSTFIX
