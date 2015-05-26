@@ -458,7 +458,7 @@
 			<key>name</key>
 			<string>Generator Keyword</string>
 			<key>scope</key>
-			<string>storage.type.function.generator</string>
+			<string>storage.type.function.generator, storage.modifier.generator.asterisk</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>

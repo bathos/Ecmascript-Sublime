@@ -235,7 +235,8 @@ settings:
 
 - name: Generator Keyword
   scope: >-
-    storage.type.function.generator
+    storage.type.function.generator,
+    storage.modifier.generator.asterisk
   settings:
     foreground: '#EAFD1A'
 
