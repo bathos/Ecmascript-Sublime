@@ -432,7 +432,7 @@ contexts:
       scope: invalid.illegal.token.es
       set: whileOrForStatement_STMT
     # The line contains a non-terminal semicolon, but not after 'in'.
-    - match: '(?=(?![^;]+in).*;.)'
+    - match: '(?=(?![^;]+\bin\b).*;.)'
       set: forStatement_EXP_LEGACY_INIT
     # At this point we believe we are in a for-in or for-of loop. Though the
     # circumstances that would lead to this being false would be unusual in
@@ -530,6 +530,8 @@ contexts:
     - match: 'in{{idEnd}}'
       scope: keyword.control.loop.in.es # -BS
       set: [ forStatement_AFTER_FINAL_EXP, expression ]
+    - match: ','
+      scope: xxx
     # Perhaps we were really in a for-;; loop that did not have its first
     # semicolon on the initial line... we can recover in some cases.
     - match: ';'
@@ -4195,7 +4197,7 @@ contexts:
       pop: true
     - match: ','
       scope: punctuation.separator.argument.es
-      set: [ arguments, assignmentExpression ]
+      set: arguments
     - include: other_illegal
 
   arguments_AFTER_SPREAD:
