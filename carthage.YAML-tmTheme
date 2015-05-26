@@ -1,0 +1,319 @@
+# [PackageDev] target_format: plist, ext: tmTheme
+name: Carthage
+uuid: 59515723-fff1-4eda-a678-5bb3b7194ec3
+
+settings:
+- settings:
+    foreground: '#DCDCDC'
+    background: '#271F37' 
+    gutter: '#322643'
+    caret: '#DCDCDC'
+
+    bracketContentsOptions: 'stippled_underline'
+    bracketsOptions: 'stippled_underline'
+
+    guide: '#6B6575'
+    stackGuide: '#847C90'
+    activeGuide: '#9A91A8'
+
+    multiEditHighlight: '#2A4557'
+    searchHighlight: '#4D45A0'
+    selection: '#4D4557'
+
+- name: Comment
+  scope: comment
+  settings:
+    foreground: '#A7D7D0'
+
+
+- scope: entity
+  settings:
+    foreground: '#DCDCDC'
+- scope: invalid
+  settings:
+    background: '#B0C2C0'
+    foreground: '#798382'
+- scope: markup
+  settings:
+    foreground: '#DCDCDC'
+- scope: markup.underline
+  settings:
+    background: '#DCDCDC'
+- scope: markup.bold
+  settings:
+    fontStyle: 'bold'
+- scope: markup.heading
+  settings:
+    foreground: '#DCDCDC'
+- scope: markup.italic
+  settings:
+    fontStyle: 'italic'
+- scope: markup.list
+  settings:
+    background: '#DCDCDC'
+- scope: markup.quote
+  settings:
+    background: '#DCDCDC'
+- scope: markup.raw
+  settings:
+    background: '#DCDCDC'
+- scope: storage.modifier
+  settings:
+    foreground: '#DCDCDC'
+- scope: string.regexp
+  settings:
+    foreground: '#DCDCDC'
+- scope: support
+  settings:
+    foreground: '#DCDCDC'
+- scope: support.function
+  settings:
+    foreground: '#DCDCDC'
+- scope: support.variable
+  settings:
+    foreground: '#DCDCDC'
+
+
+- name: Constants
+  scope: >-
+    constant.language,
+    constant.numeric
+  settings:
+    fontStyle: bold
+    foreground: '#E7DEEC'
+
+- name: Operators & Module Declarations
+  scope:
+    keyword.operator,
+    storage.modifier.module,
+    storage.type.module
+  settings:
+    foreground: '#6898F4'
+
+- name: Decorators
+  scope: >-
+    punctuation.definition.decorator,
+    variable.other.readwrite.decorator
+  settings:
+    fontStyle: italic
+    foreground: '#DCDCDC'
+
+- name: Variables, Parameters, Object & Array Literals
+  scope: >-
+    punctuation.definition.array,
+    punctuation.definition.object,
+    punctuation.separator.key-value,
+    punctuation.separator.object-member,
+    variable
+  settings:
+    foreground: '#DCBF21'
+
+- name: Language Variables
+  scope: variable.language
+  settings:
+    fontStyle: italic
+
+- name: Statement Keywords / Punctuation, & Expression Parentheses
+  scope: >-
+    keyword.control,
+    keyword.other.debugger,
+    punctuation.definition.block,
+    punctuation.definition.expression,
+    punctuation.definition.string.interpolated.element
+  settings:
+    fontStyle: bold
+    foreground: '#F3DF71'
+
+- name: Invocations & Instantiations
+  scope: >-
+    meta.instantiation,
+    meta.invocation,
+    punctuation.definition.arguments,
+    punctuation.separator.argument
+  settings:
+    foreground: '#CFFA41'
+
+- name: Strings
+  scope: string
+  settings:
+    foreground: '#25BDFD'
+
+- name: String Escapes
+  scope: constant.character
+  settings:
+    fontStyle: italic
+    foreground: '#55CBFD'
+
+- name: Regex
+  scope: string.regexp
+  settings:
+    background: '#25004E'
+    foreground: '#7C6BFF'
+
+- name: Regex Flags
+  scope: string.regexp.flags
+  settings:
+    fontStyle: italic
+    foreground: '#AA9FFB'
+
+- name: Regex Char Classes, Quantifers & Assertions
+  scope: >-
+    keyword.control.anchor.regexp,
+    keyword.operator.negation.regexp,
+    keyword.operator.quantifier.regexp,
+    string.regexp constant.other.character-class,
+    string.regexp punctuation.definition.assertion
+  settings:
+    foreground: '#975AFC'
+
+- name: Regex Backrefs & Escapes
+  scope: >-
+    string.regexp constant.character.escape,
+    string.regexp keyword.other.back-reference
+  settings:
+    fontStyle: italic
+    foreground: '#8777FF'
+
+- name: Regex Groups
+  scope:
+    string.regexp punctuation.definition.group
+  settings:
+    fontStyle: bold
+    foreground: '#979FDE'
+
+- name: Regex Capturing Groups 1
+  scope: >-
+    meta.group.capturing.regexp
+  settings:
+    background: '#320069'
+- name: Regex Capturing Groups 2
+  scope: >-
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+  settings:
+    background: '#3E0082'
+- name: Regex Capturing Groups 3
+  scope: >-
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+  settings:
+    background: '#4A009C'
+- name: Regex Capturing Groups 4
+  scope: >-
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+  settings:
+    background: '#5600B5'
+- name: Regex Capturing Groups 5
+  scope: >-
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+  settings:
+    background: '#6200CF'
+- name: Regex Capturing Groups 6+
+  scope: >-
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+  settings:
+    background: '#6E00E8'
+
+- name: Function
+  scope: >-
+    punctuation.definition.function.arrow.body,
+    punctuation.definition.function.body,
+    punctuation.definition.method.body,
+    punctuation.definition.parameters.function,
+    punctuation.definition.parameters.method,
+    storage.type.function
+  settings:
+    foreground: '#D388F6'
+
+- name: Function Name
+  scope: >-
+    entity.name.function,
+    entity.name.method
+  settings:
+    fontStyle: bold
+    foreground: '#C15AF1'
+
+- name: Generator & Async
+  scope: >-
+    punctuation.definition.generator.body,
+    punctuation.definition.method.generator.body,
+    punctuation.definition.parameters.generator,
+    punctuation.definition.parameters.method.generator,
+    storage.modifier.async,
+    storage.modifier.generator.asterisk,
+    storage.type.function.generator
+  settings:
+    foreground: '#A885F9'
+
+- name: Generator Name
+  scope: >-
+    entity.name.function.generator,
+    entity.name.method.generator
+  settings:
+    fontStyle: bold
+    foreground: '#763FF4'
+
+- name: Class, Constructor, Accessor & Static Keywords
+  scope: >-
+    entity.name.constructor,
+    punctuation.definition.class.body,
+    punctuation.definition.constructor.body,
+    punctuation.definition.parameters.constructor,
+    storage.modifier.accessor,
+    storage.modifier.extends,
+    storage.modifier.static,
+    storage.type.class
+  settings:
+    foreground: '#64AD15'
+
+- name: Accessor
+  scope: >-
+    entity.name.accessor,
+    punctuation.definition.accessor.body,
+    punctuation.definition.parameters.accessor
+  settings:
+    foreground: '#74AD84'
+
+- name: Class Name
+  scope: entity.name.class
+  settings:
+    fontStyle: bold
+    foreground: '#76DD07'
+
+- name: Declaration Punctuation
+  scope:
+    punctuation.definition.function,
+    punctuation.definition.parameters,
+    punctuation.definition.accessor.body,
+    punctuation.definition.class.body,
+    punctuation.definition.constructor.body,
+    punctuation.definition.method.body,
+    punctuation.definition.method.generator.body,
+    storage.modifier.generator.asterisk,
+    storage.type.function.arrow
+  settings:
+    fontStyle: bold
+
+- name: Binding Declaration
+  scope: >-
+    entity.other.property-binding,
+    punctuation.definition.binding,
+    punctuation.separator.property-binding,
+    punctuation.separator.array-element.binding,
+    storage.type.constant,
+    storage.type.variable
+  settings:
+    foreground: '#DCD9A1'
