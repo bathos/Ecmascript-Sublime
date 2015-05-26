@@ -8,6 +8,17 @@ scope: source.es
 # though I walk through the valley of the shadow
 # of PHP, I will fear no feature creep, for Crockford and Eich...
 
+# Captures with the ^BS suffix are included for interoperability with themes
+# that target Babel Sublime or JS Next. This is not always possible to achieve
+# since there are cases where one would always clobber the other. In some cases
+# you will see "^BS, adapted" or "^BS, partial", indicating scopes which may not
+# lead to 1:1 exact coloring between themes but will nonetheless appear
+# harmonious. "-BS" indicates cases where it would not be good to include these
+# fallback scopes for various reasons, though they won’t cause any real coloring
+# problems; in fact some are improvments where we’ve disambiguated a previous
+# conflation. Captures with no ‘BS’ annotations either correspond directly
+# already to, or are more specific versions of, scopes from BS & JSNext. 
+
 variables:
   # CONTEXT CONTROL PATTERNS ###################################################
   MAT_word_or_any_one_char: '\w+|\S'
@@ -126,12 +137,16 @@ contexts:
   root:
     - include: useStrict
     # IMPORT DECLARATION
-    - match: 'import{{idEnd}}'
-      scope: storage.type.module.import.es
+    - match: '((import)){{idEnd}}'
+      captures:
+        1: storage.type.module.import.es
+        2: keyword.operator.module.js # ^BS
       push: moduleDeclaration_AFTER_IMPORT
     # EXPORT DECLARATION
-    - match: 'export{{idEnd}}'
-      scope: storage.type.module.export.es
+    - match: '((export)){{idEnd}}'
+      captures:
+        1: storage.type.module.export.es
+        2: keyword.operator.module.js # ^BS
       push: moduleDeclaration_AFTER_EXPORT
     # STATEMENT LIST
     - include: statements
@@ -214,8 +229,10 @@ contexts:
 
   statement:
     # BLOCK STATEMENT
-    - match: '\{'
-      scope: punctuation.definition.block.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.block.begin.es
+        2: meta.brace.curly.js # ^BS
       set: blockStatement
     # IF STATEMENT
     - match: 'if{{idEnd}}'
@@ -243,7 +260,7 @@ contexts:
       set: tryStatement_AFTER_TRY
     # WITH STATEMENT
     - match: 'with{{idEnd}}'
-      scope: keyword.control.with.es
+      scope: keyword.control.with.es # -BS
       set: withStatement_AFTER_WITH
     # CONST DECLARATION
     - match: 'const{{idEnd}}'
@@ -259,11 +276,11 @@ contexts:
       set: whileStatement_AFTER_WHILE
     # THROW STATEMENT
     - match: 'throw{{idEnd}}'
-      scope: keyword.control.flow.throw.es
+      scope: keyword.control.flow.throw.es # -BS
       set: throwStatement
     # BREAK STATEMENT
     - match: 'break{{idEnd}}'
-      scope: keyword.control.flow.break.es
+      scope: keyword.control.flow.break.es # -BS
       set: breakOrContinue_AFTER_WORD
     # RETURN STATEMENT
     - match: 'return{{idEnd}}'
@@ -282,25 +299,28 @@ contexts:
     # FUNCTION DECLARATION
     - match: '(async)?\s*(function){{idEnd}}'
       captures:
-        1: storage.modifier.async.es
+        1: storage.modifier.async.es # -BS
         2: storage.type.function.es
       set: functionDeclaration_AFTER_FUNCTION
     # CONTINUE STATEMENT
     - match: 'continue{{idEnd}}'
-      scope: keyword.control.flow.continue.es
+      scope: keyword.control.flow.continue.es # -BS
       set: breakOrContinue_AFTER_WORD
     # DEBUGGER STATEMENT
     - match: 'debugger{{idEnd}}'
       scope: keyword.other.debugger.es
       set: optional_semicolon_pop
     # * LABELLED STATEMENT (note: does not pop or transition)
-    - match: '({{identifier}})\s*(:)'
+    - match: '(({{identifier}})\s*(:))'
       captures:
-        1: entity.name.statement.es
-        2: punctuation.separator.label-statement.es
+        1: string.unquoted.label.js # ^BS, adapted
+        2: entity.name.statement.es
+        3: punctuation.separator.label-statement.es # -BS
     # DECORATED CLASS DECLARATION
-    - match: '@'
-      scope: punctuation.definition.decorator.es
+    - match: '((@))'
+      captures:
+        1: punctuation.definition.tag.js # ^BS
+        2: punctuation.definition.decorator.es
       set: [ classDeclaration_AFTER_DECORATOR, decoratorExpression ]
     # EXPRESSION STATEMENT
     # Though expression statements are a subset of possible expressions, the
@@ -308,8 +328,10 @@ contexts:
     - include: expression
 
   blockStatement:
-    - match: '\}'
-      scope: punctuation.definition.block.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.block.end.es
+        2: meta.brace.curly.js # ^BS
       pop: true
     - include: statements
 
@@ -319,21 +341,27 @@ contexts:
     - match: ';'
       scope: punctuation.terminator.statement.es
       pop: true
-    - match: '{{identifier}}'
-      scope: entity.name.statement.es
+    - match: '(({{identifier}}))'
+      captures:
+        1: string.unquoted.label.js # ^BS, adapted
+        2: entity.name.statement.es
       set: optional_semicolon_pop
     - include: else_pop
 
   doStatement_AFTER_DO:
-    - match: '\{'
-      scope: punctuation.definition.block.loop.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.block.loop.begin.es
+        2: meta.brace.curly.js # ^BS
       set: doStatement_STMT_AFTER_BRACE
     - match: '{{PLA_anything}}'
       set: [ doStatement_AFTER_STMT, semicolon_maybe, statement ]
 
   doStatement_STMT_AFTER_BRACE:
-    - match: '\}'
-      scope: punctuation.definition.block.loop.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.block.loop.end.es
+        2: meta.brace.curly.js # ^BS
       set: doStatement_AFTER_STMT
     - include: statements
 
@@ -344,20 +372,26 @@ contexts:
     - include: other_illegal_pop
 
   doStatement_AFTER_WHILE:
-    - match: '\('
-      scope: punctuation.definition.expression.loop.begin.es
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.expression.loop.begin.es
+        2: meta.brace.round.js # ^BS
       set: [ doStatement_AFTER_EXP, expression ]
     - include: other_illegal_pop
 
   doStatement_AFTER_EXP:
-    - match: '\)'
-      scope: punctuation.definition.expression.loop.end.es
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.expression.loop.end.es
+        2: meta.brace.round.js # ^BS
       pop: true
     - include: other_illegal
 
   forStatement_AFTER_FOR:
-    - match: '\('
-      scope: punctuation.definition.expression.loop.begin.es
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.expression.loop.begin.es
+        2: meta.brace.round.js # ^BS
       set: forStatement_AFTER_PAREN_OPEN
     - match: '(each){{idEnd}}'
       scope: keyword.control.flow.each.es
@@ -367,8 +401,10 @@ contexts:
     - include: other_illegal_pop
 
   forStatement_AFTER_EACH:
-    - match: '\('
-      scope: punctuation.definition.expression.loop.begin.es
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.expression.loop.begin.es
+        2: meta.brace.round.js # ^BS
       set: forStatement_AFTER_PAREN_OPEN
     - include: other_illegal_pop
 
@@ -414,7 +450,7 @@ contexts:
 
   forStatement_EXP_LEGACY_INIT:
     - match: ';'
-      scope: punctuation.separator.loop-expression.es
+      scope: punctuation.separator.loop-expression.es # -BS
       set: forStatement_EXP_LEGACY_COND
     - match: '\)'
       scope: invalid.illegal.token.es
@@ -433,7 +469,7 @@ contexts:
 
   forStatement_EXP_LEGACY_INIT_AFTER_EXP:
     - match: ';'
-      scope: punctuation.separator.loop-expression.es
+      scope: punctuation.separator.loop-expression.es # -BS
       set: forStatement_EXP_LEGACY_COND
     - match: '\)'
       scope: invalid.illegal.token.es
@@ -442,7 +478,7 @@ contexts:
 
   forStatement_EXP_LEGACY_COND:
     - match: ';'
-      scope: punctuation.separator.loop-expression.es
+      scope: punctuation.separator.loop-expression.es # -BS
       set: forStatement_EXP_LEGACY_AFTERTHOUGHT
     - match: '\)'
       scope: invalid.illegal.token.es
@@ -452,7 +488,7 @@ contexts:
 
   forStatement_EXP_LEGACY_COND_AFTER_EXP:
     - match: ';'
-      scope: punctuation.separator.loop-expression.es
+      scope: punctuation.separator.loop-expression.es # -BS
       set: forStatement_EXP_LEGACY_AFTERTHOUGHT
     - match: '\)'
       scope: invalid.illegal.token.es
@@ -460,18 +496,24 @@ contexts:
     - include: other_illegal
 
   forStatement_EXP_LEGACY_AFTERTHOUGHT:
-    - match: '\)'
-      scope: punctuation.definition.expression.loop.end.es
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.expression.loop.end.es
+        2: meta.brace.round.js # ^BS
       set: whileOrForStatement_STMT
     - match: '{{PLA_anything}}'
       set: [ forStatement_AFTER_FINAL_EXP, expression ]
 
   forStatement_IN_OR_OF_DECLARATION_AFTER_WORD:
-    - match: '\['
-      scope: punctuation.definition.binding.array.begin.es
+    - match: '((\[))'
+      captures:
+        1: punctuation.definition.binding.array.begin.es
+        2: meta.brace.square.js # ^BS
       set: [ forStatement_IN_OR_OF_AFTER_BINDING, bindingArray ]
-    - match: '\{'
-      scope: punctuation.definition.binding.object.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.binding.object.begin.es
+        2: meta.brace.curly.js # ^BS
       set: [ forStatement_IN_OR_OF_AFTER_BINDING, bindingObject ]
     - match: '{{identifier}}'
       scope: variable.other.readwrite.es
@@ -480,46 +522,56 @@ contexts:
 
   forStatement_IN_OR_OF_AFTER_BINDING:
     - match: 'of{{idEnd}}'
-      scope: keyword.control.loop.of.es
+      scope: keyword.control.loop.of.es # -BS
       set: [ forStatement_AFTER_FINAL_EXP, assignmentExpression ]
     - match: 'in{{idEnd}}'
-      scope: keyword.control.loop.in.es
+      scope: keyword.control.loop.in.es # -BS
       set: [ forStatement_AFTER_FINAL_EXP, expression ]
     # Perhaps we were really in a for-;; loop that did not have its first
     # semicolon on the initial line... we can recover in some cases.
     - match: ';'
-      scope: punctuation.separator.loop-expression.es
+      scope: punctuation.separator.loop-expression.es # -BS
       set: forStatement_EXP_LEGACY_COND
     - include: other_illegal
 
   forStatement_AFTER_FINAL_EXP:
-    - match: '\)'
-      scope: punctuation.definition.expression.loop.end.es
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.expression.loop.end.es
+        2: meta.brace.round.js # ^BS
       set: whileOrForStatement_STMT
     - include: other_illegal
 
   ifStatement_AFTER_IF:
-    - match: '\('
-      scope: punctuation.definition.expression.conditional.begin.es
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.expression.conditional.begin.es
+        2: meta.brace.round.js # ^BS
       set: [ ifStatement_AFTER_EXP, expression ]
     - include: other_illegal_pop
 
   ifStatement_AFTER_EXP:
-    - match: '\)'
-      scope: punctuation.definition.expression.conditional.end.es
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.expression.conditional.end.es
+        2: meta.brace.round.js # ^BS
       set: ifStatement_STMT
     - include: other_illegal
 
   ifStatement_STMT:
-    - match: '\{'
-      scope: punctuation.definition.block.conditional.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.block.conditional.begin.es
+        2: meta.brace.curly.js # ^BS
       set: ifStatement_STMT_AFTER_BRACE
     - match: '{{PLA_anything}}'
       set: [ ifStatement_AFTER_STMT, semicolon_maybe, statement ]
 
   ifStatement_STMT_AFTER_BRACE:
-    - match: '\}'
-      scope: punctuation.definition.block.conditional.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.block.conditional.end.es
+        2: meta.brace.curly.js # ^BS
       set: ifStatement_AFTER_STMT
     - include: statements
 
@@ -539,26 +591,34 @@ contexts:
       set: [ optional_semicolon_pop, expression ]
 
   switchStatement_AFTER_SWITCH:
-    - match: '\('
-      scope: punctuation.definition.expression.switch.begin.es
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.expression.switch.begin.es
+        2: meta.brace.round.js # ^BS
       set: [ switchStatement_AFTER_EXP, expression ]
     - include: other_illegal_pop
 
   switchStatement_AFTER_EXP:
-    - match: '\)'
-      scope: punctuation.definition.expression.switch.end.es
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.expression.switch.end.es
+        2: meta.brace.round.js # ^BS
       set: switchStatement_BEFORE_BRACE
     - include: other_illegal
 
   switchStatement_BEFORE_BRACE:
-    - match: '\{'
-      scope: punctuation.definition.block.switch.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.block.switch.begin.es
+        2: meta.brace.curly.js # ^BS
       set: switchStatement_AFTER_BRACE
     - include: other_illegal_pop
 
   switchStatement_AFTER_BRACE:
-    - match: '\}'
-      scope: punctuation.definition.block.switch.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.block.switch.end.es
+        2: meta.brace.curly.js # ^BS
       pop: true
     - match: 'case{{idEnd}}'
       scope: keyword.control.switch.case.es
@@ -570,18 +630,22 @@ contexts:
 
   switchStatement_CASE_AFTER_EXP:
     - match: ':'
-      scope: punctuation.separator.case-statements.es
+      scope: punctuation.separator.case-statements.es # -BS
       set: switchStatement_CASE_STMT
-    - match: '\}'
-      scope: invalid.illegal.token.es
+    - match: '((\}))'
+      captures:
+        1: invalid.illegal.token.es
+        2: meta.brace.curly.js # ^BS
       pop: true
     - match: '{{MAT_word_or_any_one_char}}'
       scope: invalid.illegal.token.es
       set: switchStatement_AFTER_BRACE
 
   switchStatement_CASE_STMT:
-    - match: '\}'
-      scope: punctuation.definition.block.switch.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.block.switch.end.es
+        2: meta.brace.curly.js # ^BS
       pop: true
     - match: 'case{{idEnd}}'
       scope: keyword.control.switch.case.es
@@ -598,14 +662,18 @@ contexts:
       set: [ optional_semicolon_pop, expression ]
 
   tryStatement_AFTER_TRY:
-    - match: '\{'
-      scope: punctuation.definition.block.trycatch.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.block.trycatch.begin.es
+        2: meta.brace.curly.js # ^BS
       set: tryStatement_AFTER_TRY_BRACE
     - include: other_illegal_pop
 
   tryStatement_AFTER_TRY_BRACE:
-    - match: '\}'
-      scope: punctuation.definition.block.trycatch.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.block.trycatch.end.es
+        2: meta.brace.curly.js # ^BS
       set: tryStatement_AFTER_TRY_BLOCK
     - include: statements
 
@@ -619,40 +687,52 @@ contexts:
     - include: other_illegal_pop
 
   tryStatement_AFTER_CATCH:
-    - match: '\('
-      scope: punctuation.definition.parameters.catch.begin.es
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.parameters.catch.begin.es
+        2: meta.brace.round.js # ^BS
       set: tryStatement_CATCH_PARAM
     - include: other_illegal_pop
 
   tryStatement_CATCH_PARAM:
     - match: '{{identifier}}'
-      scope: variable.parameter.catch.es
+      scope: variable.parameter.catch.es # -BS
       set: tryStatement_AFTER_CATCH_PARAM
-    - match: '\['
-      scope: punctuation.definition.binding.array.parameter.begin.es
+    - match: '((\[))'
+      captures:
+        1: punctuation.definition.binding.array.parameter.begin.es
+        2: meta.brace.square.js # ^BS
       set: [ tryStatement_AFTER_CATCH_PARAM, bindingArray_PARAM ]
-    - match: '\{'
-      scope: punctuation.definition.binding.object.parameter.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.binding.object.parameter.begin.es
+        2: meta.brace.curly.js # ^BS
       set: [ tryStatement_AFTER_CATCH_PARAM, bindingObject_PARAM ]
     - match: '\)'
       scope: invalid.illegal.token.es
       set: tryStatement_AFTER_CATCH_PARAM
 
   tryStatement_AFTER_CATCH_PARAM:
-    - match: '\)'
-      scope: punctuation.definition.parameters.catch.end.es
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.parameters.catch.end.es
+        2: meta.brace.round.js # ^BS
       set: tryStatement_BEFORE_CATCH_BRACE
     - include: other_illegal
 
   tryStatement_BEFORE_CATCH_BRACE:
-    - match: '\{'
-      scope: punctuation.definition.block.trycatch.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.block.trycatch.begin.es
+        2: meta.brace.curly.js # ^BS
       set: tryStatement_AFTER_CATCH_BRACE
     - include: other_illegal_pop
 
   tryStatement_AFTER_CATCH_BRACE:
-    - match: '\}'
-      scope: punctuation.definition.block.trycatch.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.block.trycatch.end.es
+        2: meta.brace.curly.js # ^BS
       set: tryStatement_AFTER_CATCH_BLOCK
     - include: statements
 
@@ -663,123 +743,167 @@ contexts:
     - include: else_pop
 
   tryStatement_AFTER_FINALLY:
-    - match: '\{'
-      scope: punctuation.definition.block.trycatch.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.block.trycatch.begin.es
+        2: meta.brace.curly.js # ^BS
       set: tryStatement_AFTER_FINALLY_BRACE
     - include: other_illegal_pop
 
   tryStatement_AFTER_FINALLY_BRACE:
-    - match: '\}'
-      scope: punctuation.definition.block.trycatch.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.block.trycatch.end.es
+        2: meta.brace.curly.js # ^BS
       pop: true
     - include: statements
 
   whileStatement_AFTER_WHILE:
-    - match: '\('
-      scope: punctuation.definition.expression.loop.begin.es
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.expression.loop.begin.es
+        2: meta.brace.round.js # ^BS
       set: [ whileStatement_AFTER_EXP, expression ]
     - include: other_illegal_pop
 
   whileStatement_AFTER_EXP:
-    - match: '\)'
-      scope: punctuation.definition.expression.loop.end.es
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.expression.loop.end.es
+        2: meta.brace.round.js # ^BS
       set: whileOrForStatement_STMT
     - include: other_illegal
 
   whileOrForStatement_STMT:
-    - match: '\{'
-      scope: punctuation.definition.block.loop.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.block.loop.begin.es
+        2: meta.brace.curly.js # ^BS
       set: whileOrForStatement_STMT_AFTER_BRACE
     - match: '{{PLA_anything}}'
       set: statement
 
   whileOrForStatement_STMT_AFTER_BRACE:
-    - match: '\}'
-      scope: punctuation.definition.block.loop.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.block.loop.end.es
+        2: meta.brace.curly.js # ^BS
       pop: true
     - include: statements
 
   withStatement_AFTER_WITH:
-    - match: '\('
-      scope: punctuation.definition.expression.with.begin.es
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.expression.with.begin.es
+        2: meta.brace.round.js # ^BS
       set: [ withStatement_AFTER_EXP, expression ]
     - include: other_illegal_pop
 
   withStatement_AFTER_EXP:
-    - match: '\)'
-      scope: punctuation.definition.expression.with.end.es
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.expression.with.end.es
+        2: meta.brace.round.js # ^BS
       set: withStatement_STMT
     - include: other_illegal
 
   withStatement_STMT:
-    - match: '\{'
-      scope: punctuation.definition.block.with.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.block.with.begin.es
+        2: meta.brace.curly.js # ^BS
       set: withStatement_STMT_AFTER_BRACE
     - match: '{{PLA_anything}}'
       set: statement
 
   withStatement_STMT_AFTER_BRACE:
-    - match: '\}'
-      scope: punctuation.definition.block.with.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.block.with.end.es
+        2: meta.brace.curly.js # ^BS
       pop: true
     - include: statements
 
 # DECLARATIONS #################################################################
 
   classDeclaration_AFTER_CLASS:
-    - match: '{{identifier}}'
-      scope: entity.name.class.es
+    - match: '(({{identifier}}))'
+      captures:
+        1: entity.name.class.js # ^BS -- Monokai
+        2: entity.name.class.es
       set: classDeclaration_AFTER_NAME
     - include: other_illegal_pop
 
   classDeclaration_AFTER_NAME:
-    - match: '\{'
-      scope: punctuation.definition.class.body.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.class.body.begin.es
+        2: meta.brace.curly.js # ^BS
       set: classDeclaration_AFTER_BRACE
-    - match: 'extends{{idEnd}}'
-      scope: storage.modifier.extends.es
+    - match: '((extends)){{idEnd}}'
+      captures:
+        1: storage.type.extends.js # ^BS
+        2: storage.modifier.extends.es
       set: [ classDeclaration_AFTER_HERITAGE, assignmentExpression ] # (lhse)
     - include: other_illegal_pop
 
   classDeclaration_AFTER_HERITAGE:
-    - match: '\{'
-      scope: punctuation.definition.class.body.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.class.body.begin.es
+        2: meta.brace.curly.js # ^BS
       set: classDeclaration_AFTER_BRACE
     - include: other_illegal_pop
 
   classDeclaration_AFTER_BRACE:
-    - match: '\}'
-      scope: punctuation.definition.class.body.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.class.body.end.es
+        2: meta.brace.curly.js # ^BS
       pop: true
     # Semicolons in the class body are technically legal for uncertain reasons.
     - match: ';'
       scope: punctuation.terminator.statement.es
-    - match: 'static{{idEnd}}'
-      scope: storage.modifier.static.es
+    - match: '((static)){{idEnd}}'
+      captures:
+        1: storage.modifier.static.es
+        2: storage.type.js # ^BS
       set: classDeclaration_METHOD_COMMON
-    - match: 'constructor{{idEnd}}'
-      scope: entity.name.constructor.es
+    - match: '((constructor)){{idEnd}}'
+      captures:
+        1: entity.name.method.js # ^BS
+        2: entity.name.constructor.es
       push: constructorMethod_AFTER_CONSTRUCTOR
-    - match: '@'
-      scope: punctuation.definition.decorator.es
+    - match: '((@))'
+      captures:
+        1: punctuation.definition.tag.js # ^BS
+        2: punctuation.definition.decorator.es
       push: decoratorExpression
     - include: classDeclaration_METHOD_COMMON
 
   classDeclaration_METHOD_COMMON:
     - match: '\*'
-      scope: storage.type.function.generator.asterisk.es
+      scope: storage.type.function.generator.asterisk.es # -BS
       set: [ classDeclaration_AFTER_BRACE, generatorMethod_AFTER_ASTERISK ]
-    - match: 'get{{idEnd}}'
-      scope: storage.modifier.accessor.get.es
+    - match: '((get)){{idEnd}}'
+      captures:
+        1: storage.type.accessor.js # ^BS
+        2: storage.modifier.accessor.get.es
       set: [ classDeclaration_AFTER_BRACE, accessorMethod_AFTER_GET ]
-    - match: 'set{{idEnd}}'
-      scope: storage.modifier.accessor.set.es
+    - match: '((set)){{idEnd}}'
+      captures:
+        1: storage.type.accessor.js # ^BS
+        2: storage.modifier.accessor.set.es
       set: [ classDeclaration_AFTER_BRACE, accessorMethod_AFTER_SET ]
-    - match: 'async{{idEnd}}'
-      scope: storage.modifier.async.method.es
+    - match: '((async)){{idEnd}}'
+      captures:
+        1: storage.type.js # ^BS
+        2: storage.modifier.async.method.es
       set: [ classDeclaration_AFTER_BRACE, asyncMethod_AFTER_ASYNC ]
-    - match: '{{identifier}}'
-      scope: entity.name.method.es
+    - match: '(({{identifier}}))'
+      captures:
+        1: entity.name.method.js # ^BS -- monokai
+        2: entity.name.method.es
       set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME ]
     - match: "'"
       scope: punctuation.definition.string.quoted.single.begin.es
@@ -787,6 +911,8 @@ contexts:
     - match: '"'
       scope: punctuation.definition.string.quoted.double.begin.es
       set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME, stringDouble_AFTER_OPEN ]
+    # None of the remainder are handled correctly in BS or JSN, so they are all
+    # technically "-BS" cases
     - match: '({{decNum}})'
       scope: constant.numeric.decimal.es
       captures:
@@ -816,14 +942,18 @@ contexts:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
       set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME ]
-    - match: '\['
-      scope: punctuation.definition.accessor.begin.es
+    - match: '((\[))'
+      captures:
+        1: punctuation.definition.accessor.begin.es
+        2: meta.brace.square.js # ^BS
       set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME, computedProp_AFTER_AE, assignmentExpression ]
     - include: other_illegal_pop
 
   classDeclaration_AFTER_DECORATOR:
-    - match: '@'
-      scope: punctuation.definition.decorator.es
+    - match: '((@))'
+      captures:
+        1: punctuation.definition.tag.js # ^BS
+        2: punctuation.definition.decorator.es
       push: decoratorExpression
     - match: 'class'
       scope: storage.type.class
@@ -833,31 +963,35 @@ contexts:
   constLetVarDeclaration_AFTER_WORD:
     # The first four of these are used to assign scopes for using in the symbol
     # list. This is important as the `const x =` function ‘declaration’ pattern
-    # seems to be taking off now that there’s an actual reason for it.
-    - match: '({{allThreeIDs}})(?=\s*=\s*function\s*\*\s*\()'
+    # seems to be taking off now that there’s an actual reason for it. This same
+    # set of matches allows us to apply scopes for BS / JSN themes.
+    - match: '(({{allThreeIDs}}))(?=\s*=\s*function\s*\*\s*\()'
       captures:
-        1: meta.symbol-helper.generator.es
-        2: variable.other.readwrite.allCap.es
-        3: variable.other.readwrite.initCap.es
-        4: variable.other.readwrite.es
+        1: meta.function.js entity.name.function.js # ^BS
+        2: meta.symbol-helper.generator.es # -BS
+        3: variable.other.readwrite.allCap.es # -BS
+        4: variable.other.readwrite.initCap.es
+        5: variable.other.readwrite.es
       set: constLetVarDeclaration_AFTER_BINDING
-    - match: '({{allThreeIDs}})(?=\s*=\s*function\s*\()'
+    - match: '(({{allThreeIDs}}))(?=\s*=\s*function\s*\()'
       captures:
-        1: meta.symbol-helper.function.es
-        2: variable.other.readwrite.allCap.es
-        3: variable.other.readwrite.initCap.es
-        4: variable.other.readwrite.es
+        1: meta.function.js entity.name.function.js # ^BS
+        2: meta.symbol-helper.function.es
+        3: variable.other.readwrite.allCap.es # -BS
+        4: variable.other.readwrite.initCap.es
+        5: variable.other.readwrite.es
       set: constLetVarDeclaration_AFTER_BINDING
-    - match: '({{allThreeIDs}})(?=\s*=\s*class\s*(?:\{|extends{idEnd}))'
+    - match: '(({{allThreeIDs}}))(?=\s*=\s*class\s*(?:\{|extends{idEnd}))'
       captures:
-        1: meta.symbol-helper.class.es
-        2: variable.other.readwrite.allCap.es
-        3: variable.other.readwrite.initCap.es
-        4: variable.other.readwrite.es
+        1: meta.function.js entity.name.class.js # ^BS, augmented
+        2: meta.symbol-helper.class.es
+        3: variable.other.readwrite.allCap.es # -BS
+        4: variable.other.readwrite.initCap.es
+        5: variable.other.readwrite.es
       set: constLetVarDeclaration_AFTER_BINDING
     - match: >-
         (?x)
-          ( {{allThreeIDs}} )
+          (( {{allThreeIDs}} ))
           (?=
             \s* = \s*
             (?:
@@ -867,24 +1001,34 @@ contexts:
             \s* =>
           )
       captures:
-        1: meta.symbol-helper.arrow.es
-        2: variable.other.readwrite.allCap.es
-        3: variable.other.readwrite.initCap.es
-        4: variable.other.readwrite.es
+        1: meta.function.arrow.js entity.name.function.js # ^BS
+        2: meta.symbol-helper.arrow.es
+        3: variable.other.readwrite.allCap.es
+        4: variable.other.readwrite.initCap.es
+        5: variable.other.readwrite.es
       set: constLetVarDeclaration_AFTER_BINDING
-    - match: '{{identifier}}'
-      scope: variable.other.readwrite.es
+    - match: '{{allThreeIDs}}'
+      captures:
+        1: variable.other.readwrite.allCap.es # -BS
+        2: variable.other.readwrite.initCap.es
+        3: variable.other.readwrite.es
       set: constLetVarDeclaration_AFTER_BINDING
-    - match: '\['
-      scope: punctuation.definition.binding.array.begin.es
+    - match: '((\[))'
+      captures:
+        1: punctuation.definition.binding.array.begin.es
+        2: meta.brace.square.js # ^BS
       set: [ constLetVarDeclaration_AFTER_BINDING_PATTERN, bindingArray ]
-    - match: '\{'
-      scope: punctuation.definition.binding.object.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.binding.object.begin.es
+        2: meta.brace.curly.js # ^BS
       set: [ constLetVarDeclaration_AFTER_BINDING_PATTERN, bindingObject ]
 
   constLetVarDeclaration_AFTER_BINDING:
-    - match: ','
-      scope: punctuation.separator.binding-binding.es
+    - match: '((,))'
+      captures:
+        1: punctuation.separator.binding-binding.es
+        2: meta.delimiter.comma
       set: constLetVarDeclaration_AFTER_WORD
     - match: '='
       scope: keyword.operator.assignment.es
@@ -907,26 +1051,34 @@ contexts:
     - include: other_illegal_pop
 
   functionDeclaration_AFTER_NAME:
-    - match: '\('
-      scope: punctuation.definition.parameters.function.begin.es
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.parameters.function.begin.es
+        2: meta.brace.round.js # ^BS
       set: [ functionDeclaration_AFTER_PARAMS, parameters ]
     - include: other_illegal_pop
 
   functionDeclaration_AFTER_PARAMS:
-    - match: '\)'
-      scope: punctuation.definition.parameters.function.end.es
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.parameters.function.end.es
+        2: meta.brace.round.js # ^BS
       set: functionDeclaration_BEFORE_BRACE
     - include: other_illegal
 
   functionDeclaration_BEFORE_BRACE:
-    - match: '\{'
-      scope: punctuation.definition.function.body.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.function.body.begin.es
+        2: meta.brace.curly.js # ^BS
       set: functionDeclaration_AFTER_BRACE
     - include: other_illegal_pop
 
   functionDeclaration_AFTER_BRACE:
-    - match: '\}'
-      scope: punctuation.definition.function.body.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.function.body.end.es
+        2: meta.brace.curly.js # ^BS
       pop: true
     - include: useStrict
     - include: statements
@@ -938,39 +1090,53 @@ contexts:
     - include: other_illegal_pop
 
   generatorDeclaration_AFTER_NAME:
-    - match: '\('
-      scope: punctuation.definition.parameters.generator.begin.es
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.parameters.generator.begin.es
+        2: meta.brace.round.js # ^BS
       set: [ generatorDeclaration_AFTER_PARAMS, parameters ]
     - include: other_illegal_pop
 
   generatorDeclaration_AFTER_PARAMS:
-    - match: '\)'
-      scope: punctuation.definition.parameters.generator.end.es
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.parameters.generator.end.es
+        2: meta.brace.round.js # ^BS
       set: generatorDeclaration_BEFORE_BRACE
     - include: other_illegal
 
   generatorDeclaration_BEFORE_BRACE:
-    - match: '\{'
-      scope: punctuation.definition.generator.body.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.generator.body.begin.es
+        2: meta.brace.curly.js # ^BS
       set: generatorDeclaration_AFTER_BRACE
     - include: other_illegal_pop
 
   generatorDeclaration_AFTER_BRACE:
-    - match: '\}'
-      scope: punctuation.definition.generator.body.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.generator.body.end.es
+        2: meta.brace.curly.js # ^BS
       pop: true
     - include: useStrict
     - include: statements
 
   moduleDeclaration_AFTER_EXPORT:
-    - match: '\*'
-      scope: storage.type.module.namespace.es
+    - match: '((\*))'
+      captures:
+        1: keyword.operator.module.js # ^BS, augmented
+        2: storage.modifier.module.namespace.es
       set: moduleDeclaration_BEFORE_FROM
-    - match: '\{'
-      scope: punctuation.definition.module-binding.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.module-binding.begin.es
+        2: meta.brace.curly.js # ^BS
       set: moduleDeclaration_EXPORT_BINDING_AFTER_BRACE
-    - match: 'default{{idEnd}}'
-      scope: storage.type.module.default.es
+    - match: '((default)){{idEnd}}'
+      captures:
+        1: keyword.operator.module.js # ^BS
+        2: storage.modifier.module.default.es
       set: moduleDeclaration_AFTER_DEFAULT
     - match: 'let{{idEnd}}'
       scope: storage.type.variable.let.es
@@ -989,10 +1155,11 @@ contexts:
         1: storage.type.function.generator.es
         2: storage.type.function.generator.asterisk.es
       set: generatorDeclaration_AFTER_ASTERISK
-    - match: '(async)?\s*(function){{idEnd}}'
+    - match: '((async))?\s*(function){{idEnd}}'
       captures:
-        1: storage.modifier.async.es
-        2: storage.type.function.es
+        1: storage.type.js # ^BS
+        2: storage.modifier.async.es
+        3: storage.type.function.es
       set: functionDeclaration_AFTER_FUNCTION
     - include: other_illegal_pop
 
@@ -1005,29 +1172,38 @@ contexts:
         1: storage.type.function.generator.es
         2: storage.type.function.generator.asterisk.es
       set: moduleDeclaration_DEFAULT_AFTER_ASTERISK
-    - match: '(async)?\s*(function){{idEnd}}'
+    - match: '((async))?\s*(function){{idEnd}}'
       captures:
-        1: storage.modifier.async.es
-        2: storage.type.function.es
+        1: storage.type.js # ^BS
+        2: storage.modifier.async.es
+        3: storage.type.function.es
       set: moduleDeclaration_DEFAULT_AFTER_FUNCTION
     - match: '{{PLA_anything}}'
       set: assignmentExpression
 
   moduleDeclaration_DEFAULT_AFTER_CLASS:
-    - match: '\{'
-      scope: punctuation.definition.class.body.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.class.body.begin.es
+        2: meta.brace.curly.js # ^BS
       set: classDeclaration_AFTER_BRACE
-    - match: 'extends{{idEnd}}'
-      scope: storage.modifier.extends.es
+    - match: '((extends)){{idEnd}}'
+      captures:
+        1: storage.type.extends.js # ^BS
+        2: storage.modifier.extends.es
       set: [ classDeclaration_AFTER_HERITAGE, assignmentExpression ]
-    - match: '{{identifier}}'
-      scope: entity.name.class.es
+    - match: '(({{identifier}}))'
+      captures:
+        1: entity.name.class.js # ^BS -- monokai
+        2: entity.name.class.es
       set: classDeclaration_AFTER_NAME
     - include: other_illegal_pop
 
   moduleDeclaration_DEFAULT_AFTER_ASTERISK:
-    - match: '\('
-      scope: punctuation.definition.parameters.generator.begin.es
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.parameters.generator.begin.es
+        2: meta.brace.round.js # ^BS
       set: [ generatorDeclaration_AFTER_PARAMS, parameters ]
     - match: '{{identifier}}'
       scope: entity.name.function.generator.es
@@ -1035,8 +1211,10 @@ contexts:
     - include: other_illegal_pop
 
   moduleDeclaration_DEFAULT_AFTER_FUNCTION:
-    - match: '\('
-      scope: punctuation.definition.parameters.function.begin.es
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.parameters.function.begin.es
+        2: meta.brace.round.js # ^BS
       set: [ functionDeclaration_AFTER_PARAMS, parameters ]
     - match: '{{allThreeIDs}}'
       captures:
@@ -1047,8 +1225,10 @@ contexts:
     - include: other_illegal_pop
 
   moduleDeclaration_BEFORE_FROM:
-    - match: 'from{{idEnd}}'
-      scope: storage.type.module.from.es
+    - match: '((from)){{idEnd}}'
+      captures:
+        1: keyword.operator.module.js # ^BS
+        2: storage.modifier.module.from.es
       set: moduleDeclaration_BEFORE_SPECIFIER
     - include: other_illegal_pop
 
@@ -1062,13 +1242,16 @@ contexts:
     - include: other_illegal_pop
 
   moduleDeclaration_EXPORT_BINDING_AFTER_BRACE:
-    - match: '\}'
-      scope: punctuation.definition.module-binding.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.module-binding.end.es
+        2: meta.brace.curly.js # ^BS
       set: moduleDeclaration_EXPORT_AFTER_BINDING
-    - match: '({{identifier}})\s+(as){{idEnd}}'
+    - match: '({{identifier}})\s+((as)){{idEnd}}'
       captures:
         1: variable.other.readwrite.export.es
-        2: storage.type.module.as.es
+        2: keyword.operator.module.js # ^BS
+        3: storage.modifier.module.as.es
       set: moduleDeclaration_EXPORT_BINDING_AFTER_AS
     - match: '{{identifier}}'
       scope: variable.other.readwrite.export.es
@@ -1082,17 +1265,23 @@ contexts:
     - include: other_illegal_pop
 
   moduleDeclaration_AFTER_EXPORT_BINDING_SPECIFIER:
-    - match: '\}'
-      scope: punctuation.definition.module-binding.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.module-binding.end.es
+        2: meta.brace.curly.js # ^BS
       set: moduleDeclaration_EXPORT_AFTER_BINDING
-    - match: ','
-      scope: punctuation.separator.module-binding.es
+    - match: '((,))'
+      captures:
+        1: punctuation.separator.module-binding.es
+        2: meta.delimiter.comma.js # ^BS
       set: moduleDeclaration_EXPORT_BINDING_AFTER_BRACE
     - include: other_illegal
 
   moduleDeclaration_AFTER_EXPORT_BINDING_SPECIFIER_AMBIG:
-    - match: 'as{{idEnd}}'
-      scope: storage.type.module.as.es
+    - match: '((as)){{idEnd}}'
+      captures:
+        1: keyword.operator.module.js # ^BS
+        2: storage.modifier.module.as.es
       set: moduleDeclaration_EXPORT_BINDING_AFTER_AS
     - include: moduleDeclaration_AFTER_EXPORT_BINDING_SPECIFIER
 
@@ -1100,17 +1289,23 @@ contexts:
     - match: ';'
       scope: punctuation.terminator.statement.es
       pop: true
-    - match: 'from{{idEnd}}'
-      scope: storage.type.module.from.es
+    - match: '((from)){{idEnd}}'
+      captures:
+        1: keyword.operator.module.js # ^BS
+        2: storage.modifier.module.from.es
       set: moduleDeclaration_BEFORE_SPECIFIER
     - include: else_pop
 
   moduleDeclaration_AFTER_IMPORT:
-    - match: '\*'
-      scope: storage.type.module.namespace.es
+    - match: '((\*))'
+      captures:
+        1: keyword.operator.module.js # ^BS, augmented
+        2: storage.modifier.module.namespace.es
       set: moduleDeclaration_IMPORT_BINDING_AFTER_ASTERISK
-    - match: '\{'
-      scope: punctuation.definition.module-binding.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.module-binding.begin.es
+        2: meta.brace.curly.js # ^BS
       set: moduleDeclaration_IMPORT_BINDING_AFTER_BRACE
     - match: '{{identifier}}'
       scope: variable.other.readwrite.import.es
@@ -1118,25 +1313,35 @@ contexts:
     - include: moduleDeclaration_BEFORE_SPECIFIER
 
   moduleDeclaration_IMPORT_AFTER_IDENTIFIER:
-    - match: ','
-      scope: punctuation.separator.module-binding.es
+    - match: '((,))'
+      captures:
+        1: punctuation.separator.module-binding.es
+        2: meta.delimiter.comma.js # ^BS
       set: moduleDeclaration_IMPORT_AFTER_IDENTIFIER_COMMA
-    - match: 'from{{idEnd}}'
-      scope: storage.type.module.from.es
+    - match: '((from)){{idEnd}}'
+      captures:
+        1: keyword.operator.module.js # ^BS
+        2: storage.modifier.module.from.es
       set: moduleDeclaration_BEFORE_SPECIFIER
 
   moduleDeclaration_IMPORT_AFTER_IDENTIFIER_COMMA:
-    - match: '\*'
-      scope: storage.type.module.namespace.es
+    - match: '((\*))'
+      captures:
+        1: keyword.operator.module.js # ^BS, augmented
+        2: storage.modifier.module.namespace.es
       set: moduleDeclaration_IMPORT_BINDING_AFTER_ASTERISK
-    - match: '\{'
-      scope: punctuation.definition.module-binding.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.module-binding.begin.es
+        2: meta.brace.curly.js # ^BS
       set: moduleDeclaration_IMPORT_BINDING_AFTER_BRACE
     - include: other_illegal_pop
 
   moduleDeclaration_IMPORT_BINDING_AFTER_ASTERISK:
-    - match: 'as{{idEnd}}'
-      scope: storage.type.module.as.es
+    - match: '((as)){{idEnd}}'
+      captures:
+        1: keyword.operator.module.js # ^BS
+        2: storage.modifier.module.as.es
       set: moduleDeclaration_IMPORT_BINDING_AFTER_AS
     - include: other_illegal_pop
 
@@ -1147,13 +1352,16 @@ contexts:
     - include: other_illegal_pop
 
   moduleDeclaration_IMPORT_BINDING_AFTER_BRACE:
-    - match: '\}'
-      scope: punctuation.definition.module-binding.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.module-binding.end.es
+        2: meta.brace.curly.js # ^BS
       set: moduleDeclaration_BEFORE_FROM
-    - match: '({{identifier}})\s+(as){{idEnd}}'
+    - match: '({{identifier}})\s+((as)){{idEnd}}'
       captures:
         1: entity.name.module.import.es
-        2: storage.type.module.as.es
+        2: keyword.operator.module.js # ^BS
+        3: storage.modifier.module.as.es
       set: moduleDeclaration_IMPORT_BINDING_AFTER_AS_BEFORE_BRACE_CLOSE
     - match: '{{identifier}}'
       scope: variable.other.readwrite.import.es
@@ -1167,17 +1375,23 @@ contexts:
     - include: other_illegal_pop
 
   moduleDeclaration_AFTER_IMPORT_BINDING_SPECIFIER:
-    - match: '\}'
-      scope: punctuation.definition.module-binding.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.module-binding.end.es
+        2: meta.brace.curly.js # ^BS
       set: moduleDeclaration_BEFORE_FROM
-    - match: ','
-      scope: punctuation.separator.module-binding.es
+    - match: '((,))'
+      captures:
+        1: punctuation.separator.module-binding.es
+        2: meta.delimiter.comma.js # ^BS
       set: moduleDeclaration_IMPORT_BINDING_AFTER_BRACE
     - include: other_illegal
 
   moduleDeclaration_AFTER_IMPORT_BINDING_SPECIFIER_AMBIG:
-    - match: 'as{{idEnd}}'
-      scope: storage.type.module.as.es
+    - match: '((as)){{idEnd}}'
+      captures:
+        1: keyword.operator.module.js # ^BS
+        2: storage.modifier.module.as.es
       set: moduleDeclaration_IMPORT_BINDING_AFTER_AS_BEFORE_BRACE_CLOSE
     - include: moduleDeclaration_AFTER_IMPORT_BINDING_SPECIFIER
 
@@ -1202,8 +1416,10 @@ contexts:
     # realistically it will nearly always be an identifier, and it is something
     # to which we would like to give a unique scope when possible. However to be
     # safe we still need to continue on to the usual AE context.
-    - match: '(?!async{{idEnd}}){{identifier}}(?!\s*=){{idEnd}}'
-      scope: variable.other.readwrite.decorator.es
+    - match: '(?!async{{idEnd}})(({{identifier}}))(?!\s*=){{idEnd}}'
+      captures:
+        1: entity.name.tag.js # ^ BS
+        2: variable.other.readwrite.decorator.es
       set: ae_AFTER_IDENTIFIER
     - include: assignmentExpression
 
@@ -2855,61 +3071,78 @@ contexts:
     - include: other_illegal
 
   literalObject_OPEN:
-    - match: '\}'
-      scope: punctuation.definition.object.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.object.end.es
+        2: meta.brace.curly.js # ^BS
       pop: true
     # PREFIXED METHODS
     - match: '\*'
-      scope: storage.type.function.generator.asterisk.es
+      scope: storage.type.function.generator.asterisk.es # -BS
       set: [ literalObject_AFTER_AE, generatorMethod_AFTER_ASTERISK ]
-    - match: '(get)\s*(:)'
+    - match: '((get))\s*((:))'
       captures:
-        1: variable.other.readwrite.property.es
-        2: punctuation.separator.key-value.es
+        1: string.unquoted.label.js # ^BS
+        2: variable.other.readwrite.property.object-literal.es
+        3: constant.other.object.key # ^BS
+        4: punctuation.separator.key-value.es
       set: [ literalObject_AFTER_AE, assignmentExpression ]
-    - match: 'get{{idEnd}}'
-      scope: storage.modifier.accessor.get.es
+    - match: '((get)){{idEnd}}'
+      captures:
+        1: storage.type.accessor.js # ^BS
+        2: storage.modifier.accessor.get.es
       set: [ literalObject_AFTER_AE, accessorMethod_AFTER_GET ]
-    - match: '(set)\s*(:)'
+    - match: '((set))\s*((:))'
       captures:
-        1: variable.other.readwrite.property.es
-        2: punctuation.separator.key-value.es
+        1: string.unquoted.label.js # ^BS
+        2: variable.other.readwrite.property.object-literal.es
+        3: constant.other.object.key # ^BS
+        4: punctuation.separator.key-value.es
       set: [ literalObject_AFTER_AE, assignmentExpression ]
-    - match: 'set{{idEnd}}'
-      scope: storage.modifier.accessor.set.es
+    - match: '((set)){{idEnd}}'
+      captures:
+        1: storage.type.accessor.js # ^BS
+        2: storage.modifier.accessor.set.es
       set: [ literalObject_AFTER_AE, accessorMethod_AFTER_SET ]
-    - match: 'async{{idEnd}}'
-      scope: storage.modifier.async.es
+    - match: '((async)){{idEnd}}'
+      captures:
+        1: storage.type.js # ^BS
+        2: storage.modifier.async.es
       set: [ literalObject_AFTER_AE, asyncMethod_AFTER_ASYNC ]
     # NORMAL METHODS
-    - match: '({{allThreeIDs}})\s*(\()'
+    - match: '(({{allThreeIDs}}))\s*(\()'
       captures:
-        1: entity.name.method.es
-        2: variable.other.readwrite.property.allCap.es
-        3: variable.other.readwrite.property.initCap.es
-        4: variable.other.readwrite.property.es
-        5: punctuation.definition.parameters.method.begin.es
+        1: entity.name.method.js # ^BS -- monokai
+        2: entity.name.method.es
+        3: variable.other.readwrite.property.allCap.es
+        4: variable.other.readwrite.property.initCap.es
+        5: variable.other.readwrite.property.es
+        6: punctuation.definition.parameters.method.begin.es
       set: [ literalObject_AFTER_AE, method_AFTER_PARAMS, parameters ]
     # NORMAL PROPERTIES
-    - match: '(?:{{allThreeIDs}})\s*(:)'
+    - match: '({{allThreeIDs}})\s*((:))'
       captures:
-        1: variable.other.readwrite.property.object-literal.allCap.es
-        2: variable.other.readwrite.property.object-literal.initCap.es
-        3: variable.other.readwrite.property.object-literal.es
-        4: punctuation.separator.key-value.es
+        1: string.unquoted.label.js # ^BS
+        2: variable.other.readwrite.property.object-literal.allCap.es
+        3: variable.other.readwrite.property.object-literal.initCap.es
+        4: variable.other.readwrite.property.object-literal.es
+        5: constant.other.object.key # ^BS
+        6: punctuation.separator.key-value.es
       set: [ literalObject_AFTER_AE, assignmentExpression ]
     # IDENTIFIER REFERENCE (probably)
     # We match references (shorthand properties) last because we must rely on
     # other punctuation to identify ‘regular’ properties and methods.
     - match: '{{allThreeIDs}}'
       captures:
-        1: variable.other.readwrite.property.shorthand.allCap.es
+        1: variable.other.readwrite.property.shorthand.allCap.es # -BS
         2: variable.other.readwrite.property.shorthand.initCap.es
         3: variable.other.readwrite.property.shorthand.es
       set: literalObject_AFTER_SHORTHAND
     # NORMALLY ILLEGAL NAME
-    - match: '{{identifierName}}'
-      scope: variable.other.readwrite.property.object-literal.es
+    - match: '(({{identifierName}}))'
+      captures:
+        1: string.unquoted.label.js # ^BS
+        2: variable.other.readwrite.property.object-literal.es
       set: literalObject_AFTER_SHORTHAND
     # QUOTED PROPERTY
     - match: "'"
@@ -2922,8 +3155,10 @@ contexts:
     - match: '\.{3}'
       scope: keyword.operator.spread
       set: literalObject_AFTER_ELLIPSIS
-    - match: '@'
-      scope: punctuation.definition.decorator.es
+    - match: '((@))'
+      captures:
+        1: punctuation.definition.tag.js # ^BS
+        2: punctuation.definition.decorator.es
       push: decoratorExpression
     # NUMERIC PROPERTY
     - match: '({{decNum}})'
@@ -2956,32 +3191,44 @@ contexts:
         2: meta.numeric.prefix.es
       set: literalObject_AFTER_PROP
     # COMPUTED PROPERTY
-    - match: '\['
-      scope: punctuation.definition.accessor.begin.es
+    - match: '((\[))'
+      captures:
+        1: punctuation.definition.accessor.begin.es
+        2: meta.brace.square.js # ^BS
       set: [ literalObject_AFTER_PROP, computedProp_AFTER_AE, assignmentExpression ]
 
   literalObject_AFTER_SHORTHAND:
     # Safety context for " prop \n : "
-    - match: ':'
-      scope: punctuation.separator.key-value.es
+    - match: '((:))'
+      captures:
+        1: constant.other.object.key # ^BS
+        2: punctuation.separator.key-value.es
       set: [ literalObject_AFTER_AE, assignmentExpression ]
-    - match: '\('
-      scope: punctuation.definition.parameters.method.begin.es
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.parameters.method.begin.es
+        2: meta.brace.round.js # ^BS
       set: [ literalObject_AFTER_AE, method_AFTER_PARAMS, parameters ]
     - include: literalObject_AFTER_AE
 
   literalObject_AFTER_PROP:
-    - match: ':'
-      scope: punctuation.separator.key-value.es
+    - match: '((:))'
+      captures:
+        1: constant.other.object.key # ^BS
+        2: punctuation.separator.key-value.es
       set: [ literalObject_AFTER_AE, assignmentExpression ]
-    - match: '\('
-      scope: punctuation.definition.parameters.method.begin.es
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.parameters.method.begin.es
+        2: meta.brace.round.js # ^BS
       set: [ literalObject_AFTER_AE, method_AFTER_PARAMS, parameters ]
     - include: other_illegal
 
   literalObject_AFTER_AE:
-    - match: ','
-      scope: punctuation.separator.object-member.es
+    - match: '((,))'
+      captures:
+        1: punctuation.separator.object-member.es
+        2: meta.delimiter.comma.js # ^BS
       set: literalObject_OPEN
     - match: '{{PLA_anything}}'
       set: literalObject_OPEN
@@ -2989,7 +3236,7 @@ contexts:
   literalObject_AFTER_ELLIPSIS:
     - match: '{{allThreeIDs}}'
       captures:
-        1: variable.other.readwrite.property.shorthand.rest.allCap.es
+        1: variable.other.readwrite.property.shorthand.rest.allCap.es # -BS
         2: variable.other.readwrite.property.shorthand.rest.initCap.es
         3: variable.other.readwrite.property.shorthand.rest.es
       set: literalObject_AFTER_REST_MEMBER
@@ -2999,48 +3246,62 @@ contexts:
     - include: other_illegal
 
   literalObject_AFTER_REST_MEMBER:
-    - match: '\}'
-      scope: punctuation.definition.object.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.object.end.es
+        2: meta.brace.curly.js # ^BS
       pop: true
     - include: other_illegal
 
   computedProp_AFTER_AE:
     # Also used for property access
-    - match: '\]'
-      scope: punctuation.definition.accessor.end.es
+    - match: '((\]))'
+      captures:
+        1: punctuation.definition.accessor.end.es
+        2: meta.brace.square.js # ^BS
       pop: true
     - include: other_illegal
 
 # OBJECT & CLASS LITERAL METHODS ###############################################
 
   method_AFTER_NAME:
-    - match: '\('
-      scope: punctuation.definition.parameters.method.begin.es
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.parameters.method.begin.es
+        2: meta.brace.round.js # ^BS
       set: [ method_AFTER_PARAMS, parameters ]
     - include: other_illegal_pop
 
   method_AFTER_PARAMS:
-    - match: '\)'
-      scope: punctuation.definition.parameters.method.end.es
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.parameters.method.end.es
+        2: meta.brace.round.js # ^BS
       set: method_BEFORE_BRACE
     - include: other_illegal
 
   method_BEFORE_BRACE:
-    - match: '\{'
-      scope: punctuation.definition.method.body.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.method.body.begin.es
+        2: meta.brace.curly.js # ^BS
       set: method_AFTER_BRACE
     - include: other_illegal_pop
 
   method_AFTER_BRACE:
-    - match: '\}'
-      scope: punctuation.definition.method.body.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.method.body.end.es
+        2: meta.brace.curly.js # ^BS
       pop: true
     - include: useStrict
     - include: statements
 
   asyncMethod_AFTER_ASYNC:
-    - match: '{{identifier}}'
-      scope: entity.name.method.async
+    - match: '(({{identifier}}))'
+      captures:
+        1: entity.name.method.js # ^BS -- monokai
+        2: entity.name.method.async
       set: method_AFTER_NAME
     - match: "'"
       scope: punctuation.definition.string.quoted.single.begin.es
@@ -3077,14 +3338,18 @@ contexts:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
       set: method_AFTER_NAME
-    - match: '\['
-      scope: punctuation.definition.accessor.begin.es
+    - match: '((\[))'
+      captures:
+        1: punctuation.definition.accessor.begin.es
+        2: meta.brace.square.js # ^BS
       set: [ method_AFTER_NAME, computedProp_AFTER_AE, assignmentExpression ]
     - include: other_illegal_pop
 
   accessorMethod_AFTER_GET:
-    - match: '{{identifier}}'
-      scope: entity.name.accessor.get.es
+    - match: '(({{identifier}}))'
+      captures:
+        1: entity.name.method.js # ^BS -- monokai
+        2: entity.name.accessor.get.es
       set: accessorMethod_AFTER_GET_NAME
     - match: "'"
       scope: punctuation.definition.string.quoted.single.begin.es
@@ -3121,27 +3386,35 @@ contexts:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
       set: accessorMethod_AFTER_GET_NAME
-    - match: '\['
-      scope: punctuation.definition.accessor.begin.es
+    - match: '((\[))'
+      captures:
+        1: punctuation.definition.accessor.begin.es
+        2: meta.brace.square.js # ^BS
       set: [ accessorMethod_AFTER_GET_NAME, computedProp_AFTER_AE, assignmentExpression ]
     # Possibly this is an object property.
     - include: other_illegal_pop
 
   accessorMethod_AFTER_GET_NAME:
-    - match: '\('
-      scope: punctuation.definition.parameters.accessor.begin.es
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.parameters.accessor.begin.es
+        2: meta.brace.round.js # ^BS
       set: accessorMethod_AFTER_GET_PAREN_OPEN
     - include: other_illegal_pop
 
   accessorMethod_AFTER_GET_PAREN_OPEN:
-    - match: '\)'
-      scope: punctuation.definition.parameters.accessor.end.es
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.parameters.accessor.end.es
+        2: meta.brace.round.js # ^BS
       set: accessorMethod_BEFORE_BRACE
     - include: other_illegal
 
   accessorMethod_AFTER_SET:
-    - match: '{{identifier}}'
-      scope: entity.name.accessor.set.es
+    - match: '(({{identifier}}))'
+      captures:
+        1: entity.name.method.js # ^BS -- monokai
+        2: entity.name.accessor.set.es
       set: accessorMethod_AFTER_SET_NAME
     - match: "'"
       scope: punctuation.definition.string.quoted.single.begin.es
@@ -3178,32 +3451,42 @@ contexts:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
       set: accessorMethod_AFTER_SET_NAME
-    - match: '\['
-      scope: punctuation.definition.accessor.begin.es
+    - match: '((\[))'
+      captures:
+        1: punctuation.definition.accessor.begin.es
+        2: meta.brace.square.js # ^BS
       set: [ accessorMethod_AFTER_SET_NAME, computedProp_AFTER_AE, assignmentExpression ]
     - include: other_illegal_pop
 
   accessorMethod_AFTER_SET_NAME:
-    - match: '\('
-      scope: punctuation.definition.parameters.accessor.begin.es
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.parameters.accessor.begin.es
+        2: meta.brace.round.js # ^BS
       set: [ accessorMethod_AFTER_SET_PARAM, parameters ]
     - include: other_illegal_pop
 
   accessorMethod_AFTER_SET_PARAM:
-    - match: '\)'
-      scope: punctuation.definition.parameters.accessor.end.es
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.parameters.accessor.end.es
+        2: meta.brace.round.js # ^BS
       set: accessorMethod_BEFORE_BRACE
     - include: other_illegal
 
   accessorMethod_BEFORE_BRACE:
-    - match: '\{'
-      scope: punctuation.definition.accessor.body.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.accessor.body.begin.es
+        2: meta.brace.curly.js # ^BS
       set: accessorMethod_AFTER_BRACE
     - include: other_illegal_pop
 
   accessorMethod_AFTER_BRACE:
-    - match: '\}'
-      scope: punctuation.definition.accessor.body.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.accessor.body.end.es
+        2: meta.brace.curly.js # ^BS
       pop: true
     - include: useStrict
     - match: '(return){{idEnd}}'
@@ -3212,8 +3495,10 @@ contexts:
     - include: statements
 
   generatorMethod_AFTER_ASTERISK:
-    - match: '{{identifier}}'
-      scope: entity.name.method.generator.es
+    - match: '(({{identifier}}))'
+      captures:
+        1: entity.name.method.js # ^BS -- monokai
+        2: entity.name.method.generator.es
       set: generatorMethod_AFTER_NAME
     - match: "'"
       scope: punctuation.definition.string.quoted.single.begin.es
@@ -3250,57 +3535,75 @@ contexts:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
       set: generatorMethod_AFTER_NAME
-    - match: '\['
-      scope: punctuation.definition.accessor.begin.es
+    - match: '((\[))'
+      captures:
+        1: punctuation.definition.accessor.begin.es
+        2: meta.brace.square.js # ^BS
       set: [ generatorMethod_AFTER_NAME, computedProp_AFTER_AE, assignmentExpression ]
     - include: other_illegal_pop
 
   generatorMethod_AFTER_NAME:
-    - match: '\('
-      scope: punctuation.definition.parameters.method.generator.begin.es
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.parameters.method.generator.begin.es
+        2: meta.brace.round.js # ^BS
       set: [ generatorMethod_AFTER_PARAMS, parameters ]
     - include: other_illegal_pop
 
   generatorMethod_AFTER_PARAMS:
-    - match: '\)'
-      scope: punctuation.definition.parameters.method.generator.end.es
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.parameters.method.generator.end.es
+        2: meta.brace.round.js # ^BS
       set: generatorMethod_BEFORE_BRACE
     - include: other_illegal
 
   generatorMethod_BEFORE_BRACE:
-    - match: '\{'
-      scope: punctuation.definition.method.generator.body.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.method.generator.body.begin.es
+        2: meta.brace.curly.js # ^BS
       set: generatorMethod_AFTER_BRACE
     - include: other_illegal_pop
 
   generatorMethod_AFTER_BRACE:
-    - match: '\}'
-      scope: punctuation.definition.method.generator.body.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.method.generator.body.end.es
+        2: meta.brace.curly.js # ^BS
       pop: true
     - include: useStrict
     - include: statements
 
   constructorMethod_AFTER_CONSTRUCTOR:
-    - match: '\('
-      scope: punctuation.definition.parameters.constructor.begin.es
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.parameters.constructor.begin.es
+        2: meta.brace.round.js # ^BS
       set: [ constructorMethod_AFTER_PARAMS, parameters ]
     - include: other_illegal_pop
 
   constructorMethod_AFTER_PARAMS:
-    - match: '\)'
-      scope: punctuation.definition.parameters.constructor.end.es
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.parameters.constructor.end.es
+        2: meta.brace.round.js # ^BS
       set: constructorMethod_BEFORE_BRACE
     - include: other_illegal
 
   constructorMethod_BEFORE_BRACE:
-    - match: '\{'
-      scope: punctuation.definition.constructor.body.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.constructor.body.begin.es
+        2: meta.brace.curly.js # ^BS
       set: constructorMethod_AFTER_BRACE
     - include: other_illegal_pop
 
   constructorMethod_AFTER_BRACE:
-    - match: '\}'
-      scope: punctuation.definition.constructor.body.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.constructor.body.end.es
+        2: meta.brace.curly.js # ^BS
       pop: true
     - include: useStrict
     - include: statements
@@ -3308,34 +3611,46 @@ contexts:
 # BINDING PATTERNS #############################################################
 
   bindingArray:
-    - match: '\]'
-      scope: punctuation.definition.binding.array.end.es
+    - match: '((\]))'
+      captures:
+        1: punctuation.definition.binding.array.end.es
+        2: meta.brace.square.js # ^BS
       pop: true
-    - match: ','
-      scope: punctuation.separator.array-element.binding.es
+    - match: '((,))'
+      captures:
+        1: punctuation.separator.array-element.binding.es
+        2: meta.separator.comma.js # ^BS
     - match: '\.{3}'
-      scope: keyword.other.rest.es
+      scope: keyword.other.rest.es # -BS
       set: bindingArray_AFTER_ELLIPSIS
     - match: '{{allThreeIDs}}'
       captures:
-        1: variable.other.readwrite.allCap.es
+        1: variable.other.readwrite.allCap.es # -BS
         2: variable.other.readwrite.initCap.es
         3: variable.other.readwrite.es
       set: bindingArray_AFTER_ELEM
-    - match: '\['
-      scope: punctuation.definition.binding.array.begin.es
+    - match: '((\[))'
+      captures:
+        1: punctuation.definition.binding.array.begin.es
+        2: meta.brace.square.js # ^BS
       set: [ bindingArray_AFTER_ELEM, bindingArray ]
-    - match: '\{'
-      scope: punctuation.definition.binding.object.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.binding.object.begin.es
+        2: meta.brace.curly.js # ^BS
       set: [ bindingArray_AFTER_ELEM, bindingObject ]
     - include: other_illegal
 
   bindingArray_AFTER_ELEM:
-    - match: '\]'
-      scope: punctuation.definition.binding.array.end.es
+    - match: '((\]))'
+      captures:
+        1: punctuation.definition.binding.array.end.es
+        2: meta.brace.square.js # ^BS
       pop: true
-    - match: ','
-      scope: punctuation.separator.array-element.binding.es
+    - match: '((,))'
+      captures:
+        1: punctuation.separator.array-element.binding.es
+        2: meta.separator.comma.js # ^BS
       set: bindingArray
     - match: '='
       scope: keyword.operator.assignment.conditional.default.es
@@ -3345,7 +3660,7 @@ contexts:
   bindingArray_AFTER_ELLIPSIS:
     - match: '{{allThreeIDs}}'
       captures:
-        1: variable.other.readwrite.allCap.es
+        1: variable.other.readwrite.allCap.es # -BS
         2: variable.other.readwrite.initCap.es
         3: variable.other.readwrite.es
       set: bindingArray_AFTER_REST_ELEM
@@ -3354,31 +3669,39 @@ contexts:
       pop: true
 
   bindingArray_AFTER_REST_ELEM:
-    - match: '\]'
-      scope: punctuation.definition.binding.array.end.es
+    - match: '((\]))'
+      captures:
+        1: punctuation.definition.binding.array.end.es
+        2: meta.brace.square.js # ^BS
       pop: true
     - include: other_illegal
 
   bindingObject:
-    - match: '\}'
-      scope: punctuation.definition.binding.object.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.binding.object.end.es
+        2: meta.brace.curly.js # ^BS
       pop: true
     # BOUND PROPERTY ASSIGNMENT, NORMAL PROPERTY STYLE
-    - match: '({{identifierName}})\s*(:)'
+    - match: '(({{identifierName}}))\s*((:))'
       captures:
-        1: entity.other.property-binding.es
-        2: punctuation.separator.property-binding.es
+        1: string.unquoted.label.js # ^BS
+        2: entity.other.property-binding.es
+        3: constant.other.object.key.js # ^BS
+        4: punctuation.separator.property-binding.es
       set: bindingObject_AFTER_PROPERTY
     # BOUND PROPERTY ASSIGNMENT, SAME-NAME SHORTHAND
     - match: '{{allThreeIDs}}'
       captures:
-        1: variable.other.readwrite.allCap.es
+        1: variable.other.readwrite.allCap.es # -BS
         2: variable.other.readwrite.initCap.es
         3: variable.other.readwrite.es
       set: bindingObject_AFTER_ELEM
     # COMPUTED PROPERTY
-    - match: '\['
-      scope: punctuation.definition.accessor.begin.es
+    - match: '((\[))'
+      captures:
+        1: punctuation.definition.accessor.begin.es
+        2: meta.brace.square.js # ^BS
       set: [ bindingObject_BEFORE_COLON, computedProp_AFTER_AE, assignmentExpression ]
     - match: "'"
       scope: punctuation.definition.string.quoted.single.begin.es
@@ -3388,7 +3711,7 @@ contexts:
       set: [ bindingObject_BEFORE_COLON, stringDouble_AFTER_OPEN ]
     # REST PROPERTIES
     - match: '\.{3}'
-      scope: keyword.other.rest.es
+      scope: keyword.other.rest.es # -BS
       set: bindingObject_AFTER_ELLIPSIS
     - include: other_illegal
     # NUMERIC PROPERTY
@@ -3423,8 +3746,10 @@ contexts:
       set: bindingObject_BEFORE_COLON
 
   bindingObject_BEFORE_COLON:
-    - match: ':'
-      scope: punctuation.separator.property-binding.es
+    - match: '((:))'
+      captures:
+        1: constant.other.object.key.js # ^BS, augmented
+        2: punctuation.separator.property-binding.es
       set: bindingObject_AFTER_PROPERTY
     - match: '\}'
       scope: invalid.illegal.token.es
@@ -3434,26 +3759,34 @@ contexts:
   bindingObject_AFTER_PROPERTY:
     - match: '{{allThreeIDs}}'
       captures:
-        1: variable.other.readwrite.allCap.es
+        1: variable.other.readwrite.allCap.es # -BS
         2: variable.other.readwrite.initCap.es
         3: variable.other.readwrite.es
       set: bindingObject_AFTER_ELEM
-    - match: '\['
-      scope: punctuation.definition.binding.array.begin.es
+    - match: '((\[))'
+      captures:
+        1: punctuation.definition.binding.array.begin.es
+        2: meta.brace.square.js # ^BS
       set: [ bindingObject_AFTER_ELEM, bindingArray ]
-    - match: '\{'
-      scope: punctuation.definition.binding.object.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.binding.object.begin.es
+        2: meta.brace.curly.js # ^BS
       set: [ bindingObject_AFTER_ELEM, bindingObject ]
     - match: '{{MAT_word_or_any_one_char}}'
       scope: invalid.illegal.token.es
       set: bindingObject_AFTER_ELEM
 
   bindingObject_AFTER_ELEM:
-    - match: '\}'
-      scope: punctuation.definition.binding.object.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.binding.object.end.es
+        2: meta.brace.curly.js # ^BS
       pop: true
-    - match: ','
-      scope: punctuation.separator.object-member.binding.es
+    - match: '((,))'
+      captures:
+        1: punctuation.separator.object-member.binding.es
+        2: meta.separator.comma.js # ^BS
       set: bindingObject
     - match: '='
       scope: keyword.operator.assignment.conditional.default.es
@@ -3462,7 +3795,7 @@ contexts:
   bindingObject_AFTER_ELLIPSIS:
     - match: '{{allThreeIDs}}'
       captures:
-        1: variable.other.readwrite.allCap.es
+        1: variable.other.readwrite.allCap.es # -BS
         2: variable.other.readwrite.initCap.es
         3: variable.other.readwrite.es
       set: bindingObject_AFTER_REST_ELEM
@@ -3472,37 +3805,51 @@ contexts:
     - include: other_illegal
 
   bindingObject_AFTER_REST_ELEM:
-    - match: '\}'
-      scope: punctuation.definition.binding.object.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.binding.object.end.es
+        2: meta.brace.curly.js # ^BS
       pop: true
     - include: other_illegal
 
   bindingArray_PARAM:
-    - match: '\]'
-      scope: punctuation.definition.binding.array.parameter.end.es
+    - match: '((\]))'
+      captures:
+        1: punctuation.definition.binding.array.parameter.end.es
+        2: meta.brace.square.js # ^BS, augmented
       pop: true
-    - match: ','
-      scope: punctuation.separator.array-element.binding.parameter.es
+    - match: '((,))'
+      captures:
+        1: punctuation.separator.array-element.binding.parameter.es
+        2: meta.separator.comma.js # ^BS, augmented
     - match: '\.{3}'
-      scope: keyword.other.rest.parameter.es
+      scope: keyword.other.rest.parameter.es # -BS
       set: bindingArray_PARAM_AFTER_ELLIPSIS
     - match: '{{identifier}}'
       scope: variable.parameter.es
       set: bindingArray_PARAM_AFTER_ELEM
-    - match: '\['
-      scope: punctuation.definition.binding.array.parameter.begin.es
+    - match: '((\[))'
+      captures:
+        1: punctuation.definition.binding.array.parameter.begin.es
+        2: meta.brace.square.js # ^BS, augmented
       set: [ bindingArray_PARAM_AFTER_ELEM, bindingArray_PARAM ]
-    - match: '\{'
-      scope: punctuation.definition.binding.object.parameter.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.binding.object.parameter.begin.es
+        2: meta.brace.curly.js # ^BS, augmented
       set: [ bindingArray_PARAM_AFTER_ELEM, bindingObject_PARAM ]
     - include: other_illegal
 
   bindingArray_PARAM_AFTER_ELEM:
-    - match: '\]'
-      scope: punctuation.definition.binding.array.parameter.end.es
+    - match: '((\]))'
+      captures:
+        1: punctuation.definition.binding.array.parameter.end.es
+        2: meta.brace.square.js # ^BS, augmented
       pop: true
-    - match: ','
-      scope: punctuation.separator.array-element.binding.parameter.es
+    - match: '((,))'
+      captures:
+        1: punctuation.separator.array-element.binding.parameter.es
+        2: meta.separator.comma.js # ^BS, augmented
       set: bindingArray_PARAM
     - match: '='
       scope: keyword.operator.assignment.conditional.default.es
@@ -3518,28 +3865,36 @@ contexts:
       pop: true
 
   bindingArray_PARAM_AFTER_REST_ELEM:
-    - match: '\]'
-      scope: punctuation.definition.binding.array.parameter.end.es
+    - match: '((\]))'
+      captures:
+        1: punctuation.definition.binding.array.parameter.end.es
+        2: meta.brace.square.js # ^BS, augmented
       pop: true
     - include: other_illegal
 
   bindingObject_PARAM:
-    - match: '\}'
-      scope: punctuation.definition.binding.object.parameter.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.binding.object.parameter.end.es
+        2: meta.brace.curly.hs # ^BS, augmented
       pop: true
     # BOUND PROPERTY ASSIGNMENT, NORMAL PROPERTY STYLE
-    - match: '({{identifierName}})\s*(:)'
+    - match: '(({{identifierName}}))\s*((:))'
       captures:
-        1: entity.other.property-binding.parameter.es
-        2: punctuation.separator.property-binding.parameter.es
+        1: string.unquoted.label.js # ^BS, augmented
+        2: entity.other.property-binding.parameter.es
+        3: constant.other.object.key.js # ^BS, augmented
+        4: punctuation.separator.property-binding.parameter.es
       set: bindingObject_PARAM_AFTER_PROPERTY
     # BOUND PROPERTY ASSIGNMENT, SAME-NAME SHORTHAND
     - match: '{{identifier}}'
       scope: variable.parameter.es
       set: bindingObject_PARAM_AFTER_ELEM
     # COMPUTED PROPERTY
-    - match: '\['
-      scope: punctuation.definition.accessor.parameter.begin.es
+    - match: '((\[))'
+      captures:
+        1: punctuation.definition.accessor.parameter.begin.es
+        2: meta.brace.square.js # ^BS, augmented
       set: [ bindingObject_PARAM_BEFORE_COLON, computedProp_AFTER_AE, assignmentExpression ]
     - match: "'"
       scope: punctuation.definition.string.quoted.single.parameter.begin.es
@@ -3549,7 +3904,7 @@ contexts:
       set: [ bindingObject_PARAM_BEFORE_COLON, stringDouble_AFTER_OPEN ]
     # REST PROPERTIES
     - match: '\.{3}'
-      scope: keyword.other.rest.parameter.es
+      scope: keyword.other.rest.parameter.es # -BS
       set: bindingObject_PARAM_AFTER_ELLIPSIS
     - include: other_illegal
     # NUMERIC PROPERTY
@@ -3584,8 +3939,10 @@ contexts:
       set: bindingObject_PARAM_BEFORE_COLON
 
   bindingObject_PARAM_BEFORE_COLON:
-    - match: ':'
-      scope: punctuation.separator.property-binding.parameter.es
+    - match: '((:))'
+      captures:
+        1: constant.other.object.key.js # ^BS, augmented
+        2: punctuation.separator.property-binding.parameter.es
       set: bindingObject_PARAM_AFTER_PROPERTY
     - match: '\}'
       scope: invalid.illegal.token.es
@@ -3596,22 +3953,30 @@ contexts:
     - match: '{{identifier}}'
       scope: variable.parameter.es
       set: bindingObject_PARAM_AFTER_ELEM
-    - match: '\['
-      scope: punctuation.definition.binding.array.parameter.begin.es
+    - match: '((\[))'
+      captures:
+        1: punctuation.definition.binding.array.parameter.begin.es
+        2: meta.brace.square.js # ^BS, augmented
       set: [ bindingObject_PARAM_AFTER_ELEM, bindingArray_PARAM ]
-    - match: '\{'
-      scope: punctuation.definition.binding.object.parameter.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.binding.object.parameter.begin.es
+        2: meta.brace.curly.js # ^BS, augmented
       set: [ bindingObject_PARAM_AFTER_ELEM, bindingObject_PARAM ]
     - match: '{{MAT_word_or_any_one_char}}'
       scope: invalid.illegal.token.es
       set: bindingObject_PARAM_AFTER_ELEM
 
   bindingObject_PARAM_AFTER_ELEM:
-    - match: '\}'
-      scope: punctuation.definition.binding.object.parameter.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.binding.object.parameter.end.es
+        2: meta.brace.curly.js # ^BS, augmented
       pop: true
-    - match: ','
-      scope: punctuation.separator.object-member.binding.parameter.es
+    - match: '((,))'
+      captures:
+        1: punctuation.separator.object-member.binding.parameter.es
+        2: meta.delimiter.comma.js # ^BS, augmented
       set: bindingObject_PARAM
     - match: '='
       scope: keyword.operator.assignment.conditional.default.es
@@ -3627,8 +3992,10 @@ contexts:
     - include: other_illegal
 
   bindingObject_PARAM_AFTER_REST_ELEM:
-    - match: '\}'
-      scope: punctuation.definition.binding.object.parameter.end.es
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.binding.object.parameter.end.es
+        2: meta.brace.curly.js # ^BS, augmented
       pop: true
     - include: other_illegal
 
@@ -3636,8 +4003,10 @@ contexts:
 # Note: Arguments is inclusive of its final delimiter. Parameters is not.
 
   arguments:
-    - match: '\)'
-      scope: punctuation.definition.arguments.end.es
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.arguments.end.es
+        2: meta.brace.round.js # ^BS
       pop: true
     - match: ','
       scope: invalid.illegal.token.es
@@ -3649,29 +4018,34 @@ contexts:
     - include: other_illegal
 
   arguments_AFTER_AE:
-    - match: '\)'
-      scope: punctuation.definition.arguments.end.es
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.arguments.end.es
+        2: meta.brace.round.js # ^BS
       pop: true
     - match: ','
       scope: punctuation.separator.argument.es
-      push: assignmentExpression
-    - match: '\.{3}'
-      scope: keyword.operator.spread.es
-      set: [ arguments_AFTER_SPREAD, assignmentExpression ]
+      set: [ arguments, assignmentExpression ]
     - include: other_illegal
 
   arguments_AFTER_SPREAD:
-    - match: '\)'
-      scope: punctuation.definition.arguments.end.es
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.arguments.end.es
+        2: meta.brace.round.js # ^BS
       pop: true
     - include: other_illegal
 
   parameters:
-    - match: '\['
-      scope: punctuation.definition.binding.array.parameter.begin.es
+    - match: '((\[))'
+      captures:
+        1: punctuation.definition.binding.array.parameter.begin.es
+        2: meta.brace.square.js # ^ES, augmented
       set: [ parameters_AFTER_PARAM, bindingArray_PARAM ]
-    - match: '\{'
-      scope: punctuation.definition.binding.object.parameter.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.binding.object.parameter.begin.es
+        2: meta.brace.curly.js # ^ES, augmented
       set: [ parameters_AFTER_PARAM, bindingObject_PARAM ]
     - match: '{{identifier}}'
       scope: variable.parameter.es
@@ -3680,7 +4054,7 @@ contexts:
       scope: invalid.illegal.token.es
       pop: true
     - match: '\.{3}'
-      scope: keyword.other.rest.parameter.es
+      scope: keyword.other.rest.parameter.es # -ES
       set: parameters_AFTER_ELLIPSIS
     - include: parameters_AFTER_REST_PARAM
 
@@ -3694,11 +4068,15 @@ contexts:
     - include: parameters_AFTER_REST_PARAM
 
   parameters_AFTER_ELLIPSIS:
-    - match: '\['
-      scope: punctuation.definition.binding.array.parameter.begin.es
+    - match: '((\[))'
+      captures:
+        1: punctuation.definition.binding.array.parameter.begin.es
+        2: meta.brace.square.js # ^BS
       set: [ parameters_AFTER_REST_PARAM, bindingArray_PARAM ]
-    - match: '\{'
-      scope: punctuation.definition.binding.object.parameter.begin.es
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.binding.object.parameter.begin.es
+        2: meta.brace.curly.js # ^BS
       set: [ parameters_AFTER_REST_PARAM, bindingObject_PARAM ]
     - match: '{{identifier}}'
       scope: variable.parameter.rest.es
@@ -3835,7 +4213,7 @@ contexts:
   regex_AFTER_PATTERN:
     - meta_include_prototype: false
     - match: >-
-        (?x)
+        (?x) ((
           ([gimyu])
           (?:
             (?!\1) ([gimyu])
@@ -3849,8 +4227,11 @@ contexts:
               )?
             )?
           )?
+          ))
           {{idEnd}}
-      scope: string.regexp.flags.es
+      captures:
+        1: string.regexp.js keyword.other.js # ^BS
+        2: string.regexp.flags.es
       pop: true
     - match: '\w+'
       scope: invalid.illegal.token
@@ -3878,7 +4259,7 @@ contexts:
     - include: string_COMMON_QUOTED
 
   templateString_AFTER_OPEN:
-    - meta_scope: string.interpolated.es
+    - meta_scope: string.interpolated.es # -BS (throughout)
     - meta_include_prototype: false
     - match: '\\[`\$\{]'
       scope: constant.character.escape.es

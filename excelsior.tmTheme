@@ -333,6 +333,19 @@
 		</dict>
 		<dict>
 			<key>name</key>
+			<string>Statement Name</string>
+			<key>scope</key>
+			<string>entity.name.statement, punctuation.separator.label-statement</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
+				<key>foreground</key>
+				<string>#8D7C62</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
 			<string>Loop Statements</string>
 			<key>scope</key>
 			<string>keyword.control.loop, punctuation.definition.block.loop, punctuation.definition.expression.loop, punctuation.separator.loop-expression</string>
@@ -588,6 +601,17 @@
 		</dict>
 		<dict>
 			<key>name</key>
+			<string>Module</string>
+			<key>scope</key>
+			<string>punctuation.definition.module-binding, punctuation.separator.module-binding, storage.type.module, storage.modifier.module</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#49B6A7</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
 			<string>Expression Group</string>
 			<key>scope</key>
 			<string>punctuation.definition.expression</string>
@@ -667,13 +691,35 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>Regex Char Classes (Predefined) &amp; Punctuation</string>
+			<string>Regex Char Classes &amp; Punctuation</string>
 			<key>scope</key>
-			<string>string.regexp constant.other.character-class.predefined, string.regexp constant.other.character-class punctuation</string>
+			<string>string.regexp constant.other.character-class.predefined, string.regexp constant.other.character-class punctuation, string.regexp constant.other.character-class.set</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
 				<string>#8ABA8A</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Char Class Dash</string>
+			<key>scope</key>
+			<string>punctuation.definition.character-class.dash.regexp</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#577557</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Char Class Negation</string>
+			<key>scope</key>
+			<string>keyword.operator.negation.regexp</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#C59764</string>
 			</dict>
 		</dict>
 		<dict>
@@ -696,17 +742,6 @@
 			<dict>
 				<key>foreground</key>
 				<string>#73D226</string>
-			</dict>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>Regex Char Classes (Content)</string>
-			<key>scope</key>
-			<string>string.regexp constant.other.character-class.set</string>
-			<key>settings</key>
-			<dict>
-				<key>foreground</key>
-				<string>#6DBC72</string>
 			</dict>
 		</dict>
 		<dict>
@@ -768,9 +803,9 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>Regex Negative Assertions &amp; Char Class Negation</string>
+			<string>Regex Negative Assertions</string>
 			<key>scope</key>
-			<string>keyword.operator.negation.regexp, string.regexp punctuation.definition.assertion.negative</string>
+			<string>string.regexp punctuation.definition.assertion.negative</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>

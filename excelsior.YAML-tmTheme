@@ -140,6 +140,14 @@ settings:
   settings:
     foreground: '#CAB18C'
 
+- name: Statement Name
+  scope: >-
+    entity.name.statement,
+    punctuation.separator.label-statement
+  settings:
+    fontStyle: bold
+    foreground: '#8D7C62'
+
 - name: Loop Statements
   scope: >-
     keyword.control.loop,
@@ -322,6 +330,15 @@ settings:
     fontStyle: 'italic'
     foreground: '#597873'
 
+- name: Module
+  scope: >-
+    punctuation.definition.module-binding,
+    punctuation.separator.module-binding,
+    storage.type.module,
+    storage.modifier.module
+  settings:
+    foreground: '#49B6A7'
+
 # EXPRESSIONS ##################################################################
 
 - name: Expression Group
@@ -373,12 +390,23 @@ settings:
 
 # REGEX ########################################################################
 
-- name: Regex Char Classes (Predefined) & Punctuation
+- name: Regex Char Classes & Punctuation
   scope: >-
     string.regexp constant.other.character-class.predefined,
-    string.regexp constant.other.character-class punctuation
+    string.regexp constant.other.character-class punctuation,
+    string.regexp constant.other.character-class.set
   settings:
     foreground: '#8ABA8A'
+
+- name: Regex Char Class Dash
+  scope: punctuation.definition.character-class.dash.regexp
+  settings:
+    foreground: '#577557'
+
+- name: Regex Char Class Negation
+  scope: keyword.operator.negation.regexp
+  settings:
+    foreground: '#C59764'
 
 - name: Regex Char Classes (Predefined) & Escapes
   scope: >-
@@ -392,11 +420,6 @@ settings:
   scope: string.regexp constant.character.escape
   settings:
     foreground: '#73D226'
-
-- name: Regex Char Classes (Content)
-  scope: string.regexp constant.other.character-class.set
-  settings:
-    foreground: '#6DBC72'
 
 - name: Regex Backrefs
   scope: string.regexp keyword.other.back-reference
@@ -427,10 +450,8 @@ settings:
   settings:
     foreground: '#5FC983'
 
-- name: Regex Negative Assertions & Char Class Negation
-  scope: >-
-    keyword.operator.negation.regexp,
-    string.regexp punctuation.definition.assertion.negative
+- name: Regex Negative Assertions
+  scope: string.regexp punctuation.definition.assertion.negative
   settings:
     foreground: '#ED804A'
 
