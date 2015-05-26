@@ -1033,7 +1033,7 @@ contexts:
     - match: '((,))'
       captures:
         1: punctuation.separator.binding-binding.es
-        2: meta.delimiter.comma
+        2: meta.delimiter.comma.js
       set: constLetVarDeclaration_AFTER_WORD
     - match: '='
       scope: keyword.operator.assignment.es
@@ -2197,7 +2197,7 @@ contexts:
     # character. 
     - match: '(?x) ((\{)) (?= (?<brackets> [^\{\}] | \{ \g<brackets>* \} )* \}\s*=[^=])'
       captures:
-        1: punctuation.definition.binding.object.begin
+        1: punctuation.definition.binding.object.begin.es
         2: meta.brace.curly.js # ^BS
       set: [ ae_AFTER_THING, bindingObject ]
     - match: '(?x) ((\[)) (?= (?<brackets> [^\[\]] | \[ \g<brackets>* \] )* \]\s*=[^=])'
@@ -3055,7 +3055,7 @@ contexts:
   ae_NO_IN_OBJECT_ARRAY_BINDING:
     - match: '(?x) ((\{)) (?= (?<brackets> [^\{\}] | \{ \g<brackets>* \} )* \}\s*=[^=])'
       captures:
-        1: punctuation.definition.binding.object.begin
+        1: punctuation.definition.binding.object.begin.es
         2: meta.brace.curly.js
       set: [ ae_NO_IN_AFTER_THING, bindingObject ]
     - match: '(?x) ((\[)) (?= (?<brackets> [^\[\]] | \[ \g<brackets>* \] )* \]\s*=[^=])'
@@ -3254,7 +3254,7 @@ contexts:
       captures:
         1: constant.other.object.key.js string.unquoted.label.js # ^BS
         2: variable.other.readwrite.property.object-literal.es
-        3: constant.other.object.key # ^BS
+        3: constant.other.object.key.js # ^BS
         4: punctuation.separator.key-value.es
       set: [ literalObject_AFTER_AE, assignmentExpression ]
     - match: '((get)){{idEnd}}'
@@ -3266,7 +3266,7 @@ contexts:
       captures:
         1: constant.other.object.key.js string.unquoted.label.js # ^BS
         2: variable.other.readwrite.property.object-literal.es
-        3: constant.other.object.key # ^BS
+        3: constant.other.object.key.js # ^BS
         4: punctuation.separator.key-value.es
       set: [ literalObject_AFTER_AE, assignmentExpression ]
     - match: '((set)){{idEnd}}'
@@ -3296,7 +3296,7 @@ contexts:
         2: variable.other.readwrite.property.object-literal.allCap.es
         3: variable.other.readwrite.property.object-literal.initCap.es
         4: variable.other.readwrite.property.object-literal.es
-        5: constant.other.object.key # ^BS
+        5: constant.other.object.key.js # ^BS
         6: punctuation.separator.key-value.es
       set: [ literalObject_AFTER_AE, assignmentExpression ]
     # IDENTIFIER REFERENCE (probably)
@@ -3371,7 +3371,7 @@ contexts:
     # Safety context for " prop \n : "
     - match: '((:))'
       captures:
-        1: constant.other.object.key # ^BS
+        1: constant.other.object.key.js # ^BS
         2: punctuation.separator.key-value.es
       set: [ literalObject_AFTER_AE, assignmentExpression ]
     - match: '((\())'
@@ -3384,7 +3384,7 @@ contexts:
   literalObject_AFTER_PROP:
     - match: '((:))'
       captures:
-        1: constant.other.object.key # ^BS
+        1: constant.other.object.key.js # ^BS
         2: punctuation.separator.key-value.es
       set: [ literalObject_AFTER_AE, assignmentExpression ]
     - match: '((\())'
@@ -3471,7 +3471,7 @@ contexts:
     - match: '(({{identifier}}))'
       captures:
         1: entity.name.method.js # ^BS -- monokai
-        2: entity.name.method.async
+        2: entity.name.method.async.es
       set: method_AFTER_NAME
     - match: "'"
       scope: punctuation.definition.string.quoted.single.begin.es

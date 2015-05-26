@@ -24,22 +24,19 @@ this ‘released.’
 
 ## Remaining Work
 
- - I’d like to provide two themes with the definition package itself. One will
-   be something tacky to show off the kinds of stuff you can do; the other will
-   be something more usable.
+ - I’d like to provide two themes with the definition package itself. The first
+   of these is ‘Excelsior,’ a kind of tacky attempt to demonstrate what can be
+   done that I’ve grown very fond of as it matured. It’s (mostly) complete now.
+   Still, it’s probably a bit much for many users. So I intend to do a second
+   more subdued theme.
  - The chunk of comment-delimited code starting at `assignmentExpression_NO_IN`
    is actually possible to generate as a build step. Doing so will reduce the
    chances of accidentally editing `assignmentExpression` without making the
    corresponding change in `assignmentExpression_NO_IN`. I’m not sure if this
-   is worthwhile yet but it seems like a good idea. 
- - Ecmascript Sublime Syntax introduces many scopes not in the original Sublime
-   Javascript tmLanguage or JSNext or Babel Sublime. However it also lacks some
-   scopes from these. While these divergences were usually deliberate, I would
-   like to add ‘double’ scopes to certain elements to increase compatibility
-   with existing themes that target Babel Sublime and JSNext. 
+   is worthwhile yet but it’s rolling around in my head. 
  - A lot of the redundant-looking contexts exist for good reasons -- but not all
    of them. There should be a clean-up and consolidation phase for contexts,
-   but more importantly, for patterns.
+   but more importantly, for patterns (or more often, pattern components).
 
 ## Why Bother
 
@@ -82,19 +79,12 @@ or may not suit your style. And finally, Ecmascript Sublime is a lot more rigid
 by nature, so invalid token sequences will not often pass unnoticed -- you may
 find this useful, or you may find it bothersome.
 
-Although there’s no real theme yet, assigning random colors to all scopes is a
-good way to give some idea of what can be done:
-
-![Color barf example](https://github.com/bathos/Ecmascript-Sublime/raw/master/example-barf.png)
-
-And from the first theme I’m working on, which is at least a little more
-reasonable hopefully:
+Here’s an early shot of Excelsior. I should add an updated one soon:
 
 ![Early Excelsior example](https://github.com/bathos/Ecmascript-Sublime/raw/master/example-okay.png)
 
-**May 25**: "Excelsior" theme is coming along. I set out to make this one mainly
-a demo of what’s possible, but I’m actually really happy with how it’s turning
-out. Cool new thing: regex capture group coloring:
+And here’s an example I’m fond of, using background colors to indicate the depth
+of matching groups in a regular expression:
 
 ![Excelsior regex example](https://github.com/bathos/Ecmascript-Sublime/raw/master/example-regex.png)
 
@@ -167,11 +157,20 @@ sure what habitual global users would like to see.
 
 ## Themes
 
-As yet, there are none! Let’s fix that.
+The first theme, Excelsior, is more or less finished. A second one, Carthage, is
+just begun.
 
-I intend to do one theme that’s really a demo of what’s possible -- in other
-words, it will be tacky as hell. But of course I want to add a more reasonable
-one as well.
+As of version 0.1.2, I’ve also added many additional scopes and tweaked a number
+of things to increase interoperability with existing themes. Monokai, Cobalt,
+and Brogrammer were my reference themes; the goal was to make them match as
+closely as is reasonable to how they look when using Babel Sublime. There’s a
+handful of things that cannot be made to match because of what I guess could be
+called philosophical differences, but it should now be possible to use
+Ecmascript Sublime with just about any theme without cringing.
+
+I should note, there is another theme included with the package. It isn’t a real
+theme though -- it assigns random colors to hundreds of scopes. It is useful for
+referencing when designing themes but you’d be insane to actually use it.
 
 If you’re interested in adding support for Ecmascript Sublime to your theme, or
 are developing a new theme with this in mind, you’ll probably want a list of
@@ -179,9 +178,11 @@ the targettable scopes...
 
 ## Scopes
 
-Once this is solidified I will add examples, at least for the ones that might
-not otherwise be obvious. Right now it’s still likely that some of these will be
-tweaked.
+Soon I will be adding examples, at least for the less obvious items. It goes
+without saying that only a minority of these will be truly useful to most
+themers; on the other hand, you get to decide which those are.
+
+### ‘Official’ Scopes
 
  - comment.block.es
  - comment.line.es
@@ -218,12 +219,13 @@ tweaked.
  - entity.name.function.es
  - entity.name.function.generator.es
  - entity.name.function.initCap.es
- - entity.name.method.async
+ - entity.name.method.async.es
  - entity.name.method.es
  - entity.name.method.generator.es
  - entity.name.module.export.es
  - entity.name.module.import.es
  - entity.name.statement.es
+ - entity.name.type.new
  - entity.other.property-binding.es
  - entity.other.property-binding.parameter.es
  - invalid.deprecated.es
@@ -238,6 +240,7 @@ tweaked.
  - keyword.control.flow.break.es
  - keyword.control.flow.continue.es
  - keyword.control.flow.each.es
+ - keyword.control.flow.return.accessor.es
  - keyword.control.flow.return.es
  - keyword.control.flow.throw.es
  - keyword.control.flow.yield.es
@@ -288,6 +291,7 @@ tweaked.
  - keyword.operator.assignment.conditional.default.es
  - keyword.operator.assignment.conditional.mallet.es
  - keyword.operator.assignment.es
+ - keyword.operator.bind.es
  - keyword.operator.bitwise.logical.and.es
  - keyword.operator.bitwise.logical.not.es
  - keyword.operator.bitwise.logical.or.es
@@ -324,6 +328,7 @@ tweaked.
  - keyword.other.debugger.es
  - keyword.other.rest.es
  - keyword.other.rest.parameter.es
+ - meta.brace.curly.hs
  - meta.comment.body.es
  - meta.comment.border.es
  - meta.comment.box-drawing.es
@@ -339,10 +344,6 @@ tweaked.
  - meta.numeric.exponent.e.es
  - meta.numeric.exponent.sign.es
  - meta.numeric.prefix.es
- - meta.symbol-helper.arrow.es
- - meta.symbol-helper.class.es
- - meta.symbol-helper.function.es
- - meta.symbol-helper.generator.es
  - meta.whitespace.es
  - punctuation.decimal.es
  - punctuation.definition.accessor.begin.es
@@ -354,6 +355,10 @@ tweaked.
  - punctuation.definition.arguments.end.es
  - punctuation.definition.array.begin.es
  - punctuation.definition.array.end.es
+ - punctuation.definition.assertion.negative.begin.regexp
+ - punctuation.definition.assertion.negative.end.regexp
+ - punctuation.definition.assertion.positive.begin.regexp
+ - punctuation.definition.assertion.positive.end.regexp
  - punctuation.definition.binding.array.begin.es
  - punctuation.definition.binding.array.end.es
  - punctuation.definition.binding.array.parameter.begin.es
@@ -408,8 +413,10 @@ tweaked.
  - punctuation.definition.function.body.end.es
  - punctuation.definition.generator.body.begin.es
  - punctuation.definition.generator.body.end.es
- - punctuation.definition.group.begin.regexp
- - punctuation.definition.group.end.regexp
+ - punctuation.definition.group.capturing.begin.regexp
+ - punctuation.definition.group.capturing.end.regexp
+ - punctuation.definition.group.non-capturing.begin.regexp
+ - punctuation.definition.group.non-capturing.end.regexp
  - punctuation.definition.method.body.begin.es
  - punctuation.definition.method.body.end.es
  - punctuation.definition.method.generator.body.begin.es
@@ -463,13 +470,19 @@ tweaked.
  - punctuation.separator.property-binding.es
  - punctuation.separator.property-binding.parameter.es
  - punctuation.terminator.statement.es
- - source.es
  - storage.modifier.accessor.get.es
+ - storage.modifier.accessor.set.es
  - storage.modifier.async.es
+ - storage.modifier.async.expression.es
+ - storage.modifier.async.method.es
  - storage.modifier.extends.es
+ - storage.modifier.generator.asterisk.es
+ - storage.modifier.generator.asterisk.expression.es
+ - storage.modifier.module.as.es
+ - storage.modifier.module.default.es
+ - storage.modifier.module.from.es
+ - storage.modifier.module.namespace.es
  - storage.modifier.static.es
- - storage.type.accessor.set.es
- - storage.type.async.expression.es
  - storage.type.class
  - storage.type.class.es
  - storage.type.class.expression.es
@@ -477,16 +490,10 @@ tweaked.
  - storage.type.function.arrow.es
  - storage.type.function.es
  - storage.type.function.expression.es
- - storage.type.function.generator.asterisk.es
- - storage.type.function.generator.asterisk.expression.es
  - storage.type.function.generator.es
  - storage.type.function.generator.expression.es
- - storage.type.module.as.es
- - storage.type.module.default.es
  - storage.type.module.export.es
- - storage.type.module.from.es
  - storage.type.module.import.es
- - storage.type.module.namespace.es
  - storage.type.variable.let.es
  - storage.type.variable.var.es
  - string.interpolated.es
@@ -520,6 +527,9 @@ tweaked.
  - variable.other.readwrite.property.allCap.es
  - variable.other.readwrite.property.es
  - variable.other.readwrite.property.initCap.es
+ - variable.other.readwrite.property.object-literal.allCap.es
+ - variable.other.readwrite.property.object-literal.es
+ - variable.other.readwrite.property.object-literal.initCap.es
  - variable.other.readwrite.property.proto.es
  - variable.other.readwrite.property.prototype.es
  - variable.other.readwrite.property.shorthand.allCap.es
@@ -528,10 +538,56 @@ tweaked.
  - variable.other.readwrite.property.shorthand.rest.allCap.es
  - variable.other.readwrite.property.shorthand.rest.es
  - variable.other.readwrite.property.shorthand.rest.initCap.es
+ - variable.other.readwrite.propertyobject-literal..es
  - variable.other.readwrite.tag.es
  - variable.parameter.catch.es
  - variable.parameter.es
  - variable.parameter.rest.es
+
+### Symbol Helper Scopes
+
+These scopes are used to facilitate proper population of the symbol list.
+
+ - meta.symbol-helper.arrow.es
+ - meta.symbol-helper.class.es
+ - meta.symbol-helper.function.es
+ - meta.symbol-helper.generator.es
+
+### Interoperability Scopes
+
+These scopes exist alongside others above to maximize interoperability with
+existing themes, especially those targetting JSNext and Babel Sublime.
+
+ - constant.other.object.key.js
+ - entity.name.class.js
+ - entity.name.function.js
+ - entity.name.method.js
+ - entity.name.tag.js
+ - entity.quasi.element.js
+ - entity.quasi.tag.name.js
+ - keyword.generator.asterisk.js
+ - keyword.operator.module.js
+ - keyword.other.js
+ - meta.brace.curly.js
+ - meta.brace.round.js
+ - meta.brace.sqaure.js
+ - meta.brace.square.js
+ - meta.delimiter.comma.js
+ - meta.function-call
+ - meta.function.arrow.js
+ - meta.function.js
+ - meta.instance.constructor
+ - meta.separator.comma.js
+ - punctuation.definition.tag.js
+ - punctuation.quasi.element.begin.js
+ - punctuation.quasi.element.end.js
+ - storage.type.accessor.js
+ - storage.type.extends.js
+ - storage.type.function.js
+ - storage.type.js
+ - string.regexp.js
+ - string.unquoted.label.js
+
 
 ## About the Scope Conventions
 
@@ -547,15 +603,15 @@ most themes.
 
 Sometimes I opted to use a pre-existing tmLanguage convention over a domain-
 specific choice. For example, Babel uses `quasi` but many tmLanguages and themes
-already target `string.interpolated`. One of the things I will do later is
-‘double scope’ these things so that you can refer to them either way in a theme.
+already target `string.interpolated`. In cases like this I typically ‘double
+scope’ the tokens so that they can be targetted either way.
 
 Other divergences stem from the objective of the definition, which may differ a
-bit in intent. I wanted the scopes to be very reflective of the language’s
-grammar. For example, `entity.name.function` will appear in a function
-declaration, but it won’t appear in function invocations; to Ecmascript Sublime,
-in that context what you’re looking at is an identifier (which has a scope) and
-an invocation (which also has a scope), but not an entity name.
+bit. I wanted the scopes to be very reflective of the language’s grammar. For
+example, `entity.name.function` will appear in a function declaration, but it
+won’t appear in function invocations; to Ecmascript Sublime, in that context
+what you’re looking at is an identifier (which has a scope) and an invocation
+(which also has a scope), but not an entity name.
 
 Many of the new scopes concern punctuation. The `punctuation.definition` scope
 namespace is the existing convention for these things. So for if statements, for
