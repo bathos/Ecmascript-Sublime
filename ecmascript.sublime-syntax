@@ -1521,13 +1521,14 @@ contexts:
       set: ae_AFTER_ACCESSOR_OPERATOR
     # This is another special cases for crybaby decorator expressions. It will
     # work only for computed properties that do not contain other brackets, but
-    # that should be sufficient for any realistic cases.
+    # that should be sufficient for any realistic cases. It isn’t needed in the
+    # ‘NO_IN’ series.
     - match: >-
         (?x) (?=
           \[
             [^\[\]]+
           \]
-          \s* \(
+          \s* \( [^\)]* \) \s* \{
         )
       pop: true
     - match: '((\[))'
