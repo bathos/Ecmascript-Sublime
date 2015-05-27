@@ -16,6 +16,7 @@ settings:
     stackGuide: '#3B3C3D'
     activeGuide: '#48494A'
 
+    lineHighlight: '#3E3E3E'
     multiEditHighlight: '#A5EB5144'
     searchHighlight: '#E9EE5F99'
     selection: '#575757'

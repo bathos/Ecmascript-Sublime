@@ -25,6 +25,8 @@
 				<string>#323334</string>
 				<key>gutter</key>
 				<string>#323232</string>
+				<key>lineHighlight</key>
+				<string>#3E3E3E</string>
 				<key>multiEditHighlight</key>
 				<string>#A5EB5144</string>
 				<key>searchHighlight</key>
