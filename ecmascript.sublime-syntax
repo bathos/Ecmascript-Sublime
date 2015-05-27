@@ -314,7 +314,7 @@ contexts:
       scope: keyword.other.debugger.es
       set: optional_semicolon_pop
     # * LABELLED STATEMENT (note: does not pop or transition)
-    - match: '(({{identifier}})\s*(:))'
+    - match: '(({{identifier}})\s*(:(?!:)))'
       captures:
         1: constant.other.object.key.js string.unquoted.label.js # ^BS, adapted
         2: entity.name.statement.es
@@ -4381,7 +4381,6 @@ contexts:
     - match: '\]'
       scope: punctuation.definition.character-class.end.regexp
       pop: true
-    - include: regex_ANY_CHILD_CONTEXT
     - include: regex_COMMON
 
   regex_AFTER_ASSERTION_NEGATIVE_OPEN:
