@@ -5,8 +5,8 @@ uuid: 59515723-fff1-4eda-a678-5bb3b7194ec3
 settings:
 - settings:
     foreground: '#DCDCDC'
-    background: '#271F37' 
-    gutter: '#322643'
+    background: '#31313A' 
+    gutter: '#3D3D48'
     caret: '#DCDCDC'
 
     bracketContentsOptions: 'stippled_underline'
@@ -25,54 +25,10 @@ settings:
   settings:
     foreground: '#A7D7D0'
 
-
-- scope: entity
+- name: Support
+  scope: support
   settings:
-    foreground: '#DCDCDC'
-- scope: invalid
-  settings:
-    background: '#B0C2C0'
-    foreground: '#798382'
-- scope: markup
-  settings:
-    foreground: '#DCDCDC'
-- scope: markup.underline
-  settings:
-    background: '#DCDCDC'
-- scope: markup.bold
-  settings:
-    fontStyle: 'bold'
-- scope: markup.heading
-  settings:
-    foreground: '#DCDCDC'
-- scope: markup.italic
-  settings:
-    fontStyle: 'italic'
-- scope: markup.list
-  settings:
-    background: '#DCDCDC'
-- scope: markup.quote
-  settings:
-    background: '#DCDCDC'
-- scope: markup.raw
-  settings:
-    background: '#DCDCDC'
-- scope: storage.modifier
-  settings:
-    foreground: '#DCDCDC'
-- scope: string.regexp
-  settings:
-    foreground: '#DCDCDC'
-- scope: support
-  settings:
-    foreground: '#DCDCDC'
-- scope: support.function
-  settings:
-    foreground: '#DCDCDC'
-- scope: support.variable
-  settings:
-    foreground: '#DCDCDC'
-
+    foreground: '#0C61CA'
 
 - name: Constants
   scope: >-
@@ -106,7 +62,14 @@ settings:
     punctuation.separator.object-member,
     variable
   settings:
-    foreground: '#DCBF21'
+    foreground: '#D0D99C'
+
+- name: Properties
+  scope: >-
+    punctuation.definition.accessor,
+    variable.other.readwrite.property
+  settings:
+    foreground: '#FAE366'
 
 - name: Language Variables
   scope: variable.language
@@ -121,8 +84,7 @@ settings:
     punctuation.definition.expression,
     punctuation.definition.string.interpolated.element
   settings:
-    fontStyle: bold
-    foreground: '#F3DF71'
+    foreground: '#AD81F5'
 
 - name: Invocations & Instantiations
   scope: >-
@@ -236,7 +198,7 @@ settings:
     punctuation.definition.parameters.method,
     storage.type.function
   settings:
-    foreground: '#D388F6'
+    foreground: '#B179CB'
 
 - name: Function Name
   scope: >-
@@ -244,7 +206,7 @@ settings:
     entity.name.method
   settings:
     fontStyle: bold
-    foreground: '#C15AF1'
+    foreground: '#AA5CCE'
 
 - name: Generator & Async
   scope: >-
@@ -277,7 +239,7 @@ settings:
     storage.modifier.static,
     storage.type.class
   settings:
-    foreground: '#64AD15'
+    foreground: '#66D168'
 
 - name: Accessor
   scope: >-
@@ -285,13 +247,13 @@ settings:
     punctuation.definition.accessor.body,
     punctuation.definition.parameters.accessor
   settings:
-    foreground: '#74AD84'
+    foreground: '#9BCF9C'
 
 - name: Class Name
   scope: entity.name.class
   settings:
     fontStyle: bold
-    foreground: '#76DD07'
+    foreground: '#4FE352'
 
 - name: Declaration Punctuation
   scope:
