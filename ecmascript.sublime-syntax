@@ -1429,6 +1429,13 @@ contexts:
     # realistically it will nearly always be an identifier, and it is something
     # to which we would like to give a unique scope when possible. However to be
     # safe we still need to continue on to the usual AE context.
+    #
+    # Also note that there are problems with the current spec’s grammar
+    # definition. Allowing an assignment expression before a method definition
+    # creates ambiguities that even a real parser wouldn’t like, muchless a
+    # linear regex syntax def. To deal with this we actually need to add to add
+    # a kindof hackish lookahead in assignment expression to (hopefully) pop on
+    # generator definitions. We can also try to deal with some computed props.
     - match: '(?!async{{idEnd}})(({{identifier}}))(?!\s*=){{idEnd}}'
       captures:
         1: entity.name.tag.js # ^ BS
@@ -1512,6 +1519,17 @@ contexts:
     - match: '\.'
       scope: keyword.operator.accessor.es
       set: ae_AFTER_ACCESSOR_OPERATOR
+    # This is another special cases for crybaby decorator expressions. It will
+    # work only for computed properties that do not contain other brackets, but
+    # that should be sufficient for any realistic cases.
+    - match: >-
+        (?x) (?=
+          \[
+            [^\[\]]+
+          \]
+          \s* \(
+        )
+      pop: true
     - match: '((\[))'
       captures:
         1: punctuation.definition.accessor.begin.es
@@ -2016,7 +2034,19 @@ contexts:
     - match: '\*\*(?!=)'
       scope: keyword.operator.arithmetic.exponentiation.es
       set: assignmentExpression
-    - match: '\*(?![=\*])'
+    # The lookaheads here (aside from the first) are an awkward way to prevent
+    # bad matching when a decorator is followed by a generator. It’s imperfect,
+    # but exceptional cases should be rare. I think the final decorator syntax
+    # will need to be far more restrictive because these problems, while worse
+    # for us, are also going to affect real parsers.
+    - match: >-
+        (?x)
+          \*
+          (?! [=\*])
+          (?! \s* " [^"]+ " \s* \( )
+          (?! \s* '' [^'']+ '' \s* \( )
+          (?! \s* \[ [\]]+ \] \s* \( )
+          (?! \s* {{identifier}} \s* \([^)]*\) \s* \{)
       scope: keyword.operator.arithmetic.multiplication.es
       set: assignmentExpression
     - match: '\/(?!=)'
@@ -2906,7 +2936,14 @@ contexts:
     - match: '\*\*(?!=)'
       scope: keyword.operator.arithmetic.exponentiation.es
       set: assignmentExpression_NO_IN
-    - match: '\*(?![=\*])'
+    - match: >-
+        (?x)
+          \*
+          (?! [=\*])
+          (?! \s* " [^"]+ " \s* \( )
+          (?! \s* '' [^'']+ '' \s* \( )
+          (?! \s* \[ [\]]+ \] \s* \( )
+          (?! \s* {{identifier}} \s* \([^)]*\) \s* \{)
       scope: keyword.operator.arithmetic.multiplication.es
       set: assignmentExpression_NO_IN
     - match: '\/(?!=)'
