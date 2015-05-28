@@ -603,13 +603,24 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>Module</string>
+			<string>Module Import, Export</string>
 			<key>scope</key>
-			<string>punctuation.definition.module-binding, punctuation.separator.module-binding, storage.type.module, storage.modifier.module</string>
+			<string>storage.type.module keyword.operator</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#49B6A7</string>
+				<string>#C2276F</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Module etc</string>
+			<key>scope</key>
+			<string>punctuation.definition.module-binding, punctuation.separator.module-binding, storage.modifier.module</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#E23E8A</string>
 			</dict>
 		</dict>
 		<dict>

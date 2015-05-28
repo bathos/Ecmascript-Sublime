@@ -332,14 +332,20 @@ settings:
     fontStyle: 'italic'
     foreground: '#597873'
 
-- name: Module
+- name: Module Import, Export
+  scope: >-
+    storage.type.module keyword.operator
+  # keyword.operator is there because of interoperability scope issues...
+  settings:
+    foreground: '#C2276F'
+
+- name: Module etc
   scope: >-
     punctuation.definition.module-binding,
     punctuation.separator.module-binding,
-    storage.type.module,
     storage.modifier.module
   settings:
-    foreground: '#49B6A7'
+    foreground: '#E23E8A'
 
 # EXPRESSIONS ##################################################################
 
