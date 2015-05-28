@@ -1927,7 +1927,7 @@ contexts:
     - match: '((((Buffer)))\s*)((\())'
       captures:
         1: variable.other.readwrite.es
-        2: meta.instance.constructor entity.name.type.new # ^BS
+        2: meta.instance.constructor # ^BS
         3: meta.instantiation.es
         4: support.class.node.es
         5: punctuation.definition.arguments.begin.es
@@ -1992,7 +1992,7 @@ contexts:
     - match: '(?x) (((({{intrinsicConstructors}})))\s*)((\())'
       captures:
         1: variable.other.readwrite.es
-        2: meta.instance.constructor entity.name.type.new # ^BS
+        2: meta.instance.constructor # ^BS
         3: meta.instantiation.es
         4: support.class.builtin.es
         5: punctuation.definition.arguments.begin.es
@@ -2399,7 +2399,7 @@ contexts:
       captures:
         1: keyword.operator.new.es
         2: variable.other.readwrite.es
-        3: meta.instance.constructor entity.name.type.new # ^BS
+        3: meta.instance.constructor # ^BS
         4: meta.instantiation.es
         5: support.class.node.es
         6: support.class.builtin.es
@@ -2430,7 +2430,7 @@ contexts:
         8: variable.other.readwrite.es
         9: keyword.operator.accessor.es
         10: variable.other.readwrite.es
-        11: meta.instance.constructor entity.name.type.new # ^BS, augmented
+        11: meta.instance.constructor # ^BS, augmented
         12: meta.instantiation.es
       set: ae_AFTER_THING
     - match: '(new)\s*(\.)'
@@ -2867,7 +2867,7 @@ contexts:
     - match: '((((Buffer)))\s*)((\())'
       captures:
         1: variable.other.readwrite.es
-        2: meta.instance.constructor entity.name.type.new
+        2: meta.instance.constructor
         3: meta.instantiation.es
         4: support.class.node.es
         5: punctuation.definition.arguments.begin.es
@@ -2902,7 +2902,7 @@ contexts:
     - match: '(?x) (((({{intrinsicConstructors}})))\s*)((\())'
       captures:
         1: variable.other.readwrite.es
-        2: meta.instance.constructor entity.name.type.new
+        2: meta.instance.constructor
         3: meta.instantiation.es
         4: support.class.builtin.es
         5: punctuation.definition.arguments.begin.es
@@ -3184,7 +3184,7 @@ contexts:
       captures:
         1: keyword.operator.new.es
         2: variable.other.readwrite.es
-        3: meta.instance.constructor entity.name.type.new
+        3: meta.instance.constructor
         4: meta.instantiation.es
         5: support.class.node.es
         6: support.class.builtin.es
@@ -3212,7 +3212,7 @@ contexts:
         8: variable.other.readwrite.es
         9: keyword.operator.accessor.es
         10: variable.other.readwrite.es
-        11: meta.instance.constructor entity.name.type.new
+        11: meta.instance.constructor
         12: meta.instantiation.es
       set: ae_NO_IN_AFTER_THING
     - match: '(new)\s*(\.)'
