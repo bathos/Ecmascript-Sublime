@@ -4,7 +4,7 @@ uuid: ec03bb31-a261-42cf-84e0-5d6fc178a126
 
 # CLASS
 scope: >-
-  source.es entity.name.class,
+  source.es entity.name.class.es,
   source.es meta.symbol-helper.class
 settings:
   showInSymbolList: 1

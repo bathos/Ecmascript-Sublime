@@ -5,7 +5,7 @@
 	<key>name</key>
 	<string>Default Export Symbol</string>
 	<key>scope</key>
-	<string>storage.type.module.default</string>
+	<string>storage.modifier.module.default</string>
 	<key>settings</key>
 	<dict>
 		<key>showInIndexedSymbolList</key>

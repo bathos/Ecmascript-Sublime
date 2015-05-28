@@ -4,7 +4,7 @@ uuid: 47d901a1-9272-472f-b9e3-b3b105433cee
 
 # GENERATOR
 scope: >-
-  source.es entity.name.function.generator,
+  source.es entity.name.function.generator.es,
   source.es meta.symbol-helper.generator
 settings:
   showInSymbolList: 1

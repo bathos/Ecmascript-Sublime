@@ -1002,7 +1002,10 @@ contexts:
           (?=
             \s* = \s*
             (?:
-              \( (?= (?<parens> [^\(\)] | \( \g<parens>* \) )* \) ) \) |
+              \(
+                (?<parens> [^\(\)] | \( \g<parens>* \) )*
+              \)
+              |
               {{identifierName}}
             )
             \s* =>
@@ -4320,7 +4323,7 @@ contexts:
     - match: '\|'
       scope: keyword.operator.or.regexp
     # QUANTIFIERS
-    - match: '[\?\*\+]|\{\d\s*(?:,\s*\d*\s*)?\}'
+    - match: '[\?\*\+]|\{\d+\s*(?:,\s*\d*\s*)?\}'
       scope: keyword.operator.quantifier.regexp
     # CHARACTER CLASSES
     - match: '\['
@@ -4381,6 +4384,8 @@ contexts:
     - match: '\]'
       scope: punctuation.definition.character-class.end.regexp
       pop: true
+    - match: '\/'
+    - include: regex_ANY_CHILD_CONTEXT
     - include: regex_COMMON
 
   regex_AFTER_ASSERTION_NEGATIVE_OPEN:

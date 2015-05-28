@@ -5,7 +5,7 @@
 	<key>name</key>
 	<string>Generator Symbol</string>
 	<key>scope</key>
-	<string>source.es entity.name.function.generator, source.es meta.symbol-helper.generator</string>
+	<string>source.es entity.name.function.generator.es, source.es meta.symbol-helper.generator</string>
 	<key>settings</key>
 	<dict>
 		<key>showInIndexedSymbolList</key>

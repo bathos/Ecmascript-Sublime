@@ -5,7 +5,7 @@
 	<key>name</key>
 	<string>Function Symbol</string>
 	<key>scope</key>
-	<string>source.es entity.name.function, source.es meta.symbol-helper.function</string>
+	<string>source.es entity.name.function.es, source.es meta.symbol-helper.function</string>
 	<key>settings</key>
 	<dict>
 		<key>showInIndexedSymbolList</key>
