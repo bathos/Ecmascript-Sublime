@@ -1519,6 +1519,11 @@ contexts:
   # access or infix operators other than assignment operators -- or it could
   # just be the end of the assignment expression. 
   ae_AFTER_VALUE:
+    # Refinement for error cases that are artifacts of active typing 
+    - match: '\.(?=\s*[\}\)\]])'
+      scope: invalid.illegal.token
+      pop: true
+    # Accessor operator
     - match: '\.'
       scope: keyword.operator.accessor.es
       set: ae_AFTER_ACCESSOR_OPERATOR
@@ -1534,6 +1539,7 @@ contexts:
           \s* \( [^\)]* \) \s* \{
         )
       pop: true
+    # Accessor brackets
     - match: '((\[))'
       captures:
         1: punctuation.definition.accessor.begin.es
@@ -1584,6 +1590,9 @@ contexts:
     - match: '{{identifierName}}'
       scope: variable.other.readwrite.property.es
       set: ae_AFTER_THING
+    # Refinement for error cases that are artifacts of active typing 
+    - match: '(?=[\}\)\]])'
+      pop: true
     - include: other_illegal_pop
 
   ae_ARRAY_COMPREHENSION:
