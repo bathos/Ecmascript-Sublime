@@ -1033,6 +1033,8 @@ contexts:
         1: punctuation.definition.binding.object.begin.es
         2: meta.brace.curly.js # ^BS
       set: [ constLetVarDeclaration_AFTER_BINDING_PATTERN, bindingObject ]
+    # We forgive syntax errors here to prevent mid-typing scope error cascades
+    - include: else_pop
 
   constLetVarDeclaration_AFTER_BINDING:
     - match: '((,))'
