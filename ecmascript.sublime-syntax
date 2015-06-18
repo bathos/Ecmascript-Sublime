@@ -1547,10 +1547,6 @@ contexts:
         1: punctuation.definition.accessor.begin.es
         2: meta.brace.square.js # ^BS
       set: [ ae_AFTER_THING, computedProp_AFTER_AE, assignmentExpression ]
-    # BIND-TO
-    - match: '::'
-      scope: keyword.operator.bind.es
-      set: assignmentExpression
     - include: ae_INFIX_OPS
     - include: ae_AFTER_POSTFIX
 
@@ -3476,17 +3472,9 @@ contexts:
         1: variable.other.readwrite.property.shorthand.rest.allCap.es # -BS
         2: variable.other.readwrite.property.shorthand.rest.initCap.es
         3: variable.other.readwrite.property.shorthand.rest.es
-      set: literalObject_AFTER_REST_MEMBER
+      set: literalObject_AFTER_AE
     - match: '\}'
       scope: invalid.illegal.token
-      pop: true
-    - include: other_illegal
-
-  literalObject_AFTER_REST_MEMBER:
-    - match: '((\}))'
-      captures:
-        1: punctuation.definition.object.end.es
-        2: meta.brace.curly.js # ^BS
       pop: true
     - include: other_illegal
 
