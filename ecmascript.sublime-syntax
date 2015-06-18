@@ -1033,6 +1033,8 @@ contexts:
         1: punctuation.definition.binding.object.begin.es
         2: meta.brace.curly.js # ^BS
       set: [ constLetVarDeclaration_AFTER_BINDING_PATTERN, bindingObject ]
+    # We forgive syntax errors here to prevent mid-typing scope error cascades
+    - include: else_pop
 
   constLetVarDeclaration_AFTER_BINDING:
     - match: '((,))'
@@ -1519,6 +1521,11 @@ contexts:
   # access or infix operators other than assignment operators -- or it could
   # just be the end of the assignment expression. 
   ae_AFTER_VALUE:
+    # Refinement for error cases that are artifacts of active typing 
+    - match: '\.(?=\s*[\}\)\]])'
+      scope: invalid.illegal.token
+      pop: true
+    # Accessor operator
     - match: '\.'
       scope: keyword.operator.accessor.es
       set: ae_AFTER_ACCESSOR_OPERATOR
@@ -1534,6 +1541,7 @@ contexts:
           \s* \( [^\)]* \) \s* \{
         )
       pop: true
+    # Accessor brackets
     - match: '((\[))'
       captures:
         1: punctuation.definition.accessor.begin.es
@@ -1588,6 +1596,9 @@ contexts:
     - match: '{{identifierName}}'
       scope: variable.other.readwrite.property.es
       set: ae_AFTER_THING
+    # Refinement for error cases that are artifacts of active typing 
+    - match: '(?=[\}\)\]])'
+      pop: true
     - include: other_illegal_pop
 
   ae_ARRAY_COMPREHENSION:
@@ -1933,7 +1944,7 @@ contexts:
     - match: '((((Buffer)))\s*)((\())'
       captures:
         1: variable.other.readwrite.es
-        2: meta.instance.constructor # ^BS
+        2: meta.instance.constructor entity.name.type.new # ^BS
         3: meta.instantiation.es
         4: support.class.node.es
         5: punctuation.definition.arguments.begin.es
@@ -2123,6 +2134,10 @@ contexts:
       set: assignmentExpression
     - match: 'in{{idEnd}}'
       scope: keyword.operator.relational.in.es
+      set: assignmentExpression
+    # BINDING
+    - match: '::'
+      scope: keyword.operator.bind.es
       set: assignmentExpression
 
   ae_INFIX_OPS_ASSIGNMENT:
@@ -2405,7 +2420,7 @@ contexts:
       captures:
         1: keyword.operator.new.es
         2: variable.other.readwrite.es
-        3: meta.instance.constructor # ^BS
+        3: meta.instance.constructor entity.name.type.new # ^BS
         4: meta.instantiation.es
         5: support.class.node.es
         6: support.class.builtin.es
@@ -2436,7 +2451,7 @@ contexts:
         8: variable.other.readwrite.es
         9: keyword.operator.accessor.es
         10: variable.other.readwrite.es
-        11: meta.instance.constructor # ^BS, augmented
+        11: meta.instance.constructor entity.name.type.new # ^BS, augmented
         12: meta.instantiation.es
       set: ae_AFTER_THING
     - match: '(new)\s*(\.)'
@@ -2873,7 +2888,7 @@ contexts:
     - match: '((((Buffer)))\s*)((\())'
       captures:
         1: variable.other.readwrite.es
-        2: meta.instance.constructor
+        2: meta.instance.constructor entity.name.type.new
         3: meta.instantiation.es
         4: support.class.node.es
         5: punctuation.definition.arguments.begin.es
@@ -2908,7 +2923,7 @@ contexts:
     - match: '(?x) (((({{intrinsicConstructors}})))\s*)((\())'
       captures:
         1: variable.other.readwrite.es
-        2: meta.instance.constructor
+        2: meta.instance.constructor entity.name.type.new
         3: meta.instantiation.es
         4: support.class.builtin.es
         5: punctuation.definition.arguments.begin.es
@@ -3012,6 +3027,9 @@ contexts:
       set: assignmentExpression_NO_IN
     - match: 'instanceof{{idEnd}}'
       scope: keyword.operator.relational.instanceof.es
+      set: assignmentExpression_NO_IN
+    - match: '::'
+      scope: keyword.operator.bind.es
       set: assignmentExpression_NO_IN
   ae_NO_IN_INFIX_OPS_ASSIGNMENT:
     - match: '=(?!=)'
@@ -3190,7 +3208,7 @@ contexts:
       captures:
         1: keyword.operator.new.es
         2: variable.other.readwrite.es
-        3: meta.instance.constructor
+        3: meta.instance.constructor entity.name.type.new
         4: meta.instantiation.es
         5: support.class.node.es
         6: support.class.builtin.es
@@ -3218,7 +3236,7 @@ contexts:
         8: variable.other.readwrite.es
         9: keyword.operator.accessor.es
         10: variable.other.readwrite.es
-        11: meta.instance.constructor
+        11: meta.instance.constructor entity.name.type.new
         12: meta.instantiation.es
       set: ae_NO_IN_AFTER_THING
     - match: '(new)\s*(\.)'
