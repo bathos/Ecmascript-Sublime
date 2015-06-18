@@ -980,7 +980,7 @@ contexts:
         4: variable.other.readwrite.initCap.es
         5: variable.other.readwrite.es
       set: constLetVarDeclaration_AFTER_BINDING
-    - match: '(({{allThreeIDs}}))(?=\s*=\s*function\s*\()'
+    - match: '(({{allThreeIDs}}))(?=\s*=\s*(async\s+)?function\s*\()'
       captures:
         1: meta.function.js entity.name.function.js # ^BS
         2: meta.symbol-helper.function.es
@@ -1000,7 +1000,7 @@ contexts:
         (?x)
           (( {{allThreeIDs}} ))
           (?=
-            \s* = \s*
+            \s* = \s* (async\s+)?
             (?:
               \(
                 (?<parens> [^\(\)] | \( \g<parens>* \) )*
@@ -1539,6 +1539,10 @@ contexts:
         1: punctuation.definition.accessor.begin.es
         2: meta.brace.square.js # ^BS
       set: [ ae_AFTER_THING, computedProp_AFTER_AE, assignmentExpression ]
+    # BIND-TO
+    - match: '::'
+      scope: keyword.operator.bind.es
+      set: assignmentExpression
     - include: ae_INFIX_OPS
     - include: ae_AFTER_POSTFIX
 
@@ -1851,10 +1855,12 @@ contexts:
 
   ae_IDENTIFIERS:
     - include: ae_IDENTIFIERS_LANGUAGE
-    - match: '({{identifier}})\s*(=>)'
+    - match: '((async) )?({{identifier}})\s*(=>)'
       captures:
-        1: variable.parameter.es
-        2: storage.type.function.arrow.es
+        1: storage.type.js
+        2: storage.modifier.async.expression.es
+        3: variable.parameter.es
+        4: storage.type.function.arrow.es
       set: ae_ARROW_AFTER_ARROW
     - include: ae_IDENTIFIERS_INTRINSIC
     - include: ae_IDENTIFIERS_ENVIRONMENTAL
