@@ -405,7 +405,7 @@
 			<key>name</key>
 			<string>Binding Patterns</string>
 			<key>scope</key>
-			<string>keyword.other.rest, punctuation.definition.binding, punctuation.separator.array-element.binding, punctuation.separator.object-member.binding</string>
+			<string>entity.other.property-binding, keyword.other.rest, punctuation.definition.binding, punctuation.separator.array-element.binding, punctuation.separator.object-member.binding, punctuation.separator.property-binding</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>

@@ -3387,7 +3387,7 @@ contexts:
     # ES7?
     - match: '\.{3}'
       scope: keyword.operator.spread
-      set: literalObject_AFTER_ELLIPSIS
+      set: [ literalObject_AFTER_AE, assignmentExpression ]
     - match: '((@))'
       captures:
         1: punctuation.definition.tag.js # ^BS
@@ -3465,18 +3465,6 @@ contexts:
       set: literalObject_OPEN
     - match: '{{PLA_anything}}'
       set: literalObject_OPEN
-
-  literalObject_AFTER_ELLIPSIS:
-    - match: '{{allThreeIDs}}'
-      captures:
-        1: variable.other.readwrite.property.shorthand.rest.allCap.es # -BS
-        2: variable.other.readwrite.property.shorthand.rest.initCap.es
-        3: variable.other.readwrite.property.shorthand.rest.es
-      set: literalObject_AFTER_AE
-    - match: '\}'
-      scope: invalid.illegal.token
-      pop: true
-    - include: other_illegal
 
   computedProp_AFTER_AE:
     # Also used for property access

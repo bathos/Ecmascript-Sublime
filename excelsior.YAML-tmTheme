@@ -193,10 +193,12 @@ settings:
 
 - name: Binding Patterns
   scope: >-
+    entity.other.property-binding,
     keyword.other.rest,
     punctuation.definition.binding,
     punctuation.separator.array-element.binding,
-    punctuation.separator.object-member.binding
+    punctuation.separator.object-member.binding,
+    punctuation.separator.property-binding
   settings:
     foreground: '#C6AA5E'
 
