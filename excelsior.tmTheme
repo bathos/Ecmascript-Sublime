@@ -449,7 +449,7 @@
 			<key>name</key>
 			<string>Function &amp; Return</string>
 			<key>scope</key>
-			<string>entity.name.function, keyword.control.flow.return, punctuation.definition.function.body, punctuation.definition.function.arrow.body, punctuation.definition.parameters.function</string>
+			<string>entity.name.function, keyword.control.flow.return, punctuation.definition.function.async.body, punctuation.definition.function.body, punctuation.definition.function.arrow.body, punctuation.definition.parameters.function</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -570,7 +570,7 @@
 			<key>name</key>
 			<string>Method</string>
 			<key>scope</key>
-			<string>entity.name.method, punctuation.definition.method.body, punctuation.definition.parameters.method</string>
+			<string>entity.name.method, punctuation.definition.method.async.body, punctuation.definition.method.body, punctuation.definition.parameters.method</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>

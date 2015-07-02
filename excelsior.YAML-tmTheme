@@ -230,6 +230,7 @@ settings:
   scope: >-
     entity.name.function,
     keyword.control.flow.return,
+    punctuation.definition.function.async.body,
     punctuation.definition.function.body,
     punctuation.definition.function.arrow.body,
     punctuation.definition.parameters.function
@@ -313,6 +314,7 @@ settings:
 - name: Method
   scope: >-
     entity.name.method,
+    punctuation.definition.method.async.body,
     punctuation.definition.method.body,
     punctuation.definition.parameters.method
   settings:

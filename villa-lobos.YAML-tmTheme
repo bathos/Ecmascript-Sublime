@@ -1,0 +1,606 @@
+# [PackageDev] target_format: plist, ext: tmTheme
+name: Villa-Lobos
+
+settings:
+- settings:
+    foreground: '#CED4D9'
+    background: '#111B23' 
+    gutter: '#1D2D39'
+    caret: '#3A556C'
+
+    bracketContentsOptions: 'stippled_underline'
+    bracketsOptions: 'stippled_underline'
+
+    guide: '#2F3C47'
+    stackGuide: '#2F3C47'
+    activeGuide: '#3A556C'
+
+    multiEditHighlight: '#2A4557'
+    searchHighlight: '#4D45A0'
+    selection: '#4D4557'
+
+# COMMENTS & DIRECTIVES ########################################################
+
+- name: Comment
+  scope: comment
+  settings:
+    foreground: '#FFD7F2'
+
+- name: Comment - Punctuation
+  scope: >-
+    meta.comment.border,
+    punctuation.definition.comment
+  settings:
+    foreground: '#FFA8DF'
+
+- name: Comment - Box Drawing
+  scope: meta.comment.box-drawing
+  settings:
+    foreground: '#E2C2DB'
+
+- name: Use Strict
+  scope: meta.directive.use-strict
+  settings:
+    foreground: '#E2C2DB'
+
+- name: Shebang
+  scope: comment.line.shebang
+  settings:
+    foreground: '#e25fc5'
+
+# IDENTIFIERS ##################################################################
+
+- name: Identifier - Generic
+  scope: variable
+  settings:
+    foreground: '#C8D2D9'
+
+- name: Identifier - Constructor / Core / Instantiation
+  scope: >-
+    meta.instantiation,
+    support,
+    variable.other.readwrite.allCap,
+    variable.other.readwrite.initCap
+    variable.other.readwrite.property.allCap,
+    variable.other.readwrite.property.initCap,
+    variable.other.readwrite.property.shorthand.allCap,
+    variable.other.readwrite.property.shorthand.initCap
+  settings:
+    foreground: '#4FC4F3'
+
+- name: Identifier - Language
+  scope: variable.language
+  settings:
+    foreground: '#b8d7a7'
+
+- name: Identifier - Invocation; Invocation Punctuation
+  scope: >-
+    meta.invocation,
+    punctuation.definition.arguments,
+    punctuation.separator.argument
+  settings:
+    foreground: '#BCF4D5'
+
+# VARIABLE DECLARATIONS & BINDING PATTERNS #####################################
+
+- name: Variable / Constant - Keyword
+  scope: >-
+    storage.type.constant,
+    storage.type.variable
+  settings:
+    foreground: '#b576ba'
+
+- name: Variable / Constant - Punctuation & Binding
+  scope: >-
+    entity.other.property-binding,
+    keyword.other.rest,
+    punctuation.definition.binding,
+    punctuation.separator.array-element.binding,
+    punctuation.separator.binding-binding,
+    punctuation.separator.object-member.binding,
+    punctuation.separator.property-binding
+  settings:
+    foreground: '#b89fbb'
+
+# PARAMETERS ###################################################################
+
+- name: Parameter - Name
+  scope: variable.parameter
+  settings:
+    foreground: '#e0dacf'
+
+- name: Parameter - Punctuation & Binding
+  scope: >-
+    entity.other.property-binding.parameter,
+    keyword.operator.assignment.conditional.default,
+    keyword.other.rest.parameter,
+    punctuation.definition.binding.array.parameter,
+    punctuation.definition.binding.object.parameter,
+    punctuation.separator.array-element.binding.parameter,
+    punctuation.separator.object-member.binding.parameter,
+    punctuation.separator.parameter,
+    punctuation.separator.property-binding.parameter
+  settings:
+    foreground: '#b3afa8'
+
+# FUNCTIONS, GENERATORS, PROMISES & ASYNC ######################################
+
+- name: Function - Keyword / Arrow
+  scope: storage.type.function
+  settings:
+    foreground: '#6c65ba'
+- name: Function - Name
+  scope: entity.name.function
+  settings:
+    foreground: '#574eba'
+- name: Function - Parens
+  scope: punctuation.definition.parameters
+  settings:
+    foreground: '#574eba'
+- name: Function - Braces
+  scope: punctuation.definition.function
+  settings:
+    foreground: '#574eba'
+
+- name: Generator - Keyword
+  scope: >- 
+    storage.modifier.generator,
+    storage.type.function.generator
+  settings:
+    foreground: '#6da5ba'
+- name: Generator - Name
+  scope: entity.name.function.generator
+  settings:
+    foreground: '#4c9cba'
+- name: Generator - Parens
+  scope: punctuation.definition.parameters.generator
+  settings:
+    foreground: '#4c9cba'
+- name: Generator - Braces
+  scope: punctuation.definition.generator
+  settings:
+    foreground: '#4c9cba'
+
+- name: Async - Keyword / Arrow
+  scope: >-
+    storage.modifier.async,
+    storage.type.function.async
+  settings:
+    foreground: '#6dd9a6'
+- name: Async - Name; Promise - Identifier
+  scope: >-
+    entity.name.function.async,
+    support.class.builtin.promise
+  settings:
+    foreground: '#47d994'
+- name: Async - Parens; Promise - Static Method / Invocation Parens
+  scope: >-
+    punctuation.definition.arguments.promise,
+    punctuation.definition.parameters.function.async,
+    support.method.builtin.promise
+  settings:
+    foreground: '#47d994'
+- name: Async - Braces
+  scope: punctuation.definition.function.async
+  settings:
+    foreground: '#47d994'
+
+# CLASSES & OBJECT LITERALS ####################################################
+
+- name: Class - Keyword
+  scope: storage.type.class
+  settings:
+    foreground: '#f8d788'
+- name: Class - Name
+  scope: entity.name.class
+  settings:
+    fontStyle: bold
+    foreground: '#f8d788'
+- name: Class - Extends / Constructor / Static Keywords
+  scope: >-
+    entity.name.constructor,
+    storage.modifier.extends,
+    storage.modifier.static
+  settings:
+    foreground: '#f8d788'
+- name: Class / Constructor - Punctuation
+  scope: >-
+    punctuation.definition.class,
+    punctuation.definition.constructor,
+    punctuation.definition.parameters.constructor
+  settings:
+    foreground: '#f8d788'
+
+- name: Accessor Keyword
+  scope: storage.modifier.accessor
+  settings:
+    foreground: '#f8d788'
+- name: Accessor Name
+  scope: entity.name.accessor
+  settings:
+    foreground: '#f8d788'
+- name: Accessor Parens
+  scope: punctuation.definition.parameters.accessor
+  settings:
+    foreground: '#f8d788'
+- name: Accessor Braces
+  scope: punctuation.definition.accessor.body
+  settings:
+    foreground: '#f8d788'
+
+- name: Method - Function - Name
+  scope: entity.name.method
+  settings:
+    foreground: '#a5959b'
+- name: Method - Function - Parens
+  scope: punctuation.definition.parameters.method
+  settings:
+    foreground: '#a5959b'
+- name: Method - Function - Braces
+  scope: punctuation.definition.method
+  settings:
+    foreground: '#a5959b'
+
+- name: Method - Generator - Keyword
+  scope: storage.modifier.generator.asterisk.method
+  settings:
+    foreground: '#a6ba9b'
+- name: Method - Generator - Name
+  scope: entity.name.method.generator
+  settings:
+    foreground: '#a6ba9b'
+- name: Method - Generator - Parens
+  scope: punctuation.definition.parameters.method.generator
+  settings:
+    foreground: '#a6ba9b'
+- name: Method - Generator - Braces / Generator comprehension
+  scope: >-
+    punctuation.definition.comprehension.generator,
+    punctuation.definition.method.generator
+  settings:
+    foreground: '#a6ba9b'
+
+- name: Method - Async - Keyword
+  scope: storage.modifier.async.method
+  settings:
+    foreground: '#a6d892'
+- name: Method - Async - Name
+  scope: entity.name.method.async
+  settings:
+    foreground: '#a6d892'
+- name: Method - Async - Parens
+  scope: punctuation.definition.parameters.method.async
+  settings:
+    foreground: '#a6d892'
+- name: Method - Async - Braces
+  scope: punctuation.definition.method.async
+  settings:
+    foreground: '#a6d892'
+
+# OPERATORS ####################################################################
+
+- name: Operator - Symbol
+  scope: keyword.operator
+  settings:
+    foreground: '#539da7'
+- name: Operator - Symbol - Bitwise
+  scope: >-
+    keyword.operator.assignment.augmented.bitwise,
+    keyword.operator.bitwise
+  settings:
+    foreground: '#53cf95'
+- name: Operator - Symbol - Accessor Dot / Binding Operator
+  scope: >-
+    keyword.operator.accessor,
+    keyword.operator.bind
+  settings:
+    foreground: '#BCF4D5'
+- name: Operator - Word
+  scope: >-
+    keyword.operator.new,
+    keyword.operator.relational.instanceof,
+    keyword.operator.unary
+  settings:
+    foreground: '#539da7'
+- name: Terminator / Comma Operator
+  scope: >-
+    keyword.operator.comma,
+    punctuation.terminator.statement
+  settings:
+    foreground: '#f8d7bb'
+- name: Parenthetical Expression - Punctuation
+  scope: punctuation.definition.expression
+  settings:
+    foreground: '#f178bb'
+
+# STATEMENTS ###################################################################
+
+- name: Statement - Conditional / Loop / Block - Keyword
+  scope: >-
+    keyword.control.conditional,
+    keyword.control.flow.break,
+    keyword.control.flow.continue,
+    keyword.control.loop,
+    keyword.control.switch
+  settings:
+    foreground: '#5272a6'
+
+- name: Statement - Conditional / Loop / Block - Punctuation
+  scope: >-
+    punctuation.definition.block,
+    punctuation.definition.expression.conditional,
+    punctuation.definition.expression.loop,
+    punctuation.definition.expression.switch.
+    punctuation.separator.case-statements,
+    punctuation.separator.loop-expression
+  settings:
+    foreground: '#5272a6'
+
+- name: Statement - Label
+  scope: >-
+    entity.name.statement,
+    punctuation.separator.label-statement
+  settings:
+    fontStyle: bold
+    foreground: '#5272a6'
+
+- name: Statement - Return / Throw
+  scope: >-
+    keyword.control.flow.return,
+    keyword.control.flow.throw
+  settings:
+    foreground: '#574eba'
+
+- name: Statement - Await
+  scope: keyword.control.flow.await
+  settings:
+    foreground: '#47d994'
+
+- name: Statement - Yield
+  scope: keyword.control.flow.yield
+  settings:
+    foreground: '#4c9cba'
+
+- name: Statement - Try - Keyword
+  scope: keyword.control.trycatch
+  settings:
+    foreground: '#ff9cbb'
+
+- name: Statement - Try - Punctuation
+  scope: >-
+    punctuation.definition.block.trycatch,
+    punctuation.definition.parameters.catch
+  settings:
+    foreground: '#ff9cbb'
+
+- name: Statement - Try - Parameter
+  scope: variable.parameter.catch
+  settings:
+    foreground: '#fcb9ba'
+
+# ARRAY & OBJECT LITERALS ######################################################
+
+- name: Array Literal / Spread / Comprehension
+  scope: >-
+    keyword.operator.spread,
+    punctuation.definition.array,
+    punctuation.definition.comprehension.array,
+    punctuation.separator.array-element
+  settings:
+    foreground: '#f89abb'
+
+- name: Object Literal - Braces & Properties
+  scope: >-
+    punctuation.definition.object,
+    variable.other.readwrite.property.object-literal,
+    variable.other.readwrite.property.shorthand
+  settings:
+    foreground: '#f8d7bb'
+
+- name: Object Literal - Colon / Comma; Computed Property
+  scope: >-
+    punctuation.definition.accessor,
+    punctuation.separator.key-value,
+    punctuation.separator.object-member
+  settings:
+    foreground: '#f0c8b5'
+
+# STRINGS & CONSTANTS ##########################################################
+
+- name: String
+  scope: string
+  settings:
+    foreground: '#b871bb'
+
+- name: String - Interpolated - Element Punctuation
+  scope: punctuation.definition.string.interpolated.element.begin
+  settings:
+    foreground: '#b89aa7'
+
+- name: String - Escaped Character
+  scope: constant.character.escape
+  settings:
+    foreground: '#b554ba'
+
+- name: Identifier - Interpolated String Tag
+  scope: variable.other.readwrite.tag
+  settings:
+    foreground: '#b89aa7'
+
+- name: Constant
+  scope: constant
+  settings:
+    foreground: '#2e71bb'
+
+# REGEX PATTERNS ###############################################################
+
+- name: Regex
+  scope: string.regexp
+  settings:
+    background: '#82bac40A'
+    foreground: '#f8cf59'
+
+- name: Regex Char Classes & Punctuation
+  scope: >-
+    string.regexp constant.other.character-class.predefined,
+    string.regexp constant.other.character-class punctuation,
+    string.regexp constant.other.character-class.set
+  settings:
+    foreground: '#b8cf6e'
+
+- name: Regex Char Class Dash
+  scope: punctuation.definition.character-class.dash.regexp
+  settings:
+    foreground: '#b8cf6e'
+
+- name: Regex Char Class Negation
+  scope: keyword.operator.negation.regexp
+  settings:
+    foreground: '#f1747b'
+
+- name: Regex Char Classes (Predefined) & Escapes
+  scope: >-
+    string.regexp constant.other.character-class.predefined,
+    string.regexp constant.character.escape,
+    string.regexp keyword.other.back-reference
+  settings:
+    fontStyle: 'bold'
+
+- name: Regex Char Escapes
+  scope: string.regexp constant.character.escape
+  settings:
+    foreground: '#f8d788'
+
+- name: Regex Backrefs
+  scope: string.regexp keyword.other.back-reference
+  settings:
+    background: '#b89a7b'
+
+- name: Regex Quantifiers
+  scope: >-
+    keyword.operator.quantifier.regexp
+  settings:
+    foreground: '#b8cf6e'
+
+- name: Group Punctuation
+  scope: string.regexp meta.group punctuation
+  settings:
+    foreground: '#b8cf6e'
+
+- name: Regex Positive Assertions
+  scope: >-
+    keyword.control.anchor.regexp,
+    string.regexp punctuation.definition.assertion.positive
+  settings:
+    foreground: '#b89a7b'
+
+- name: Regex Positive Assertion Text
+  scope: meta.group.assertion.positive.regexp
+  settings:
+    foreground: '#b89a7b'
+
+- name: Regex Negative Assertions
+  scope: string.regexp punctuation.definition.assertion.negative
+  settings:
+    foreground: '#f1747b'
+
+- name: Regex Negative Assertion Text
+  scope: meta.group.assertion.negative.regexp
+  settings:
+    foreground: '#f1747b'
+
+- name: Regex Capturing Groups 1
+  scope: >-
+    meta.group.capturing.regexp
+  settings:
+    background: '#82bac420'
+- name: Regex Capturing Groups 2
+  scope: >-
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+  settings:
+    background: '#82bac435'
+- name: Regex Capturing Groups 3
+  scope: >-
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+  settings:
+    background: '#82bac44A'
+- name: Regex Capturing Groups 4
+  scope: >-
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+  settings:
+    background: '#82bac45F'
+- name: Regex Capturing Groups 5
+  scope: >-
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+  settings:
+    background: '#82bac474'
+- name: Regex Capturing Groups 6+
+  scope: >-
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+    meta.group.capturing.regexp
+  settings:
+    background: '#82bac489'
+
+- name: Regex Outer Punc
+  scope: punctuation.definition.string.regexp
+  settings:
+    foreground: '#82bac4'
+
+- name: Regex Flags
+  scope: string.regexp.flags
+  settings:
+    fontStyle: italic
+    foreground: '#82bac4'
+
+# MODULES ######################################################################
+
+- name: Module - Keyword
+  scope: >-
+    storage.modifier.module,
+    storage.type.module
+  settings:
+    foreground: '#539da7'
+
+- name: Module - Punctuation
+  scope: >-
+    punctuation.definition.module-binding,
+    punctuation.separator.module-binding
+  settings:
+    foreground: '#5fb3bf'
+
+# INVALID & DEPRECATED #########################################################
+
+- name: Statement - With / Debugger
+  scope: >-
+    keyword.control.flow.each
+    keyword.control.with,
+    keyword.other.debugger,
+    invalid.deprecated,
+    punctuation.definition.block.with,
+    punctuation.definition.expression.with
+  settings:
+    foreground: '#e33780'
+
+- name: Invalid / TODO Comment
+  scope: >-
+    comment.line.todo,
+    invalid.illegal
+  settings:
+    background: '#e33780'
+    foreground: '#ff9cbb'
+
+################################################################################

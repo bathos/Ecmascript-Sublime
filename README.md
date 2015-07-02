@@ -9,6 +9,14 @@ this ‘released.’
 
 > Sublime syntax is only currently only available in Sublime Text’s dev channel.
 
+**New in 0.2**
+
+ - ‘Villa-Lobos’ theme
+ - Async functions/methods/arrows are fully scoped the way generators are
+ - Promise and its methods are uniquely scoped
+ - Added ‘todo’ scope per http://www.sublimetext.com/forum/viewtopic.php?f=2&t=18882
+ - Various minor fixes, like allowing multiple spreads in an array literal
+
 <!-- MarkdownTOC autolink=true bracket=round -->
 
 - [Remaining Work](#remaining-work)
@@ -24,11 +32,10 @@ this ‘released.’
 
 ## Remaining Work
 
- - I’d like to provide two themes with the definition package itself. The first
+ - I’d like to provide more themes with the definition package itself. The first
    of these is ‘Excelsior,’ a kind of tacky attempt to demonstrate what can be
    done that I’ve grown very fond of as it matured. It’s (mostly) complete now.
-   Still, it’s probably a bit much for many users. So I intend to do a second
-   more subdued theme.
+   Still, it’s probably a bit much for many users.
  - The chunk of comment-delimited code starting at `assignmentExpression_NO_IN`
    is actually possible to generate as a build step. Doing so will reduce the
    chances of accidentally editing `assignmentExpression` without making the
@@ -92,14 +99,15 @@ of matching groups in a regular expression:
 
 In addition to everything in the final draft of ES6, I’ve included support for
 certain ES7 strawmen that have already been implemented in Babel or Firefox. The
-depth is not always as great as with established language features, though. For
-example, async/await keywords are supported, but I didn’t go whole hog by making
-the whole async function targettable. Once async is formalized -- the grammar is
-still up in the air -- then it will be implemented thoroughly like generators.
+depth is not always as great as with established language features, though.
+<s>For example, async/await keywords are supported, but I didn’t go whole hog by
+making the whole async function targettable. Once async is formalized -- the
+grammar is still up in the air -- then it will be implemented thoroughly like
+generators.</s> Done.
 
 The following candidate ES7 features, as they stand today anyway, are covered:
 
- - async / await (minimal, but including methods, expressions, and arrows)
+ - async / await (including methods, expressions, and arrows)
  - generator comprehensions
  - array comprehensions, but only as implemented by Babel and Mozilla. (Which
    differs from the current spec, as I understand it.)
@@ -157,8 +165,15 @@ sure what habitual global users would like to see.
 
 ## Themes
 
-The first theme, Excelsior, is more or less finished. A second one, Carthage, is
-just begun.
+The first theme, Excelsior, is finished but for continued tweaking. At present
+there are three total:
+
+ - Excelsior
+ - Villa-Lobos
+ - Carthage
+
+The third of those is particularly weak, and none is as clean as someone with
+better self-control would have it.
 
 As of version 0.1.2, I’ve also added many additional scopes and tweaked a number
 of things to increase interoperability with existing themes. Monokai, Cobalt,

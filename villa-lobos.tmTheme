@@ -1,0 +1,1062 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>name</key>
+	<string>Villa-Lobos</string>
+	<key>settings</key>
+	<array>
+		<dict>
+			<key>settings</key>
+			<dict>
+				<key>activeGuide</key>
+				<string>#3A556C</string>
+				<key>background</key>
+				<string>#111B23</string>
+				<key>bracketContentsOptions</key>
+				<string>stippled_underline</string>
+				<key>bracketsOptions</key>
+				<string>stippled_underline</string>
+				<key>caret</key>
+				<string>#3A556C</string>
+				<key>foreground</key>
+				<string>#CED4D9</string>
+				<key>guide</key>
+				<string>#2F3C47</string>
+				<key>gutter</key>
+				<string>#1D2D39</string>
+				<key>multiEditHighlight</key>
+				<string>#2A4557</string>
+				<key>searchHighlight</key>
+				<string>#4D45A0</string>
+				<key>selection</key>
+				<string>#4D4557</string>
+				<key>stackGuide</key>
+				<string>#2F3C47</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Comment</string>
+			<key>scope</key>
+			<string>comment</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#FFD7F2</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Comment - Punctuation</string>
+			<key>scope</key>
+			<string>meta.comment.border, punctuation.definition.comment</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#FFA8DF</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Comment - Box Drawing</string>
+			<key>scope</key>
+			<string>meta.comment.box-drawing</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#E2C2DB</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Use Strict</string>
+			<key>scope</key>
+			<string>meta.directive.use-strict</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#E2C2DB</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Shebang</string>
+			<key>scope</key>
+			<string>comment.line.shebang</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#e25fc5</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Identifier - Generic</string>
+			<key>scope</key>
+			<string>variable</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#C8D2D9</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Identifier - Constructor / Core / Instantiation</string>
+			<key>scope</key>
+			<string>meta.instantiation, support, variable.other.readwrite.allCap, variable.other.readwrite.initCap variable.other.readwrite.property.allCap, variable.other.readwrite.property.initCap, variable.other.readwrite.property.shorthand.allCap, variable.other.readwrite.property.shorthand.initCap</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#4FC4F3</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Identifier - Language</string>
+			<key>scope</key>
+			<string>variable.language</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#b8d7a7</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Identifier - Invocation; Invocation Punctuation</string>
+			<key>scope</key>
+			<string>meta.invocation, punctuation.definition.arguments, punctuation.separator.argument</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#BCF4D5</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Variable / Constant - Keyword</string>
+			<key>scope</key>
+			<string>storage.type.constant, storage.type.variable</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#b576ba</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Variable / Constant - Punctuation &amp; Binding</string>
+			<key>scope</key>
+			<string>entity.other.property-binding, keyword.other.rest, punctuation.definition.binding, punctuation.separator.array-element.binding, punctuation.separator.binding-binding, punctuation.separator.object-member.binding, punctuation.separator.property-binding</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#b89fbb</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Parameter - Name</string>
+			<key>scope</key>
+			<string>variable.parameter</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#e0dacf</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Parameter - Punctuation &amp; Binding</string>
+			<key>scope</key>
+			<string>entity.other.property-binding.parameter, keyword.operator.assignment.conditional.default, keyword.other.rest.parameter, punctuation.definition.binding.array.parameter, punctuation.definition.binding.object.parameter, punctuation.separator.array-element.binding.parameter, punctuation.separator.object-member.binding.parameter, punctuation.separator.parameter, punctuation.separator.property-binding.parameter</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#b3afa8</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Function - Keyword / Arrow</string>
+			<key>scope</key>
+			<string>storage.type.function</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#6c65ba</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Function - Name</string>
+			<key>scope</key>
+			<string>entity.name.function</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#574eba</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Function - Parens</string>
+			<key>scope</key>
+			<string>punctuation.definition.parameters</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#574eba</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Function - Braces</string>
+			<key>scope</key>
+			<string>punctuation.definition.function</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#574eba</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Generator - Keyword</string>
+			<key>scope</key>
+			<string>storage.modifier.generator, storage.type.function.generator</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#6da5ba</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Generator - Name</string>
+			<key>scope</key>
+			<string>entity.name.function.generator</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#4c9cba</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Generator - Parens</string>
+			<key>scope</key>
+			<string>punctuation.definition.parameters.generator</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#4c9cba</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Generator - Braces</string>
+			<key>scope</key>
+			<string>punctuation.definition.generator</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#4c9cba</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Async - Keyword / Arrow</string>
+			<key>scope</key>
+			<string>storage.modifier.async, storage.type.function.async</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#6dd9a6</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Async - Name; Promise - Identifier</string>
+			<key>scope</key>
+			<string>entity.name.function.async, support.class.builtin.promise</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#47d994</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Async - Parens; Promise - Static Method / Invocation Parens</string>
+			<key>scope</key>
+			<string>punctuation.definition.arguments.promise, punctuation.definition.parameters.function.async, support.method.builtin.promise</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#47d994</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Async - Braces</string>
+			<key>scope</key>
+			<string>punctuation.definition.function.async</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#47d994</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Class - Keyword</string>
+			<key>scope</key>
+			<string>storage.type.class</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#f8d788</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Class - Name</string>
+			<key>scope</key>
+			<string>entity.name.class</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
+				<key>foreground</key>
+				<string>#f8d788</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Class - Extends / Constructor / Static Keywords</string>
+			<key>scope</key>
+			<string>entity.name.constructor, storage.modifier.extends, storage.modifier.static</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#f8d788</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Class / Constructor - Punctuation</string>
+			<key>scope</key>
+			<string>punctuation.definition.class, punctuation.definition.constructor, punctuation.definition.parameters.constructor</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#f8d788</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Accessor Keyword</string>
+			<key>scope</key>
+			<string>storage.modifier.accessor</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#f8d788</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Accessor Name</string>
+			<key>scope</key>
+			<string>entity.name.accessor</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#f8d788</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Accessor Parens</string>
+			<key>scope</key>
+			<string>punctuation.definition.parameters.accessor</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#f8d788</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Accessor Braces</string>
+			<key>scope</key>
+			<string>punctuation.definition.accessor.body</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#f8d788</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Method - Function - Name</string>
+			<key>scope</key>
+			<string>entity.name.method</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#a5959b</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Method - Function - Parens</string>
+			<key>scope</key>
+			<string>punctuation.definition.parameters.method</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#a5959b</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Method - Function - Braces</string>
+			<key>scope</key>
+			<string>punctuation.definition.method</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#a5959b</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Method - Generator - Keyword</string>
+			<key>scope</key>
+			<string>storage.modifier.generator.asterisk.method</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#a6ba9b</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Method - Generator - Name</string>
+			<key>scope</key>
+			<string>entity.name.method.generator</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#a6ba9b</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Method - Generator - Parens</string>
+			<key>scope</key>
+			<string>punctuation.definition.parameters.method.generator</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#a6ba9b</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Method - Generator - Braces / Generator comprehension</string>
+			<key>scope</key>
+			<string>punctuation.definition.comprehension.generator, punctuation.definition.method.generator</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#a6ba9b</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Method - Async - Keyword</string>
+			<key>scope</key>
+			<string>storage.modifier.async.method</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#a6d892</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Method - Async - Name</string>
+			<key>scope</key>
+			<string>entity.name.method.async</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#a6d892</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Method - Async - Parens</string>
+			<key>scope</key>
+			<string>punctuation.definition.parameters.method.async</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#a6d892</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Method - Async - Braces</string>
+			<key>scope</key>
+			<string>punctuation.definition.method.async</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#a6d892</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Operator - Symbol</string>
+			<key>scope</key>
+			<string>keyword.operator</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#539da7</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Operator - Symbol - Bitwise</string>
+			<key>scope</key>
+			<string>keyword.operator.assignment.augmented.bitwise, keyword.operator.bitwise</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#53cf95</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Operator - Symbol - Accessor Dot / Binding Operator</string>
+			<key>scope</key>
+			<string>keyword.operator.accessor, keyword.operator.bind</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#BCF4D5</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Operator - Word</string>
+			<key>scope</key>
+			<string>keyword.operator.new, keyword.operator.relational.instanceof, keyword.operator.unary</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#539da7</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Terminator / Comma Operator</string>
+			<key>scope</key>
+			<string>keyword.operator.comma, punctuation.terminator.statement</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#f8d7bb</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Parenthetical Expression - Punctuation</string>
+			<key>scope</key>
+			<string>punctuation.definition.expression</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#f178bb</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Statement - Conditional / Loop / Block - Keyword</string>
+			<key>scope</key>
+			<string>keyword.control.conditional, keyword.control.flow.break, keyword.control.flow.continue, keyword.control.loop, keyword.control.switch</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#5272a6</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Statement - Conditional / Loop / Block - Punctuation</string>
+			<key>scope</key>
+			<string>punctuation.definition.block, punctuation.definition.expression.conditional, punctuation.definition.expression.loop, punctuation.definition.expression.switch. punctuation.separator.case-statements, punctuation.separator.loop-expression</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#5272a6</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Statement - Label</string>
+			<key>scope</key>
+			<string>entity.name.statement, punctuation.separator.label-statement</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
+				<key>foreground</key>
+				<string>#5272a6</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Statement - Return / Throw</string>
+			<key>scope</key>
+			<string>keyword.control.flow.return, keyword.control.flow.throw</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#574eba</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Statement - Await</string>
+			<key>scope</key>
+			<string>keyword.control.flow.await</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#47d994</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Statement - Yield</string>
+			<key>scope</key>
+			<string>keyword.control.flow.yield</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#4c9cba</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Statement - Try - Keyword</string>
+			<key>scope</key>
+			<string>keyword.control.trycatch</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#ff9cbb</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Statement - Try - Punctuation</string>
+			<key>scope</key>
+			<string>punctuation.definition.block.trycatch, punctuation.definition.parameters.catch</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#ff9cbb</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Statement - Try - Parameter</string>
+			<key>scope</key>
+			<string>variable.parameter.catch</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#fcb9ba</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Array Literal / Spread / Comprehension</string>
+			<key>scope</key>
+			<string>keyword.operator.spread, punctuation.definition.array, punctuation.definition.comprehension.array, punctuation.separator.array-element</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#f89abb</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Object Literal - Braces &amp; Properties</string>
+			<key>scope</key>
+			<string>punctuation.definition.object, variable.other.readwrite.property.object-literal, variable.other.readwrite.property.shorthand</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#f8d7bb</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Object Literal - Colon / Comma; Computed Property</string>
+			<key>scope</key>
+			<string>punctuation.definition.accessor, punctuation.separator.key-value, punctuation.separator.object-member</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#f0c8b5</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>String</string>
+			<key>scope</key>
+			<string>string</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#b871bb</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>String - Interpolated - Element Punctuation</string>
+			<key>scope</key>
+			<string>punctuation.definition.string.interpolated.element.begin</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#b89aa7</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>String - Escaped Character</string>
+			<key>scope</key>
+			<string>constant.character.escape</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#b554ba</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Identifier - Interpolated String Tag</string>
+			<key>scope</key>
+			<string>variable.other.readwrite.tag</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#b89aa7</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Constant</string>
+			<key>scope</key>
+			<string>constant</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#2e71bb</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex</string>
+			<key>scope</key>
+			<string>string.regexp</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#82bac40A</string>
+				<key>foreground</key>
+				<string>#f8cf59</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Char Classes &amp; Punctuation</string>
+			<key>scope</key>
+			<string>string.regexp constant.other.character-class.predefined, string.regexp constant.other.character-class punctuation, string.regexp constant.other.character-class.set</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#b8cf6e</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Char Class Dash</string>
+			<key>scope</key>
+			<string>punctuation.definition.character-class.dash.regexp</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#b8cf6e</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Char Class Negation</string>
+			<key>scope</key>
+			<string>keyword.operator.negation.regexp</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#f1747b</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Char Classes (Predefined) &amp; Escapes</string>
+			<key>scope</key>
+			<string>string.regexp constant.other.character-class.predefined, string.regexp constant.character.escape, string.regexp keyword.other.back-reference</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Char Escapes</string>
+			<key>scope</key>
+			<string>string.regexp constant.character.escape</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#f8d788</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Backrefs</string>
+			<key>scope</key>
+			<string>string.regexp keyword.other.back-reference</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#b89a7b</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Quantifiers</string>
+			<key>scope</key>
+			<string>keyword.operator.quantifier.regexp</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#b8cf6e</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Group Punctuation</string>
+			<key>scope</key>
+			<string>string.regexp meta.group punctuation</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#b8cf6e</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Positive Assertions</string>
+			<key>scope</key>
+			<string>keyword.control.anchor.regexp, string.regexp punctuation.definition.assertion.positive</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#b89a7b</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Positive Assertion Text</string>
+			<key>scope</key>
+			<string>meta.group.assertion.positive.regexp</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#b89a7b</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Negative Assertions</string>
+			<key>scope</key>
+			<string>string.regexp punctuation.definition.assertion.negative</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#f1747b</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Negative Assertion Text</string>
+			<key>scope</key>
+			<string>meta.group.assertion.negative.regexp</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#f1747b</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Capturing Groups 1</string>
+			<key>scope</key>
+			<string>meta.group.capturing.regexp</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#82bac420</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Capturing Groups 2</string>
+			<key>scope</key>
+			<string>meta.group.capturing.regexp meta.group.capturing.regexp</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#82bac435</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Capturing Groups 3</string>
+			<key>scope</key>
+			<string>meta.group.capturing.regexp meta.group.capturing.regexp meta.group.capturing.regexp</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#82bac44A</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Capturing Groups 4</string>
+			<key>scope</key>
+			<string>meta.group.capturing.regexp meta.group.capturing.regexp meta.group.capturing.regexp meta.group.capturing.regexp</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#82bac45F</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Capturing Groups 5</string>
+			<key>scope</key>
+			<string>meta.group.capturing.regexp meta.group.capturing.regexp meta.group.capturing.regexp meta.group.capturing.regexp meta.group.capturing.regexp</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#82bac474</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Capturing Groups 6+</string>
+			<key>scope</key>
+			<string>meta.group.capturing.regexp meta.group.capturing.regexp meta.group.capturing.regexp meta.group.capturing.regexp meta.group.capturing.regexp meta.group.capturing.regexp</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#82bac489</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Outer Punc</string>
+			<key>scope</key>
+			<string>punctuation.definition.string.regexp</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#82bac4</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Flags</string>
+			<key>scope</key>
+			<string>string.regexp.flags</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic</string>
+				<key>foreground</key>
+				<string>#82bac4</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Module - Keyword</string>
+			<key>scope</key>
+			<string>storage.modifier.module, storage.type.module</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#539da7</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Module - Punctuation</string>
+			<key>scope</key>
+			<string>punctuation.definition.module-binding, punctuation.separator.module-binding</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#5fb3bf</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Statement - With / Debugger</string>
+			<key>scope</key>
+			<string>keyword.control.flow.each keyword.control.with, keyword.other.debugger, invalid.deprecated, punctuation.definition.block.with, punctuation.definition.expression.with</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#e33780</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Invalid / TODO Comment</string>
+			<key>scope</key>
+			<string>comment.line.todo, invalid.illegal</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#e33780</string>
+				<key>foreground</key>
+				<string>#ff9cbb</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

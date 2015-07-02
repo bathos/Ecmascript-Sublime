@@ -168,6 +168,8 @@ contexts:
           scope: meta.comment.border.es
         - match: '{{boxchars}}'
           scope: meta.comment.box-drawing.es
+        - match: '\b(?i:todo|hack)\b'
+          scope: comment.line.todo.es
     - match: '((\/\*))'
       captures:
         1: meta.comment.border.es
@@ -183,6 +185,8 @@ contexts:
           scope: meta.comment.border.es
         - match: '{{boxchars}}'
           scope: meta.comment.box-drawing.es
+        - match: '\b(?i:todo|hack)\b'
+          scope: comment.line.todo.es
 
   # If no match has been made, gently and quietly pop
   else_pop:
@@ -299,12 +303,18 @@ contexts:
         4: storage.modifier.generator.asterisk.es
       set: generatorDeclaration_AFTER_ASTERISK
     # FUNCTION DECLARATION
-    - match: '(async)?\s*((function)){{idEnd}}'
+    - match: '((function)){{idEnd}}'
+      captures:
+        1: storage.type.function.js # ^BS -- Cobalt
+        2: storage.type.function.es
+      set: functionDeclaration_AFTER_FUNCTION
+    # ASYNC DECLARATION
+    - match: '(async)\s*((function)){{idEnd}}'
       captures:
         1: storage.modifier.async.es # -BS
         2: storage.type.function.js # ^BS -- Cobalt
-        3: storage.type.function.es
-      set: functionDeclaration_AFTER_FUNCTION
+        3: storage.type.function.async.es
+      set: asyncDeclaration_AFTER_FUNCTION
     # CONTINUE STATEMENT
     - match: 'continue{{idEnd}}'
       scope: keyword.control.flow.continue.es # -BS
@@ -531,7 +541,7 @@ contexts:
       scope: keyword.control.loop.in.es # -BS
       set: [ forStatement_AFTER_FINAL_EXP, expression ]
     - match: ','
-      scope: xxx
+      scope: invalid.illegal
     # Perhaps we were really in a for-;; loop that did not have its first
     # semicolon on the initial line... we can recover in some cases.
     - match: ';'
@@ -890,7 +900,7 @@ contexts:
     - match: '((\*))'
       captures:
         1: keyword.generator.asterisk.js # ^BS
-        2: storage.modifier.generator.asterisk.es
+        2: storage.modifier.generator.asterisk.method.es
       set: [ classDeclaration_AFTER_BRACE, generatorMethod_AFTER_ASTERISK ]
     - match: '((get)){{idEnd}}'
       captures:
@@ -1095,6 +1105,45 @@ contexts:
     - include: useStrict
     - include: statements
 
+  asyncDeclaration_AFTER_FUNCTION:
+    - match: '{{allThreeIDs}}'
+      scope: entity.name.function.async.es
+      set: asyncDeclaration_AFTER_NAME
+    - include: other_illegal_pop
+
+  asyncDeclaration_AFTER_NAME:
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.parameters.function.async.begin.es
+        2: meta.brace.round.js # ^BS
+      set: [ asyncDeclaration_AFTER_PARAMS, parameters ]
+    - include: other_illegal_pop
+
+  asyncDeclaration_AFTER_PARAMS:
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.parameters.function.async.end.es
+        2: meta.brace.round.js # ^BS
+      set: asyncDeclaration_BEFORE_BRACE
+    - include: other_illegal
+
+  asyncDeclaration_BEFORE_BRACE:
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.function.async.body.begin.es
+        2: meta.brace.curly.js # ^BS
+      set: asyncDeclaration_AFTER_BRACE
+    - include: other_illegal_pop
+
+  asyncDeclaration_AFTER_BRACE:
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.function.async.body.end.es
+        2: meta.brace.curly.js # ^BS
+      pop: true
+    - include: useStrict
+    - include: statements
+
   generatorDeclaration_AFTER_ASTERISK:
     - match: '{{identifier}}'
       scope: entity.name.function.generator.es
@@ -1169,13 +1218,18 @@ contexts:
         3: keyword.generator.asterisk.js # ^BS
         4: storage.modifier.generator.asterisk.es
       set: generatorDeclaration_AFTER_ASTERISK
-    - match: '((async))?\s*((function)){{idEnd}}'
+    - match: '((function)){{idEnd}}'
+      captures:
+        1: storage.type.function.js # ^BS -- Cobalt
+        2: storage.type.function.es
+      set: functionDeclaration_AFTER_FUNCTION
+    - match: '((async))\s*((function)){{idEnd}}'
       captures:
         1: storage.type.js # ^BS
         2: storage.modifier.async.es
         3: storage.type.function.js # ^BS -- Cobalt
-        4: storage.type.function.es
-      set: functionDeclaration_AFTER_FUNCTION
+        4: storage.type.function.async.es
+      set: asyncDeclaration_AFTER_FUNCTION
     - include: other_illegal_pop
 
   moduleDeclaration_AFTER_DEFAULT:
@@ -1189,13 +1243,18 @@ contexts:
         3: keyword.generator.asterisk.js # ^BS
         4: storage.modifier.generator.asterisk.es
       set: moduleDeclaration_DEFAULT_AFTER_ASTERISK
-    - match: '((async))?\s*((function)){{idEnd}}'
+    - match: '((function)){{idEnd}}'
+      captures:
+        1: storage.type.function.js # ^BS -- Cobalt
+        2: storage.type.function.es
+      set: moduleDeclaration_DEFAULT_AFTER_FUNCTION
+    - match: '((async))\s*((function)){{idEnd}}'
       captures:
         1: storage.type.js # ^BS
         2: storage.modifier.async.es
         3: storage.type.function.js # ^BS -- Cobalt
-        4: storage.type.function.es
-      set: moduleDeclaration_DEFAULT_AFTER_FUNCTION
+        4: storage.type.function.async.es
+      set: moduleDeclaration_DEFAULT_AFTER_ASYNC_FUNCTION
     - match: '{{PLA_anything}}'
       set: assignmentExpression
 
@@ -1240,6 +1299,17 @@ contexts:
         2: entity.name.function.initCap.es
         3: entity.name.function.es
       set: functionDeclaration_AFTER_NAME
+    - include: other_illegal_pop
+
+  moduleDeclaration_DEFAULT_AFTER_ASYNC_FUNCTION:
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.parameters.function.async.begin.es
+        2: meta.brace.round.js # ^BS
+      set: [ asyncDeclaration_AFTER_PARAMS, parameters ]
+    - match: '{{allThreeIDs}}'
+      scope: entity.name.function.async.es
+      set: asyncDeclaration_AFTER_NAME
     - include: other_illegal_pop
 
   moduleDeclaration_BEFORE_FROM:
@@ -1681,17 +1751,12 @@ contexts:
     - match: '(?x) \( (?= (?<parens> [^\(\)] | \( \g<parens>* \) )* \)\s*=> )'
       scope: punctuation.definition.parameters.function.arrow.begin.es
       set: [ ae_ARROW_AFTER_PARAMS, parameters ]
-    # The async spec contains an arrow version. I doubt it will survive to ES7,
-    # but it’s already supported by Babel so I’ve included it. And it probably
-    # is useful. But the decision not to have generator arrows was already made
-    # and as far as I can tell, that was that. Async functions are a new kind of
-    # generator, so...
     - match: '((async))\s*(\()'
       captures:
         1: storage.type.js # ^BS
         2: storage.modifier.async.expression.es
-        3: punctuation.definition.parameters.function.arrow.begin.es
-      set: [ ae_ARROW_AFTER_PARAMS, parameters ]
+        3: punctuation.definition.parameters.function.async.arrow.begin.es
+      set: [ ae_ASYNC_ARROW_AFTER_PARAMS, parameters ]
 
   ae_ARROW_AFTER_PARAMS:
     - match: '\)'
@@ -1725,6 +1790,38 @@ contexts:
     - include: statements
     - include: other_illegal
 
+  ae_ASYNC_ARROW_AFTER_PARAMS:
+    - match: '\)'
+      scope: punctuation.definition.parameters.function.async.arrow.end.es
+      set: ae_ASYNC_ARROW_BEFORE_ARROW
+    # The following might be unreachable in theory, but just to be safe:
+    - include: other_illegal_pop
+
+  ae_ASYNC_ARROW_BEFORE_ARROW:
+    - match: '=>'
+      scope: storage.type.function.async.arrow.es
+      set: ae_ASYNC_ARROW_AFTER_ARROW
+    # (Likewise)
+    - include: other_illegal_pop
+
+  ae_ASYNC_ARROW_AFTER_ARROW:
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.function.async.arrow.body.begin.es
+        2: meta.brace.curly.js # ^BS
+      set: ae_ASYNC_ARROW_AFTER_BRACE
+    - include: assignmentExpression
+
+  ae_ASYNC_ARROW_AFTER_BRACE:
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.function.async.arrow.body.end.es
+        2: meta.brace.curly.js # ^BS
+      set: ae_AFTER_THING
+    - include: useStrict
+    - include: statements
+    - include: other_illegal
+
   ae_CLASS_AFTER_CLASS:
     - match: '((\{))'
       captures:
@@ -1751,13 +1848,18 @@ contexts:
         3: keyword.generator.asterisk.js # ^BS
         4: storage.modifier.generator.asterisk.expression.es
       set: ae_GENERATOR_AFTER_ASTERISK
-    - match: '((async))?\s*((function)){{idEnd}}'
+    - match: '\s*((function)){{idEnd}}'
+      captures:
+        1: storage.type.function.js # ^BS -- Cobalt
+        2: storage.type.function.expression.es
+      set: ae_FUNCTION_AFTER_FUNCTION
+    - match: '((async))\s*((function)){{idEnd}}'
       captures:
         1: storage.type.js # ^BS
         2: storage.modifier.async.expression.es
         3: storage.type.function.js # ^BS -- Cobalt
-        4: storage.type.function.expression.es
-      set: ae_FUNCTION_AFTER_FUNCTION
+        4: storage.type.function.async.expression.es
+      set: ae_ASYNC_AFTER_FUNCTION
     - match: 'class{{idEnd}}'
       scope: storage.type.class.expression.es
       set: ae_CLASS_AFTER_CLASS
@@ -1769,6 +1871,15 @@ contexts:
     - match: '{{identifier}}'
       scope: entity.name.function.es
       set: [ ae_AFTER_THING, functionDeclaration_AFTER_NAME ]
+    - include: other_illegal_pop
+
+  ae_ASYNC_AFTER_FUNCTION:
+    - match: '\('
+      scope: punctuation.definition.parameters.function.async.begin.es
+      set: [ ae_AFTER_THING, asyncDeclaration_AFTER_PARAMS, parameters ]
+    - match: '{{identifier}}'
+      scope: entity.name.function.async.es
+      set: [ ae_AFTER_THING, asyncDeclaration_AFTER_NAME ]
     - include: other_illegal_pop
 
   ae_GENERATOR_AFTER_ASTERISK:
@@ -2002,7 +2113,7 @@ contexts:
 
   ae_IDENTIFIERS_INTRINSIC:
     # CONSTRUCTORS
-    - match: '(?x) (((({{intrinsicConstructors}})))\s*)((\())'
+    - match: '(((({{intrinsicConstructors}})))\s*)((\())'
       captures:
         1: variable.other.readwrite.es
         2: meta.instance.constructor # ^BS
@@ -2011,6 +2122,9 @@ contexts:
         5: punctuation.definition.arguments.begin.es
         6: meta.brace.round.js # ^BS
       set: [ ae_AFTER_THING, arguments ]
+    - match: 'Promise{{idEnd}}'
+      scope: support.class.builtin.promise.es
+      set: ae_AFTER_PROMISE
     - match: '(?x) ({{intrinsicConstructors}}){{idEnd}}'
       scope: variable.other.readwrite.es
       captures:
@@ -2035,6 +2149,37 @@ contexts:
     - match: '(?x) ({{intrinsicFunctions}}){{idEnd}}'
       scope: support.function.builtin.es
       set: ae_AFTER_THING
+
+  ae_AFTER_PROMISE:
+    - match: '\.'
+      scope: keyword.operator.accessor.es
+      set: ae_AFTER_PROMISE_ACCESSOR
+    - include: ae_AFTER_THING
+
+  ae_AFTER_PROMISE_ACCESSOR:
+    - match: '((((all|race|reject|resolve))))\s*((\())'
+      captures:
+        1: variable.other.readwrite.property.es
+        2: meta.function-call # ^BS
+        3: meta.invocation.es
+        4: support.method.builtin.promise.es
+        5: punctuation.definition.arguments.promise.begin.es
+        6: meta.brace.round.js # ^BS
+      set: [ ae_NEW_PROMISE_AFTER_AE, assignmentExpression ]
+    - match: '((all|race|reject|resolve)){{idEnd}}'
+      captures:
+        1: variable.other.readwrite.property.es
+        2: support.method.builtin.promise.es
+      set: ae_AFTER_PROMISE_METHOD
+    - include: ae_AFTER_ACCESSOR_OPERATOR
+
+  ae_AFTER_PROMISE_METHOD:
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.arguments.promise.begin.es
+        2: meta.brace.round.js # ^BS
+      set: [ ae_NEW_PROMISE_AFTER_AE, assignmentExpression ]
+    - include: ae_AFTER_THING
 
   ae_INFIX_OPS:
     # TERNARY
@@ -2190,22 +2335,22 @@ contexts:
     # totally reasonable to scope them as such since this odd fact is just a bit
     # of legacy bs. In modern implementions they can’t be redefined (although
     # the assignment is itself a legal operation, fun fact).
-    - match: 'NaN'
+    - match: 'NaN(?![{{ID_Continue}}])'
       scope: constant.language.nan.es
       set: ae_AFTER_VALUE
-    - match: 'null'
+    - match: 'null(?![{{ID_Continue}}])'
       scope: constant.language.null.es
       set: ae_AFTER_VALUE
-    - match: 'true'
+    - match: 'true(?![{{ID_Continue}}])'
       scope: constant.language.boolean.true.es
       set: ae_AFTER_VALUE
-    - match: 'false'
+    - match: 'false(?![{{ID_Continue}}])'
       scope: constant.language.boolean.false.es
       set: ae_AFTER_VALUE
-    - match: 'Infinity'
+    - match: 'Infinity(?![{{ID_Continue}}])'
       scope: constant.language.infinity.es
       set: ae_AFTER_VALUE
-    - match: 'undefined'
+    - match: 'undefined(?![{{ID_Continue}}])'
       scope: constant.language.undefined.es
       set: ae_AFTER_VALUE
 
@@ -2373,6 +2518,22 @@ contexts:
       set: assignmentExpression
     - include: other_illegal_pop
 
+  ae_NEW_PROMISE:
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.arguments.promise.begin.es
+        2: meta.brace.round.js # ^BS
+      set: [ ae_NEW_PROMISE_AFTER_AE, assignmentExpression ]
+    - include: other_illegal_pop
+
+  ae_NEW_PROMISE_AFTER_AE:
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.arguments.promise.end.es
+        2: meta.brace.round.js # ^BS
+      set: ae_AFTER_THING
+    - include: other_illegal_pop
+
   ae_YIELD_NEW:
     # Grouped simply because they both have weird rules. Yield is unique
     # because it’s the only time ‘assignment expression or nothing’ is valid.
@@ -2406,6 +2567,15 @@ contexts:
     #        .target,new. target,new.target new .target ,new.target,new.
     #        target,new .target,new.target , new. target,new .target,new
     #                          .target == ANGKOR WAT
+    - match: >-
+        (new)\s+((((Promise)))){{idEnd}}
+      captures:
+        1: keyword.operator.new.es
+        2: variable.other.readwrite
+        3: meta.instance.constructor entity.name.type.new # ^BS
+        4: meta.instantiation
+        5: support.class.builtin.promise.es
+      set: ae_NEW_PROMISE
     - match: >-
         (?x)
           (new) \s+ (((
@@ -3071,22 +3241,22 @@ contexts:
       scope: keyword.operator.assignment.augmented.bitwise.shift.right.es
       set: assignmentExpression_NO_IN
   ae_NO_IN_LITERAL_VALUES:
-    - match: 'NaN'
+    - match: 'NaN(?![{{ID_Continue}}])'
       scope: constant.language.nan.es
       set: ae_NO_IN_AFTER_VALUE
-    - match: 'null'
+    - match: 'null(?![{{ID_Continue}}])'
       scope: constant.language.null.es
       set: ae_NO_IN_AFTER_VALUE
-    - match: 'true'
+    - match: 'true(?![{{ID_Continue}}])'
       scope: constant.language.boolean.true.es
       set: ae_NO_IN_AFTER_VALUE
-    - match: 'false'
+    - match: 'false(?![{{ID_Continue}}])'
       scope: constant.language.boolean.false.es
       set: ae_NO_IN_AFTER_VALUE
-    - match: 'Infinity'
+    - match: 'Infinity(?![{{ID_Continue}}])'
       scope: constant.language.infinity.es
       set: ae_NO_IN_AFTER_VALUE
-    - match: 'undefined'
+    - match: 'undefined(?![{{ID_Continue}}])'
       scope: constant.language.undefined.es
       set: ae_NO_IN_AFTER_VALUE
   ae_NO_IN_NUMBERS:
@@ -3283,7 +3453,7 @@ contexts:
       scope: punctuation.separator.array-element.es
     - match: '\.{3}'
       scope: keyword.operator.spread.es
-      set: [ literalArray_AFTER_SPREAD_MEMBER, assignmentExpression ]
+      set: [ literalArray_AFTER_MEMBER, assignmentExpression ]
     - match: '{{PLA_anything}}'
       set: [ literalArray_AFTER_MEMBER, assignmentExpression ]
 
@@ -3295,12 +3465,6 @@ contexts:
     - match: '{{PLA_anything}}'
       set: literalArray_OPEN
 
-  literalArray_AFTER_SPREAD_MEMBER:
-    - match: '\]'
-      scope: punctuation.definition.array.end.es
-      pop: true
-    - include: other_illegal
-
   literalObject_OPEN:
     - match: '((\}))'
       captures:
@@ -3311,7 +3475,7 @@ contexts:
     - match: '((\*))'
       captures:
         1: keyword.generator.asterisk.js # ^BS
-        2: storage.modifier.generator.asterisk.es
+        2: storage.modifier.generator.asterisk.method.es
       set: [ literalObject_AFTER_AE, generatorMethod_AFTER_ASTERISK ]
     - match: '((get))\s*((:))'
       captures:
@@ -3386,7 +3550,7 @@ contexts:
       set: [ literalObject_AFTER_PROP, stringDouble_AFTER_OPEN ]
     # ES7?
     - match: '\.{3}'
-      scope: keyword.operator.spread
+      scope: keyword.operator.spread.es
       set: [ literalObject_AFTER_AE, assignmentExpression ]
     - match: '((@))'
       captures:
@@ -3420,7 +3584,7 @@ contexts:
     - match: '({{hexNum}})'
       scope: constant.numeric.hexadecimal.es
       captures:
-        1: variable.other.readwrite.propertyobject-literal..es
+        1: variable.other.readwrite.property.object-literal.es
         2: meta.numeric.prefix.es
       set: literalObject_AFTER_PROP
     # COMPUTED PROPERTY
@@ -3515,13 +3679,13 @@ contexts:
       captures:
         1: entity.name.method.js # ^BS -- monokai
         2: entity.name.method.async.es
-      set: method_AFTER_NAME
+      set: asyncMethod_AFTER_NAME
     - match: "'"
       scope: punctuation.definition.string.quoted.single.begin.es
-      set: [ method_AFTER_NAME, stringSingle_AFTER_OPEN ]
+      set: [ asyncMethod_AFTER_NAME, stringSingle_AFTER_OPEN ]
     - match: '"'
       scope: punctuation.definition.string.quoted.double.begin.es
-      set: [ method_AFTER_NAME, stringDouble_AFTER_OPEN ]
+      set: [ asyncMethod_AFTER_NAME, stringDouble_AFTER_OPEN ]
     - match: '({{decNum}})'
       scope: constant.numeric.decimal.es
       captures:
@@ -3532,31 +3696,64 @@ contexts:
         5: meta.numeric.exponent.e.es
         6: meta.numeric.exponent.sign.es
         7: meta.numeric.exponent.digit.es
-      set: method_AFTER_NAME
+      set: asyncMethod_AFTER_NAME
     - match: '({{binNum}})'
       scope: constant.numeric.binary.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
-      set: method_AFTER_NAME
+      set: asyncMethod_AFTER_NAME
     - match: '({{octNum}})'
       scope: constant.numeric.octal.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
-      set: method_AFTER_NAME
+      set: asyncMethod_AFTER_NAME
     - match: '({{hexNum}})'
       scope: constant.numeric.hexadecimal.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
-      set: method_AFTER_NAME
+      set: asyncMethod_AFTER_NAME
     - match: '((\[))'
       captures:
         1: punctuation.definition.accessor.begin.es
         2: meta.brace.square.js # ^BS
-      set: [ method_AFTER_NAME, computedProp_AFTER_AE, assignmentExpression ]
+      set: [ asyncMethod_AFTER_NAME, computedProp_AFTER_AE, assignmentExpression ]
     - include: other_illegal_pop
+
+  asyncMethod_AFTER_NAME:
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.parameters.method.async.begin.es
+        2: meta.brace.round.js # ^BS
+      set: [ asyncMethod_AFTER_PARAMS, parameters ]
+    - include: other_illegal_pop
+
+  asyncMethod_AFTER_PARAMS:
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.parameters.method.async.end.es
+        2: meta.brace.round.js # ^BS
+      set: asyncMethod_BEFORE_BRACE
+    - include: other_illegal
+
+  asyncMethod_BEFORE_BRACE:
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.method.async.body.begin.es
+        2: meta.brace.curly.js # ^BS
+      set: asyncMethod_AFTER_BRACE
+    - include: other_illegal_pop
+
+  asyncMethod_AFTER_BRACE:
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.method.async.body.end.es
+        2: meta.brace.curly.js # ^BS
+      pop: true
+    - include: useStrict
+    - include: statements
 
   accessorMethod_AFTER_GET:
     - match: '(({{identifier}}))'
@@ -4106,7 +4303,7 @@ contexts:
     # COMPUTED PROPERTY
     - match: '((\[))'
       captures:
-        1: punctuation.definition.accessor.parameter.begin.es
+        1: punctuation.definition.accessor.begin.es
         2: meta.brace.square.js # ^BS, augmented
       set: [ bindingObject_PARAM_BEFORE_COLON, computedProp_AFTER_AE, assignmentExpression ]
     - match: "'"
