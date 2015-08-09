@@ -1194,6 +1194,11 @@ contexts:
         1: punctuation.definition.module-binding.begin.es
         2: meta.brace.curly.js # ^BS
       set: moduleDeclaration_EXPORT_BINDING_AFTER_BRACE
+    - match: '((@))'
+      captures:
+        1: punctuation.definition.tag.js # ^BS
+        2: punctuation.definition.decorator.es
+      push: decoratorExpression
     - match: '((default)){{idEnd}}'
       captures:
         1: keyword.operator.module.js # ^BS
