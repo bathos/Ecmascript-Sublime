@@ -570,7 +570,7 @@
 			<key>name</key>
 			<string>Method</string>
 			<key>scope</key>
-			<string>entity.name.method, punctuation.definition.method.async.body, punctuation.definition.method.body, punctuation.definition.parameters.method</string>
+			<string>entity.name.method, entity.name.method variable.other.readwrite.property, punctuation.definition.method.async.body, punctuation.definition.method.body, punctuation.definition.parameters.method</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>

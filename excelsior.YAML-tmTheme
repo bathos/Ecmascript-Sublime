@@ -314,6 +314,7 @@ settings:
 - name: Method
   scope: >-
     entity.name.method,
+    entity.name.method variable.other.readwrite.property,
     punctuation.definition.method.async.body,
     punctuation.definition.method.body,
     punctuation.definition.parameters.method

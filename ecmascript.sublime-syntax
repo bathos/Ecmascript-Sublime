@@ -902,12 +902,12 @@ contexts:
         1: keyword.generator.asterisk.js # ^BS
         2: storage.modifier.generator.asterisk.method.es
       set: [ classDeclaration_AFTER_BRACE, generatorMethod_AFTER_ASTERISK ]
-    - match: '((get)){{idEnd}}'
+    - match: '((get))(?!\s*\(){{idEnd}}'
       captures:
         1: storage.type.accessor.js # ^BS
         2: storage.modifier.accessor.get.es
       set: [ classDeclaration_AFTER_BRACE, accessorMethod_AFTER_GET ]
-    - match: '((set)){{idEnd}}'
+    - match: '((set))(?!\s*\(){{idEnd}}'
       captures:
         1: storage.type.accessor.js # ^BS
         2: storage.modifier.accessor.set.es
@@ -3489,7 +3489,7 @@ contexts:
         3: constant.other.object.key.js # ^BS
         4: punctuation.separator.key-value.es
       set: [ literalObject_AFTER_AE, assignmentExpression ]
-    - match: '((get)){{idEnd}}'
+    - match: '((get))(?!\s*\(){{idEnd}}'
       captures:
         1: storage.type.accessor.js # ^BS
         2: storage.modifier.accessor.get.es
@@ -3501,7 +3501,7 @@ contexts:
         3: constant.other.object.key.js # ^BS
         4: punctuation.separator.key-value.es
       set: [ literalObject_AFTER_AE, assignmentExpression ]
-    - match: '((set)){{idEnd}}'
+    - match: '((set))(?!\s*\(){{idEnd}}'
       captures:
         1: storage.type.accessor.js # ^BS
         2: storage.modifier.accessor.set.es
