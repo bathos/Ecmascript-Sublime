@@ -1260,8 +1260,24 @@ contexts:
         3: storage.type.function.js # ^BS -- Cobalt
         4: storage.type.function.async.es
       set: moduleDeclaration_DEFAULT_AFTER_ASYNC_FUNCTION
+    - match: '((@))'
+      captures:
+        1: punctuation.definition.tag.js # ^BS
+        2: punctuation.definition.decorator.es
+      set: [ moduleDeclaration_DEFAULT_AFTER_DECORATOR, decoratorExpression ]
     - match: '{{PLA_anything}}'
       set: assignmentExpression
+
+  moduleDeclaration_DEFAULT_AFTER_DECORATOR:
+    - match: 'class{{idEnd}}'
+      scope: storage.type.class.es
+      set: moduleDeclaration_DEFAULT_AFTER_CLASS
+    - match: '((@))'
+      captures:
+        1: punctuation.definition.tag.js # ^BS
+        2: punctuation.definition.decorator.es
+      push: [ decoratorExpression ]
+    - include: other_illegal_pop
 
   moduleDeclaration_DEFAULT_AFTER_CLASS:
     - match: '((\{))'
