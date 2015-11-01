@@ -226,10 +226,12 @@ settings:
   settings:
     foreground: '#FFAC0C'
 
-- name: Function & Return
+- name: Function & Return & Do Expression
   scope: >-
     entity.name.function,
+    keyword.control.do-expression.do,
     keyword.control.flow.return,
+    punctuation.definition.block.do-expression,
     punctuation.definition.function.async.body,
     punctuation.definition.function.body,
     punctuation.definition.function.arrow.body,

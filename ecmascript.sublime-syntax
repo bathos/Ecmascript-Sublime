@@ -382,7 +382,7 @@ contexts:
     - match: 'while{{idEnd}}'
       scope: keyword.control.loop.while.es
       set: doStatement_AFTER_WHILE
-    - include: other_illegal_pop
+    - include: else_pop
 
   doStatement_AFTER_WHILE:
     - match: '((\())'
@@ -1587,6 +1587,7 @@ contexts:
     - include: ae_IDENTIFIERS
     - include: ae_GENERATOR_COMPREHENSION
     - include: ae_PARENTHESIZED
+    - include: ae_DO
 
   ae_AFTER_IDENTIFIER:
     - match: '=>'
@@ -1860,6 +1861,27 @@ contexts:
         2: entity.name.class.es
       set: [ ae_AFTER_THING, classDeclaration_AFTER_NAME ]
     - include: other_illegal_pop
+
+  ae_DO:
+    - match: 'do{{idEnd}}'
+      scope: keyword.control.do-expression.do.es
+      set: [ ae_AFTER_THING, ae_DO_AFTER_DO ]
+
+  ae_DO_AFTER_DO:
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.block.do-expression.begin.es
+        2: meta.brace.curly.js # ^BS
+      set: 'ae_DO_AFTER_BRACE'
+    - include: other_illegal_pop
+
+  ae_DO_AFTER_BRACE:
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.block.do-expression.end.es
+        2: meta.brace.curly.js # ^BS
+      pop: true
+    - include: statements
 
   ae_FUNCTION_GENERATOR_CLASS:
     - match: '((function))\s*((\*))'
@@ -2705,6 +2727,7 @@ contexts:
     - include: ae_NO_IN_IDENTIFIERS
     - include: ae_NO_IN_GENERATOR_COMPREHENSION
     - include: ae_NO_IN_PARENTHESIZED
+    - include: ae_NO_IN_DO
   ae_NO_IN_AFTER_IDENTIFIER:
     - match: '=>'
       scope: storage.type.function.arrow.es
@@ -2897,6 +2920,10 @@ contexts:
         2: entity.name.class.es
       set: [ ae_NO_IN_AFTER_THING, classDeclaration_AFTER_NAME ]
     - include: other_illegal_pop
+  ae_NO_IN_DO:
+    - match: 'do{{idEnd}}'
+      scope: keyword.control.do-expression.do.es
+      set: [ ae_NO_IN_AFTER_THING, ae_DO_AFTER_DO ]
   ae_NO_IN_FUNCTION_GENERATOR_CLASS:
     - match: '((function))\s*((\*))'
       captures:

@@ -447,9 +447,9 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>Function &amp; Return</string>
+			<string>Function &amp; Return &amp; Do Expression</string>
 			<key>scope</key>
-			<string>entity.name.function, keyword.control.flow.return, punctuation.definition.function.async.body, punctuation.definition.function.body, punctuation.definition.function.arrow.body, punctuation.definition.parameters.function</string>
+			<string>entity.name.function, keyword.control.do-expression.do, keyword.control.flow.return, punctuation.definition.block.do-expression, punctuation.definition.function.async.body, punctuation.definition.function.body, punctuation.definition.function.arrow.body, punctuation.definition.parameters.function</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>

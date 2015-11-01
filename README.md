@@ -116,6 +116,7 @@ The following candidate ES7 features, as they stand today anyway, are covered:
  - trailing commas where they don’t belong at all ugh
  - object literal spread and object binding pattern rest
  - bind operator
+ - do expression
 
 There are two optional ES7 Babel transforms I haven’t done yet:
 
@@ -251,6 +252,7 @@ themers; on the other hand, you get to decide which those are.
  - keyword.control.anchor.regexp
  - keyword.control.conditional.else.es
  - keyword.control.conditional.if.es
+ - keyword.control.do-expression.do.es
  - keyword.control.flow.await
  - keyword.control.flow.break.es
  - keyword.control.flow.continue.es
@@ -385,6 +387,8 @@ themers; on the other hand, you get to decide which those are.
  - punctuation.definition.block.begin.es
  - punctuation.definition.block.conditional.begin.es
  - punctuation.definition.block.conditional.end.es
+ - punctuation.definition.block.do-expression.begin.es
+ - punctuation.definition.block.do-expression.end.es
  - punctuation.definition.block.end.es
  - punctuation.definition.block.loop.begin.es
  - punctuation.definition.block.loop.end.es
