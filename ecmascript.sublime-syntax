@@ -4479,7 +4479,7 @@ contexts:
     - match: '\.{3}'
       scope: keyword.other.rest.parameter.es # -ES
       set: parameters_AFTER_ELLIPSIS
-    - include: parameters_END
+    - include: parameters_AFTER_REST_PARAM
 
   parameters_AFTER_PARAM:
     - match: ','
@@ -4488,25 +4488,25 @@ contexts:
     - match: '='
       scope: keyword.operator.assignment.conditional.default.es
       push: assignmentExpression
-    - include: parameters_END
+    - include: parameters_AFTER_REST_PARAM
 
   parameters_AFTER_ELLIPSIS:
     - match: '((\[))'
       captures:
         1: punctuation.definition.binding.array.parameter.begin.es
         2: meta.brace.square.js # ^BS
-      set: [ parameters_AFTER_PARAM, bindingArray_PARAM ]
+      set: [ parameters_AFTER_REST_PARAM, bindingArray_PARAM ]
     - match: '((\{))'
       captures:
         1: punctuation.definition.binding.object.parameter.begin.es
         2: meta.brace.curly.js # ^BS
-      set: [ parameters_AFTER_PARAM, bindingObject_PARAM ]
+      set: [ parameters_AFTER_REST_PARAM, bindingObject_PARAM ]
     - match: '{{identifier}}'
       scope: variable.parameter.rest.es
-      set: parameters_AFTER_PARAM
-    - include: parameters_END
+      set: parameters_AFTER_REST_PARAM
+    - include: parameters_AFTER_REST_PARAM
 
-  parameters_END:
+  parameters_AFTER_REST_PARAM:
     - match: '(?=\))'
       pop: true
     - include: other_illegal
