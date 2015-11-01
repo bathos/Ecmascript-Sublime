@@ -4443,7 +4443,7 @@ contexts:
       scope: invalid.illegal.token.es
     - match: '\.{3}'
       scope: keyword.operator.spread.es
-      set: [ arguments_AFTER_SPREAD, assignmentExpression ]
+      set: [ arguments_AFTER_AE, assignmentExpression ]
     - match: '{{PLA_anything}}'
       set: [ arguments_AFTER_AE, assignmentExpression ]
     - include: other_illegal
@@ -4457,14 +4457,6 @@ contexts:
     - match: ','
       scope: punctuation.separator.argument.es
       set: arguments
-    - include: other_illegal
-
-  arguments_AFTER_SPREAD:
-    - match: '((\)))'
-      captures:
-        1: punctuation.definition.arguments.end.es
-        2: meta.brace.round.js # ^BS
-      pop: true
     - include: other_illegal
 
   parameters:
