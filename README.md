@@ -607,47 +607,47 @@ in ‘.regexp’ do not also have ‘.es’.
 
 These scopes are used to facilitate proper population of the symbol list.
 
- - meta.symbol-helper.arrow.es
- - meta.symbol-helper.class.es
- - meta.symbol-helper.function.es
- - meta.symbol-helper.generator.es
+ - `meta.symbol-helper.arrow.es`
+ - `meta.symbol-helper.class.es`
+ - `meta.symbol-helper.function.es`
+ - `meta.symbol-helper.generator.es`
 
 ### Interoperability Scopes
 
 These scopes exist alongside others above to maximize interoperability with
 existing themes, especially those targetting JSNext and Babel Sublime.
 
- - constant.other.object.key.js
- - entity.name.class.js
- - entity.name.function.js
- - entity.name.method.js
- - entity.name.tag.js
- - entity.name.type.new
- - entity.quasi.element.js
- - entity.quasi.tag.name.js
- - keyword.generator.asterisk.js
- - keyword.operator.module.js
- - keyword.other.js
- - meta.brace.curly.js
- - meta.brace.round.js
- - meta.brace.square.js
- - meta.delimiter.comma.js
- - meta.function-call
- - meta.function.arrow.js
- - meta.function.js
- - meta.instance.constructor
- - meta.separator.comma.js
- - punctuation.definition.tag.js
- - punctuation.quasi.element.begin.js
- - punctuation.quasi.element.end.js
- - storage.type.accessor.js
- - storage.type.extends.js
- - storage.type.function.js
- - storage.type.js
- - string.regexp.js
- - string.unquoted.label.js
- - variable.language.proto
- - variable.language.prototype
+ - `constant.other.object.key.js`
+ - `entity.name.class.js`
+ - `entity.name.function.js`
+ - `entity.name.method.js`
+ - `entity.name.tag.js`
+ - `entity.name.type.new`
+ - `entity.quasi.element.js`
+ - `entity.quasi.tag.name.js`
+ - `keyword.generator.asterisk.js`
+ - `keyword.operator.module.js`
+ - `keyword.other.js`
+ - `meta.brace.curly.js`
+ - `meta.brace.round.js`
+ - `meta.brace.square.js`
+ - `meta.delimiter.comma.js`
+ - `meta.function-call`
+ - `meta.function.arrow.js`
+ - `meta.function.js`
+ - `meta.instance.constructor`
+ - `meta.separator.comma.js`
+ - `punctuation.definition.tag.js`
+ - `punctuation.quasi.element.begin.js`
+ - `punctuation.quasi.element.end.js`
+ - `storage.type.accessor.js`
+ - `storage.type.extends.js`
+ - `storage.type.function.js`
+ - `storage.type.js`
+ - `string.regexp.js`
+ - `string.unquoted.label.js`
+ - `variable.language.proto`
+ - `variable.language.prototype`
 
 
 ## About the Scope Conventions
