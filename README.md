@@ -335,7 +335,7 @@ in ‘.regexp’ do not also have ‘.es’.
       - `punctuation.definition.arguments` (parens in invocation/instantiation)
       - `punctuation.definition.block.do-expression` (braces in `do` expression)
       - `punctuation.separator.argument` (comma in arguments)
-      - `variable.other.readwrite.tag` (foo in `foo&grave;str${ exp }&grave;`)
+      - `variable.other.readwrite.tag` (foo in <code>foo&grave;str${ exp }&grave;</code>)
   - **Types**
     - **Accessors**
       - `entity.name.accessor.get` (name of accessor)
@@ -600,6 +600,7 @@ in ‘.regexp’ do not also have ‘.es’.
   - `meta.whitespace`
   - `punctuation.definition.arguments.promise` (included so promises and async functions could share colors)
   - `punctuation.definition.expression` (parentheses of a parenthetic expression)
+  - `support.class.builtin.promise` (singled out for reason stated above)
   - `variable.other.readwrite.decorator` (if a decorator expression begins with an identifier, as is typical, it will have this scope applied)
 
 ### Symbol Helper Scopes
