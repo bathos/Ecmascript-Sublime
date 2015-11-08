@@ -699,7 +699,9 @@ look like this:
       settings:
         foreground: '#FF0000'
 
-If you’re new to theming, make sure you grab AAAPackageDev and ScopeAlways from
+If you’re new to theming, make sure you grab
+[AAAPackageDev](https://packagecontrol.io/packages/AAAPackageDev) and
+[ScopeAlways](https://packagecontrol.io/packages/ScopeAlways) from
 Package Control. The former will let you translate human-readable YAML into
 tmTheme XML, and the latter will show, in the status bar, what scopes are being
 applied where your cursor is.
