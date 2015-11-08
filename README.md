@@ -194,374 +194,413 @@ the targettable scopes...
 
 ## Scopes
 
-Soon I will be adding examples, at least for the less obvious items. It goes
-without saying that only a minority of these will be truly useful to most
-themers; on the other hand, you get to decide which those are.
+It goes without saying that only a minority of these will be truly useful to
+most themers; on the other hand, you get to decide which those are.
 
 ### ‘Official’ Scopes
 
- - comment.block.es
- - comment.line.es
- - comment.line.shebang.es
- - constant.character.escape.control-char.regexp
- - constant.character.escape.es
- - constant.character.escape.hexadecimal.es
- - constant.character.escape.hexadecimal.regexp
- - constant.character.escape.newline.es
- - constant.character.escape.null.es
- - constant.character.escape.null.regexp
- - constant.character.escape.pointless.es
- - constant.character.escape.pointless.regexp
- - constant.character.escape.regexp
- - constant.character.escape.unicode.es
- - constant.character.escape.unicode.regexp
- - constant.language.boolean.false.es
- - constant.language.boolean.true.es
- - constant.language.infinity.es
- - constant.language.nan.es
- - constant.language.null.es
- - constant.language.undefined.es
- - constant.numeric.binary.es
- - constant.numeric.decimal.es
- - constant.numeric.hexadecimal.es
- - constant.numeric.octal.es
- - constant.other.character-class.predefined.regexp
- - constant.other.character-class.set.regexp
- - entity.name.accessor.get.es
- - entity.name.accessor.set.es
- - entity.name.class.es
- - entity.name.constructor.es
- - entity.name.function.allCap.es
- - entity.name.function.es
- - entity.name.function.generator.es
- - entity.name.function.initCap.es
- - entity.name.method.async.es
- - entity.name.method.es
- - entity.name.method.generator.es
- - entity.name.module.export.es
- - entity.name.module.import.es
- - entity.name.statement.es
- - entity.name.type.new
- - entity.other.property-binding.es
- - entity.other.property-binding.parameter.es
- - invalid.deprecated.es
- - invalid.illegal.newline.es
- - invalid.illegal.octal-escape.es
- - invalid.illegal.token
- - invalid.illegal.token.es
- - keyword.control.anchor.regexp
- - keyword.control.conditional.else.es
- - keyword.control.conditional.if.es
- - keyword.control.do-expression.do.es
- - keyword.control.flow.await
- - keyword.control.flow.break.es
- - keyword.control.flow.continue.es
- - keyword.control.flow.each.es
- - keyword.control.flow.return.accessor.es
- - keyword.control.flow.return.es
- - keyword.control.flow.throw.es
- - keyword.control.flow.yield.es
- - keyword.control.flow.yield.iterate.es
- - keyword.control.loop.conditional.if.comprehension.array.es
- - keyword.control.loop.conditional.if.comprehension.generator.es
- - keyword.control.loop.do.es
- - keyword.control.loop.for.comprehension.array.es
- - keyword.control.loop.for.comprehension.generator.es
- - keyword.control.loop.for.es
- - keyword.control.loop.in.es
- - keyword.control.loop.of.comprehension.array.es
- - keyword.control.loop.of.comprehension.generator.es
- - keyword.control.loop.of.es
- - keyword.control.loop.while.es
- - keyword.control.switch.case.default.es
- - keyword.control.switch.case.es
- - keyword.control.switch.es
- - keyword.control.trycatch.catch.es
- - keyword.control.trycatch.finally.es
- - keyword.control.trycatch.try.es
- - keyword.control.with.es
- - keyword.operator.accessor.es
- - keyword.operator.arithmetic.addition.es
- - keyword.operator.arithmetic.decrement.postfix.es
- - keyword.operator.arithmetic.decrement.prefix.es
- - keyword.operator.arithmetic.division.es
- - keyword.operator.arithmetic.exponentiation.es
- - keyword.operator.arithmetic.increment.postfix.es
- - keyword.operator.arithmetic.increment.prefix.es
- - keyword.operator.arithmetic.modulo.es
- - keyword.operator.arithmetic.multiplication.es
- - keyword.operator.arithmetic.sign.negative.es
- - keyword.operator.arithmetic.sign.positive.es
- - keyword.operator.arithmetic.subtraction.es
- - keyword.operator.assignment.augmented.arithmetic.addition.es
- - keyword.operator.assignment.augmented.arithmetic.division.es
- - keyword.operator.assignment.augmented.arithmetic.exponentiation.es
- - keyword.operator.assignment.augmented.arithmetic.modulo.es
- - keyword.operator.assignment.augmented.arithmetic.multiplication.es
- - keyword.operator.assignment.augmented.arithmetic.subtraction.es
- - keyword.operator.assignment.augmented.bitwise.logical.and.es
- - keyword.operator.assignment.augmented.bitwise.logical.or.es
- - keyword.operator.assignment.augmented.bitwise.logical.xor.es
- - keyword.operator.assignment.augmented.bitwise.shift.left.es
- - keyword.operator.assignment.augmented.bitwise.shift.right.es
- - keyword.operator.assignment.augmented.bitwise.shift.right.unsigned.es
- - keyword.operator.assignment.conditional.default.es
- - keyword.operator.assignment.conditional.mallet.es
- - keyword.operator.assignment.es
- - keyword.operator.bind.es
- - keyword.operator.bitwise.logical.and.es
- - keyword.operator.bitwise.logical.not.es
- - keyword.operator.bitwise.logical.or.es
- - keyword.operator.bitwise.logical.xor.es
- - keyword.operator.bitwise.shift.left.es
- - keyword.operator.bitwise.shift.right.es
- - keyword.operator.bitwise.shift.right.unsigned.es
- - keyword.operator.comma.es
- - keyword.operator.comparison.equality.coercive.es
- - keyword.operator.comparison.equality.strict.es
- - keyword.operator.comparison.non-equality.coercive.es
- - keyword.operator.comparison.non-equality.strict.es
- - keyword.operator.logical.and.es
- - keyword.operator.logical.not.es
- - keyword.operator.logical.or.es
- - keyword.operator.negation.regexp
- - keyword.operator.new.es
- - keyword.operator.or.regexp
- - keyword.operator.quantifier.regexp
- - keyword.operator.relational.gt.es
- - keyword.operator.relational.gte.es
- - keyword.operator.relational.in.es
- - keyword.operator.relational.instanceof.es
- - keyword.operator.relational.lt.es
- - keyword.operator.relational.lte.es
- - keyword.operator.spread
- - keyword.operator.spread.es
- - keyword.operator.ternary.else.es
- - keyword.operator.ternary.if.es
- - keyword.operator.unary.delete.es
- - keyword.operator.unary.typeof.es
- - keyword.operator.unary.void.es
- - keyword.other.back-reference.regexp
- - keyword.other.debugger.es
- - keyword.other.rest.es
- - keyword.other.rest.parameter.es
- - meta.brace.curly.hs
- - meta.comment.body.es
- - meta.comment.border.es
- - meta.comment.box-drawing.es
- - meta.directive.use-strict.es
- - meta.group.assertion.negative.regexp
- - meta.group.assertion.positive.regexp
- - meta.group.capturing.regexp
- - meta.group.non-capturing.regexp
- - meta.idiomatic-cast.boolean.es
- - meta.instantiation.es
- - meta.invocation.es
- - meta.numeric.exponent.digit.es
- - meta.numeric.exponent.e.es
- - meta.numeric.exponent.sign.es
- - meta.numeric.prefix.es
- - meta.whitespace.es
- - punctuation.decimal.es
- - punctuation.definition.accessor.begin.es
- - punctuation.definition.accessor.body.begin.es
- - punctuation.definition.accessor.body.end.es
- - punctuation.definition.accessor.end.es
- - punctuation.definition.accessor.parameter.begin.es
- - punctuation.definition.arguments.begin.es
- - punctuation.definition.arguments.end.es
- - punctuation.definition.array.begin.es
- - punctuation.definition.array.end.es
- - punctuation.definition.assertion.negative.begin.regexp
- - punctuation.definition.assertion.negative.end.regexp
- - punctuation.definition.assertion.positive.begin.regexp
- - punctuation.definition.assertion.positive.end.regexp
- - punctuation.definition.binding.array.begin.es
- - punctuation.definition.binding.array.end.es
- - punctuation.definition.binding.array.parameter.begin.es
- - punctuation.definition.binding.array.parameter.end.es
- - punctuation.definition.binding.object.begin.es
- - punctuation.definition.binding.object.end.es
- - punctuation.definition.binding.object.parameter.begin.es
- - punctuation.definition.binding.object.parameter.end.es
- - punctuation.definition.block.begin.es
- - punctuation.definition.block.conditional.begin.es
- - punctuation.definition.block.conditional.end.es
- - punctuation.definition.block.do-expression.begin.es
- - punctuation.definition.block.do-expression.end.es
- - punctuation.definition.block.end.es
- - punctuation.definition.block.loop.begin.es
- - punctuation.definition.block.loop.end.es
- - punctuation.definition.block.switch.begin.es
- - punctuation.definition.block.switch.end.es
- - punctuation.definition.block.trycatch.begin.es
- - punctuation.definition.block.trycatch.end.es
- - punctuation.definition.block.with.begin.es
- - punctuation.definition.block.with.end.es
- - punctuation.definition.character-class.begin.regexp
- - punctuation.definition.character-class.dash.regexp
- - punctuation.definition.character-class.end.regexp
- - punctuation.definition.class.body.begin.es
- - punctuation.definition.class.body.end.es
- - punctuation.definition.comment.begin.es
- - punctuation.definition.comment.end.es
- - punctuation.definition.comprehension.array.begin.es
- - punctuation.definition.comprehension.array.end.es
- - punctuation.definition.comprehension.generator.begin.es
- - punctuation.definition.comprehension.generator.end.es
- - punctuation.definition.constructor.body.begin.es
- - punctuation.definition.constructor.body.end.es
- - punctuation.definition.decorator.es
- - punctuation.definition.expression.begin.es
- - punctuation.definition.expression.conditional.begin.es
- - punctuation.definition.expression.conditional.comprehension.array.begin.es
- - punctuation.definition.expression.conditional.comprehension.generator.begin.es
- - punctuation.definition.expression.conditional.end.es
- - punctuation.definition.expression.end.es
- - punctuation.definition.expression.loop.begin.es
- - punctuation.definition.expression.loop.comprehension.array.begin.es
- - punctuation.definition.expression.loop.comprehension.generator.begin.es
- - punctuation.definition.expression.loop.end.es
- - punctuation.definition.expression.switch.begin.es
- - punctuation.definition.expression.switch.end.es
- - punctuation.definition.expression.with.begin.es
- - punctuation.definition.expression.with.end.es
- - punctuation.definition.function.arrow.body.begin.es
- - punctuation.definition.function.arrow.body.end.es
- - punctuation.definition.function.body.begin.es
- - punctuation.definition.function.body.end.es
- - punctuation.definition.generator.body.begin.es
- - punctuation.definition.generator.body.end.es
- - punctuation.definition.group.capturing.begin.regexp
- - punctuation.definition.group.capturing.end.regexp
- - punctuation.definition.group.non-capturing.begin.regexp
- - punctuation.definition.group.non-capturing.end.regexp
- - punctuation.definition.method.body.begin.es
- - punctuation.definition.method.body.end.es
- - punctuation.definition.method.generator.body.begin.es
- - punctuation.definition.method.generator.body.end.es
- - punctuation.definition.module-binding.begin.es
- - punctuation.definition.module-binding.end.es
- - punctuation.definition.object.begin.es
- - punctuation.definition.object.end.es
- - punctuation.definition.parameters.accessor.begin.es
- - punctuation.definition.parameters.accessor.end.es
- - punctuation.definition.parameters.catch.begin.es
- - punctuation.definition.parameters.catch.end.es
- - punctuation.definition.parameters.constructor.begin.es
- - punctuation.definition.parameters.constructor.end.es
- - punctuation.definition.parameters.function.arrow.begin.es
- - punctuation.definition.parameters.function.arrow.end.es
- - punctuation.definition.parameters.function.begin.es
- - punctuation.definition.parameters.function.end.es
- - punctuation.definition.parameters.generator.begin.es
- - punctuation.definition.parameters.generator.end.es
- - punctuation.definition.parameters.method.begin.es
- - punctuation.definition.parameters.method.end.es
- - punctuation.definition.parameters.method.generator.begin.es
- - punctuation.definition.parameters.method.generator.end.es
- - punctuation.definition.string.interpolated.begin.es
- - punctuation.definition.string.interpolated.element.begin.es
- - punctuation.definition.string.interpolated.element.end.es
- - punctuation.definition.string.interpolated.end.es
- - punctuation.definition.string.quoted.double.begin.es
- - punctuation.definition.string.quoted.double.end.es
- - punctuation.definition.string.quoted.double.parameter.begin.es
- - punctuation.definition.string.quoted.single.begin.es
- - punctuation.definition.string.quoted.single.end.es
- - punctuation.definition.string.quoted.single.parameter.begin.es
- - punctuation.definition.string.regexp.begin.es
- - punctuation.definition.string.regexp.end.es
- - punctuation.separator.argument.es
- - punctuation.separator.array-element.binding.es
- - punctuation.separator.array-element.binding.parameter.es
- - punctuation.separator.array-element.es
- - punctuation.separator.binding-binding.es
- - punctuation.separator.case-statements.es
- - punctuation.separator.key-value.es
- - punctuation.separator.label-statement.es
- - punctuation.separator.loop-expression.es
- - punctuation.separator.module-binding.es
- - punctuation.separator.object-member.binding.es
- - punctuation.separator.object-member.binding.parameter.es
- - punctuation.separator.object-member.es
- - punctuation.separator.parameter.es
- - punctuation.separator.property-binding.es
- - punctuation.separator.property-binding.parameter.es
- - punctuation.terminator.statement.es
- - storage.modifier.accessor.get.es
- - storage.modifier.accessor.set.es
- - storage.modifier.async.es
- - storage.modifier.async.expression.es
- - storage.modifier.async.method.es
- - storage.modifier.extends.es
- - storage.modifier.generator.asterisk.es
- - storage.modifier.generator.asterisk.expression.es
- - storage.modifier.module.as.es
- - storage.modifier.module.default.es
- - storage.modifier.module.from.es
- - storage.modifier.module.namespace.es
- - storage.modifier.static.es
- - storage.type.class
- - storage.type.class.es
- - storage.type.class.expression.es
- - storage.type.constant.es
- - storage.type.function.arrow.es
- - storage.type.function.es
- - storage.type.function.expression.es
- - storage.type.function.generator.es
- - storage.type.function.generator.expression.es
- - storage.type.module.export.es
- - storage.type.module.import.es
- - storage.type.variable.let.es
- - storage.type.variable.var.es
- - string.interpolated.es
- - string.quoted.double.es
- - string.quoted.single.es
- - string.regexp.es
- - string.regexp.flags.es
- - support.class.builtin.es
- - support.class.node.es
- - support.function.builtin.es
- - support.function.node.require.es
- - support.variable.builtin.es
- - support.variable.dom-library.es
- - support.variable.dom.es
- - support.variable.functional-library.es
- - support.variable.node.es
- - variable.language.arguments.es
- - variable.language.new-target.fake-accessor.es
- - variable.language.new-target.fake-object.es
- - variable.language.new-target.fake-property.es
- - variable.language.proto.es
- - variable.language.prototype.es
- - variable.language.super.es
- - variable.language.this.es
- - variable.other.readwrite.allCap.es
- - variable.other.readwrite.decorator.es
- - variable.other.readwrite.es
- - variable.other.readwrite.export.es
- - variable.other.readwrite.import.es
- - variable.other.readwrite.initCap.es
- - variable.other.readwrite.property.allCap.es
- - variable.other.readwrite.property.es
- - variable.other.readwrite.property.initCap.es
- - variable.other.readwrite.property.object-literal.allCap.es
- - variable.other.readwrite.property.object-literal.es
- - variable.other.readwrite.property.object-literal.initCap.es
- - variable.other.readwrite.property.proto.es
- - variable.other.readwrite.property.prototype.es
- - variable.other.readwrite.property.shorthand.allCap.es
- - variable.other.readwrite.property.shorthand.es
- - variable.other.readwrite.property.shorthand.initCap.es
- - variable.other.readwrite.property.shorthand.rest.allCap.es
- - variable.other.readwrite.property.shorthand.rest.es
- - variable.other.readwrite.property.shorthand.rest.initCap.es
- - variable.other.readwrite.propertyobject-literal..es
- - variable.other.readwrite.tag.es
- - variable.parameter.catch.es
- - variable.parameter.es
- - variable.parameter.rest.es
+These are the scopes generally intended for targeting. For readability, I’ve
+omitted the ‘.es’ suffix as well as ‘.begin.es’ and ‘.end.es’ for various
+punctuation, as these are only useful for debugging. Note that the scopes ending
+in ‘.regexp’ do not also have ‘.es’.
+
+- **Comments & Directives**
+  - `comment`
+  - `comment.block`
+  - `comment.line`
+  - `comment.line.shebang` (e.g. `#!/usr/bin/env node`)
+  - `meta.comment.body` (content that is not part of the delimiter(s) or border)
+  - `meta.comment.border` (includes anything that seems like a border, and `//`)
+  - `meta.comment.box-drawing` (box drawing characters can be targeted)
+  - `meta.directive.use-strict` (the `'use strict'` directive)
+  - `punctuation.definition.comment` (the delimiting `//`, `/*` or `*/`)
+- **Comprehensions**
+  - `keyword.control.loop.conditional.if.comprehension.array`
+  - `keyword.control.loop.conditional.if.comprehension.generator`
+  - `keyword.control.loop.for.comprehension.array`
+  - `keyword.control.loop.for.comprehension.generator`
+  - `keyword.control.loop.of.comprehension.array`
+  - `keyword.control.loop.of.comprehension.generator`
+  - `punctuation.definition.comprehension.array`
+  - `punctuation.definition.comprehension.generator`
+  - `punctuation.definition.expression.conditional.comprehension.array`
+  - `punctuation.definition.expression.conditional.comprehension.generator`
+  - `punctuation.definition.expression.loop.comprehension.array`
+  - `punctuation.definition.expression.loop.comprehension.generator`
+- **Constants & Literals**
+  - **General**
+    - `constant`
+    - `constant.language`
+    - `constant.language.boolean`
+    - `constant.language.boolean.false`
+    - `constant.language.boolean.true`
+    - `constant.language.null`
+    - `constant.language.undefined`
+  - **Arrays**  
+    - `punctuation.definition.array`
+    - `punctuation.separator.array-element`
+  - **Numbers**
+    - `constant.language.infinity`
+    - `constant.language.nan`
+    - `constant.numeric`
+    - `constant.numeric.binary`
+    - `constant.numeric.decimal`
+    - `constant.numeric.hexadecimal`
+    - `constant.numeric.octal`
+    - `meta.numeric.exponent.digit`
+    - `meta.numeric.exponent.e`
+    - `meta.numeric.exponent.sign`
+    - `meta.numeric.prefix`
+    - `punctuation.decimal`
+  - **Objects**
+    - `punctuation.definition.object` (the braces in `let x = { a: 1 };`)
+    - `punctuation.separator.key-value` (the colon in `let x = { a: 1 };`)
+    - `punctuation.separator.object-member` (commas between properties)
+    - `variable.other.readwrite.property.object-literal`
+    - `variable.other.readwrite.property.object-literal.allCap`
+    - `variable.other.readwrite.property.object-literal.initCap`
+    - `variable.other.readwrite.property.shorthand`
+    - `variable.other.readwrite.property.shorthand.allCap`
+    - `variable.other.readwrite.property.shorthand.initCap`
+    - `variable.other.readwrite.property.shorthand.rest`
+    - `variable.other.readwrite.property.shorthand.rest.allCap`
+    - `variable.other.readwrite.property.shorthand.rest.initCap`
+    - *see also Functions for accessors and methods*
+  - **Regexp**
+    - `constant.character.escape.control-char.regexp`
+    - `constant.character.escape.hexadecimal.regexp`
+    - `constant.character.escape.null.regexp`
+    - `constant.character.escape.pointless.regexp`
+    - `constant.character.escape.regexp`
+    - `constant.character.escape.unicode.regexp`
+    - `constant.other.character-class.predefined.regexp`
+    - `constant.other.character-class.set.regexp`
+    - `keyword.control.anchor.regexp`
+    - `keyword.operator.negation.regexp`
+    - `keyword.operator.or.regexp`
+    - `keyword.operator.quantifier.regexp`
+    - `keyword.other.back-reference.regexp`
+    - `meta.group.assertion.negative.regexp`
+    - `meta.group.assertion.positive.regexp`
+    - `meta.group.capturing.regexp`
+    - `meta.group.non-capturing.regexp`
+    - `punctuation.definition.assertion.negative.regexp`
+    - `punctuation.definition.assertion.positive.regexp`
+    - `punctuation.definition.character-class.dash.regexp`
+    - `punctuation.definition.character-class.regexp`
+    - `punctuation.definition.string.regexp`
+    - `punctuation.definition.group.capturing.regexp`
+    - `punctuation.definition.group.non-capturing.regexp`
+    - `string.regexp`
+    - `string.regexp.flags`
+  - **Strings**
+    - `constant.character`
+    - `constant.character.escape`
+    - `constant.character.escape.hexadecimal` (e.g. `'\\x41'`)
+    - `constant.character.escape.newline` (a terminal backslash)
+    - `constant.character.escape.null` (i.e. `'\\0'`)
+    - `constant.character.escape.pointless` (an escape that is not needed)
+    - `constant.character.escape.unicode` (e.g. `'\\u0041'` or `'\\u{41}'`)
+    - `punctuation.definition.string`
+    - `punctuation.definition.string.interpolated`
+    - `punctuation.definition.string.interpolated.element`
+    - `punctuation.definition.string.quoted`
+    - `punctuation.definition.string.quoted.double`
+    - `punctuation.definition.string.quoted.double.parameter`
+    - `punctuation.definition.string.quoted.single`
+    - `punctuation.definition.string.quoted.single.parameter`
+    - `string`
+    - `string.interpolated`
+    - `string.quoted`
+    - `string.quoted.double`
+    - `string.quoted.single`
+- **Functions & Function-Related**
+  - **General**
+    - **Parameters**
+      - `entity.other.property-binding.parameter`
+      - `keyword.other.rest.parameter`
+      - `keyword.other.rest`
+      - `punctuation.definition.binding.array.parameter`
+      - `punctuation.definition.binding.object.parameter`
+      - `punctuation.separator.array-element.binding.parameter`
+      - `punctuation.separator.object-member.binding.parameter`
+      - `punctuation.separator.parameter`
+      - `punctuation.separator.property-binding.parameter`
+      - `variable.parameter`
+      - `variable.parameter.rest`
+    - **Execution & Do Expressions**
+      - `keyword.control.do-expression.do` (the keyword from ES7, not the loop)
+      - `meta.instantiation` (applied to identifier being instantiated)
+      - `meta.invocation` (applied to identifier being invoked)
+      - `punctuation.definition.arguments` (parens in invocation/instantiation)
+      - `punctuation.definition.block.do-expression` (braces in `do` expression)
+      - `punctuation.separator.argument` (comma in arguments)
+      - `variable.other.readwrite.tag` (foo in `foo&grave;str${ exp }&grave;`)
+  - **Types**
+    - **Accessors**
+      - `entity.name.accessor.get` (name of accessor)
+      - `entity.name.accessor.set` (name of accessor)
+      - `keyword.control.flow.return.accessor` (not sure why I gave it its own)
+      - `punctuation.definition.accessor`
+      - `punctuation.definition.accessor.body` (braces)
+      - `punctuation.definition.accessor.parameter` (the param id in a `set`)
+      - `punctuation.definition.parameters.accessor` (parens)
+      - `storage.modifier.accessor.get` (keyword `get`)
+      - `storage.modifier.accessor.set` (keyword `set`)
+    - **Async Functions**
+      - `entity.name.method.async` (name of async function)
+      - `keyword.control.flow.await` (keyword `await`)
+      - `punctuation.definition.function.async`
+      - `punctuation.definition.function.async.arrow`
+      - `punctuation.definition.function.async.arrow.body`
+      - `punctuation.definition.function.async.body`
+      - `punctuation.definition.parameters.function.async`
+      - `punctuation.definition.parameters.function.async.arrow`
+      - `storage.modifier.async` (keyword `async`, general)
+      - `storage.modifier.async.expression` (keyword `async`, in expression)
+      - `storage.modifier.async.method` (keyword `async`, in method declaration)
+    - **Classes**
+      - `entity.name.class`
+      - `entity.name.constructor`
+      - `punctuation.definition.class.body`
+      - `punctuation.definition.constructor.body`
+      - `punctuation.definition.decorator`
+      - `punctuation.definition.parameters.constructor`
+      - `storage.modifier.extends`
+      - `storage.modifier.static`
+      - `storage.type.class`
+      - `storage.type.class.expression`
+    - **Functions**
+      - `entity.name.function`
+      - `entity.name.function.allCap`
+      - `entity.name.function.initCap`
+      - `entity.name.method`
+      - `keyword.control.flow.return`
+      - `punctuation.definition.function`
+      - `punctuation.definition.function.arrow.body`
+      - `punctuation.definition.function.body`
+      - `punctuation.definition.method`
+      - `punctuation.definition.method.body`
+      - `punctuation.definition.parameters`
+      - `punctuation.definition.parameters.function`
+      - `punctuation.definition.parameters.function.arrow`
+      - `punctuation.definition.parameters.method`
+      - `storage.type.function.arrow`
+      - `storage.type.function`
+      - `storage.type.function.expression`
+    - **Generators**
+      - `entity.name.function.generator`
+      - `entity.name.method.generator`
+      - `keyword.control.flow.yield.iterate`
+      - `keyword.control.flow.yield`
+      - `punctuation.definition.generator`
+      - `punctuation.definition.generator.body`
+      - `punctuation.definition.method.generator`
+      - `punctuation.definition.method.generator.body`
+      - `punctuation.definition.parameters.generator`
+      - `punctuation.definition.parameters.method.generator`
+      - `storage.modifier.generator.asterisk`
+      - `storage.modifier.generator.asterisk.expression`
+      - `storage.type.function.generator`
+      - `storage.type.function.generator.expression`
+- **Operators**
+  - **Assignment**
+    - **General**
+      - `keyword.operator.assignment`
+      - `keyword.operator.assignment.conditional`
+      - `keyword.operator.assignment.conditional.default` (default initializer)
+      - `keyword.operator.assignment.conditional.mallet` (`||=` -- used to be in Babel)
+      - `keyword.operator.unary.delete`
+    - **Augmented**
+      - `keyword.operator.assignment.augmented`
+      - `keyword.operator.assignment.augmented.arithmetic`
+      - `keyword.operator.assignment.augmented.arithmetic.addition`
+      - `keyword.operator.assignment.augmented.arithmetic.division`
+      - `keyword.operator.assignment.augmented.arithmetic.exponentiation`
+      - `keyword.operator.assignment.augmented.arithmetic.modulo`
+      - `keyword.operator.assignment.augmented.arithmetic.multiplication`
+      - `keyword.operator.assignment.augmented.arithmetic.subtraction`
+      - `keyword.operator.assignment.augmented.bitwise`
+      - `keyword.operator.assignment.augmented.bitwise.logical`
+      - `keyword.operator.assignment.augmented.bitwise.logical.and`
+      - `keyword.operator.assignment.augmented.bitwise.logical.or`
+      - `keyword.operator.assignment.augmented.bitwise.logical.xor`
+      - `keyword.operator.assignment.augmented.bitwise.shift`
+      - `keyword.operator.assignment.augmented.bitwise.shift.left`
+      - `keyword.operator.assignment.augmented.bitwise.shift.right`
+      - `keyword.operator.assignment.augmented.bitwise.shift.right.unsigned`
+  - **Bitwise**
+    - `keyword.operator.bitwise`
+    - `keyword.operator.bitwise.logical`
+    - `keyword.operator.bitwise.logical.and`
+    - `keyword.operator.bitwise.logical.not`
+    - `keyword.operator.bitwise.logical.or`
+    - `keyword.operator.bitwise.logical.xor`
+    - `keyword.operator.bitwise.shift`
+    - `keyword.operator.bitwise.shift.left`
+    - `keyword.operator.bitwise.shift.right`
+    - `keyword.operator.bitwise.shift.right.unsigned`
+  - **Comparison**
+    - `keyword.operator.comparison`
+    - `keyword.operator.comparison.equality`
+    - `keyword.operator.comparison.equality.coercive`
+    - `keyword.operator.comparison.equality.strict`
+    - `keyword.operator.comparison.non-equality`
+    - `keyword.operator.comparison.non-equality.coercive`
+    - `keyword.operator.comparison.non-equality.strict`
+    - `keyword.operator.relational`
+    - `keyword.operator.relational.gt`
+    - `keyword.operator.relational.gte`
+    - `keyword.operator.relational.in`
+    - `keyword.operator.relational.instanceof`
+    - `keyword.operator.relational.lt`
+    - `keyword.operator.relational.lte`
+  - **Evaluative**
+    - `keyword.operator.accessor`
+    - `keyword.operator.bind`
+    - `keyword.operator.comma`
+    - `keyword.operator.new`
+    - `keyword.operator.spread`
+    - `keyword.operator.ternary`
+    - `keyword.operator.ternary.else`
+    - `keyword.operator.ternary.if`
+    - `keyword.operator.unary`
+    - `keyword.operator.unary.typeof`
+    - `keyword.operator.unary.void`
+  - **Logical**
+    - `keyword.operator.logical`
+    - `keyword.operator.logical.and`
+    - `keyword.operator.logical.not`
+    - `keyword.operator.logical.or`
+    - `meta.idiomatic-cast.boolean` (i.e. `!!val`)
+  - **Mathematic**
+    - `keyword.operator.arithmetic`
+    - `keyword.operator.arithmetic.addition`
+    - `keyword.operator.arithmetic.decrement`
+    - `keyword.operator.arithmetic.decrement.postfix`
+    - `keyword.operator.arithmetic.decrement.prefix`
+    - `keyword.operator.arithmetic.division`
+    - `keyword.operator.arithmetic.exponentiation`
+    - `keyword.operator.arithmetic.increment`
+    - `keyword.operator.arithmetic.increment.postfix`
+    - `keyword.operator.arithmetic.increment.prefix`
+    - `keyword.operator.arithmetic.modulo`
+    - `keyword.operator.arithmetic.multiplication`
+    - `keyword.operator.arithmetic.sign`
+    - `keyword.operator.arithmetic.sign.negative`
+    - `keyword.operator.arithmetic.sign.positive`
+    - `keyword.operator.arithmetic.subtraction`
+- **Statements**
+  - **General**
+    - `entity.name.statement` (statement label)
+    - `keyword.control.flow.break`
+    - `keyword.control.flow.throw`
+    - `punctuation.definition.block` (braces of any block statement)
+    - `punctuation.separator.label-statement` (statement label colon)
+    - `punctuation.terminator.statement` (terminal semicolon or empty statement)
+  - **Conditional Statements**
+    - `keyword.control.conditional`
+    - `keyword.control.conditional.else`
+    - `keyword.control.conditional.if`
+    - `keyword.control.switch` (the switch keyword)
+    - `keyword.control.switch.case` (the case keyword)
+    - `keyword.control.switch.case.default` (the default keyword, in a switch)
+    - `punctuation.definition.block.conditional` (braces for `if` or `else`)
+    - `punctuation.definition.block.switch` (braces for `switch`)
+    - `punctuation.definition.expression.conditional` (parens for `if`)
+    - `punctuation.definition.expression.switch` (parens for `switch`)
+    - `punctuation.separator.case-statements` (colon after `case` or `default`)
+  - **Loop Statements**
+    - `keyword.control.flow.continue`
+    - `keyword.control.loop.do`
+    - `keyword.control.loop.each` (deprecated)
+    - `keyword.control.loop.for`
+    - `keyword.control.loop.in`
+    - `keyword.control.loop.of`
+    - `keyword.control.loop.while`
+    - `punctuation.definition.block.loop` (braces in `while (x) {...}`)
+    - `punctuation.definition.expression.loop` (parens in ``while (x) {...}``)
+    - `punctuation.separator.loop-expression` (semicolons in a C-style `for`)
+  - **Try Statements**
+    - `keyword.control.trycatch`
+    - `keyword.control.trycatch.catch`
+    - `keyword.control.trycatch.finally`
+    - `keyword.control.trycatch.try`
+    - `punctuation.definition.block.trycatch` (braces in all three)
+    - `punctuation.definition.parameters.catch` (parens in `catch (err)`)
+    - `variable.parameter.catch` (err in `catch (err)`)
+  - **Module Statements**
+    - `entity.name.module.export`
+    - `entity.name.module.import`
+    - `punctuation.definition.module-binding` (braces in `import { x, y } from 'z'`)
+    - `punctuation.separator.module-binding` (comma in `import { x, y } from 'z'`)
+    - `storage.modifier.module.as`
+    - `storage.modifier.module.default`
+    - `storage.modifier.module.from`
+    - `storage.modifier.module.namespace` (the asterisk in `import * from z`)
+    - `storage.type.module.export`
+    - `storage.type.module.import`
+    - `variable.other.readwrite.export`
+    - `variable.other.readwrite.import`
+  - **Nonsense**
+    - `keyword.control.with` (deprecated)
+    - `keyword.other.debugger` (deprecated)
+    - `punctuation.definition.block.with` (deprecated)
+    - `punctuation.definition.expression.with` (deprecated)
+- **Variables & Constants**
+  - **Declarations**
+    - `storage.type.constant`
+    - `storage.type.variable.let`
+    - `storage.type.variable.var`
+  - **Binding Patterns (Destructuring)**
+    - `entity.other.property-binding` (y in `let { y: z } = x`)
+    - `punctuation.definition.binding`
+    - `punctuation.definition.binding.array`
+    - `punctuation.definition.binding.object`
+    - `punctuation.separator.array-element.binding` (comma in array binding)
+    - `punctuation.separator.binding-binding` (the comma here: `let x, y`)
+    - `punctuation.separator.object-member.binding` (commas in object patterns)
+    - `punctuation.separator.property-binding` (colon in `let { y: z } = x`)
+    - *see also Functions for binding patterns in parameter declarations*
+- **Identifiers**
+  - **General**
+    - `variable.other.readwrite`
+    - `variable.other.readwrite.allCap`
+    - `variable.other.readwrite.initCap`
+    - `variable.other.readwrite.property`
+    - `variable.other.readwrite.property.allCap`
+    - `variable.other.readwrite.property.initCap`
+  - **Contextual References & Pseudo-References**
+    - `variable.language.arguments`
+    - `variable.language.new-target.fake-accessor` (the dot in `new.target`)
+    - `variable.language.new-target.fake-object` (the new in `new.target`)
+    - `variable.language.new-target.fake-property` (the target in `new.target`)
+    - `variable.language.super`
+    - `variable.language.this`
+  - **Special Properties**
+    - `variable.other.readwrite.property.proto` (i.e., `x.__proto__`; a certified Bad Part)
+    - `variable.other.readwrite.property.prototype` (i.e. `X.prototype`)
+  - **Native (& Nearly Native) Objects**
+    - `support.class.builtin` (e.g. `Array`)
+    - `support.function.builtin` (e.g. `parseInt`)
+    - `support.variable.builtin` (e.g. `Math`)
+  - **Domain-Specific Objects**
+    - `support.class.node` (that is, `Buffer`)
+    - `support.function.node.require`
+    - `support.variable.dom` (e.g. `document`; kept this list minimal though)
+    - `support.variable.dom-library` (e.g. `$`)
+    - `support.variable.functional-library` (e.g. `_`)
+    - `support.variable.node` (e.g. `process`)
+- **Other**
+  - `invalid`
+  - `invalid.deprecated` (e.g. `with`)
+  - `invalid.illegal.newline` (e.g., inside a single-quote string)
+  - `invalid.illegal.octal-escape` (e.g. `'\\101'`; not valid since ES3)
+  - `invalid.illegal.token` (syntax error)
+  - `meta.whitespace`
+  - `punctuation.definition.arguments.promise` (included so promises and async functions could share colors)
+  - `punctuation.definition.expression` (parentheses of a parenthetic expression)
+  - `variable.other.readwrite.decorator` (if a decorator expression begins with an identifier, as is typical, it will have this scope applied)
 
 ### Symbol Helper Scopes
 
@@ -582,6 +621,7 @@ existing themes, especially those targetting JSNext and Babel Sublime.
  - entity.name.function.js
  - entity.name.method.js
  - entity.name.tag.js
+ - entity.name.type.new
  - entity.quasi.element.js
  - entity.quasi.tag.name.js
  - keyword.generator.asterisk.js
@@ -605,6 +645,8 @@ existing themes, especially those targetting JSNext and Babel Sublime.
  - storage.type.js
  - string.regexp.js
  - string.unquoted.label.js
+ - variable.language.proto
+ - variable.language.prototype
 
 
 ## About the Scope Conventions
@@ -728,10 +770,10 @@ asinine. That is, if a person really wrote this:
 
     label
     : {
-    	[ a,
-    	b=4 ]
-    	= [ (c)
-    	=> { c * 2, d } ]
+      [ a,
+      b=4 ]
+      = [ (c)
+      => { c * 2, d } ]
     }
 
 ... they don’t *deserve* syntax highlighting. So consider it a feature.

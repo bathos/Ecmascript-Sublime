@@ -413,7 +413,7 @@ settings:
     foreground: '#b871bb'
 
 - name: String - Interpolated - Element Punctuation
-  scope: punctuation.definition.string.interpolated.element.begin
+  scope: punctuation.definition.string.interpolated.element
   settings:
     foreground: '#b89aa7'
 

@@ -407,7 +407,7 @@ contexts:
         2: meta.brace.round.js # ^BS
       set: forStatement_AFTER_PAREN_OPEN
     - match: '(each){{idEnd}}'
-      scope: keyword.control.flow.each.es
+      scope: keyword.control.flow.loop.es
       captures:
         1: invalid.deprecated.es
       set: forStatement_AFTER_EACH
@@ -973,7 +973,7 @@ contexts:
         2: punctuation.definition.decorator.es
       push: decoratorExpression
     - match: 'class'
-      scope: storage.type.class
+      scope: storage.type.class.es
       set: classDeclaration_AFTER_CLASS
     - include: other_illegal_pop
 
@@ -2125,9 +2125,10 @@ contexts:
     # This is iffy territory for me. The criteria should be clear though. These
     # are libraries with iconic identifiers that, even if used for something
     # else, are nonetheless likely to be ‘highlight worthy’ because of their
-    # uniqueness. They have become so synonymous with their purposes that
+    # uniqueness. Either they have become so synonymous with their purposes that
     # multiple libraries in the same domain use them as a kind of signal, and
-    # they are often used as extensions to the language itself.
+    # they are often used as extensions to the language itself, or else the name
+    # is sufficiently unique that it is safe to not fret over ‘collision’.
     #
     # UNDERSCORE, LODASH & RAMDA
     # The inclusion of Ramda’s R is very questionable, I admit. It doesn’t yet
@@ -2137,8 +2138,8 @@ contexts:
     - match: '(_|R){{idEnd}}'
       scope: support.variable.functional-library.es
       set: ae_AFTER_THING
-    # JQUERY, ZEPTO, PROTOTYPE & MOOTOOLS
-    - match: '\${{idEnd}}'
+    # JQUERY, ZEPTO, PROTOTYPE & MOOTOOLS; ALSO MAJOR FRAMEWORKS
+    - match: '(?:\$|angular|Polymer|React){{idEnd}}'
       scope: support.variable.dom-library.es
       set: ae_AFTER_THING
     # HELLSCAPE OBJECTS
@@ -3127,7 +3128,7 @@ contexts:
     - match: '(_|R){{idEnd}}'
       scope: support.variable.functional-library.es
       set: ae_NO_IN_AFTER_THING
-    - match: '\${{idEnd}}'
+    - match: '(?:\$|angular|Polymer|React){{idEnd}}'
       scope: support.variable.dom-library.es
       set: ae_NO_IN_AFTER_THING
     - match: '(document|frames|history|location|navigator|screen|window){{idEnd}}'
@@ -4334,7 +4335,7 @@ contexts:
     - match: '((\}))'
       captures:
         1: punctuation.definition.binding.object.parameter.end.es
-        2: meta.brace.curly.hs # ^BS, augmented
+        2: meta.brace.curly.js # ^BS, augmented
       pop: true
     # BOUND PROPERTY ASSIGNMENT, NORMAL PROPERTY STYLE
     - match: '(({{identifierName}}))\s*((:))'

@@ -736,7 +736,7 @@
 			<key>name</key>
 			<string>String - Interpolated - Element Punctuation</string>
 			<key>scope</key>
-			<string>punctuation.definition.string.interpolated.element.begin</string>
+			<string>punctuation.definition.string.interpolated.element</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
