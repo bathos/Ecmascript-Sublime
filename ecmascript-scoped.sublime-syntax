@@ -1,0 +1,522 @@
+%YAML 1.2
+---
+name: Ecmascript Scoped
+file_extensions: [ js, es, es6 ]
+scope: source.es
+
+# This is a special variation that takes a very different approach. In the
+# normal ES Sublime definition, we take great care to avoid depth on the context
+# stack, because a syntax error could cause a cascade of mis-scoping that we’d
+# prefer to finesse our way out of. Here we use the context stack as intended,
+# which will lead to some very interesting effects. Specifically, it enables us
+# to create themes that highlight on *depth of scope* (that is, JS scope)...
+
+# This is really just an experiment right now, and as part of the experiment, I
+# have used non-standard scope naming. Instead of long hierarchical strings, it
+# leverages the natural hierarchy so that scopes can be targeted ‘organically’.
+
+# In other words, you would not target this:
+#  `punctuation.definition.comment`
+#
+# But rather:
+#  `comment delimiter`
+#
+# If this works out, I wonder if we couldn’t begin developing new conventions
+# that really take advantage of this better syntax tool...?
+#
+# Below, matches marked NEWLINE ALERT signal cases where sublime-syntax is not
+# enough to resolve ambiguities if a newline is found in an unfortunate place.
+
+variables:
+
+# CHARACTER CLASSES ############################################################
+
+  IDSTARTOTHER: '℘℮゛゜'
+  IDSTART: '\p{L}\p{Nl}{{IDSTARTOTHER}}'
+  IDCONTINUEOTHER: '··፩-፱᧚'
+  IDCONTINUE: '{{IDSTART}}\p{Mn}\p{Mc}\p{Nd}\p{Pc}{{IDCONTINUEOTHER}}'
+
+# BOUNDARY MATCHES #############################################################
+
+  ANYTHING: '(?=[\S\s])'
+  X: '(?=[^\$_‍‍{{IDCONTINUE}}]|$)'
+
+# IDENTIFIERS ##################################################################
+
+  UNICODEESCAPE: '\\u(?:\h{4}|\{\h+\})'
+  RESERVED: 'await|break|c(?:a(?:se|tch)|lass|on(?:st|tinue))|d(?:e(?:bugger|fault|lete)|o)|e(?:lse|num|x(?:port|tends))|f(?:alse|inally|or|unction)|i(?:f|mp(?:lements|ort)|n(?:stanceof|terface)?)|Infinity|let|NaN|n(?:ew|ull)|p(?:ackage|r(?:ivate|otected)|ublic)|return|s(?:uper|witch)|t(?:h(?:is|row)|r(?:ue|y)|ypeof)|undefined|v(?:ar|oid)|w(?:hile|ith)|yield'
+  IDPART:  '(?:[\$_‍‍{{IDCONTINUE}}]|{{UNICODEESCAPE}})*'
+  IDCAP: '(\p{Lu}{{IDPART}})'
+  IDGEN: '([{{IDSTART}}]{{IDPART}})'
+  ID: '(?!(?:{{RESERVED}})[^\$_‍‍{{IDCONTINUE}}])(?<![{{IDCONTINUE}}])(?:{{IDCAP}}|{{IDGEN}})'
+
+################################################################################
+################################################################################
+
+contexts:
+
+# ASSISTS ######################################################################
+
+  ELSE-INVALID:
+    - match: '{{IDGEN}}|.'
+      scope: invalid
+
+  ELSE-POP:
+    - match: '{{ANYTHING}}'
+      pop: true
+
+  NEWLINE-OR-SEMICOLON-POP:
+    - match: '$'
+      pop: true
+    - include: SEMICOLON-POP
+
+  SEMICOLON-POP:
+    - match: ';'
+      scope: terminator
+      pop: true
+    - include: ELSE-POP
+
+# ENTRY ########################################################################
+
+  main:
+    - meta_include_prototype: false
+    - match: '^\#\!.*'
+      scope: comment.shebang
+      push: MODULE
+    - match: '{{ANYTHING}}'
+      push: MODULE
+
+# PROTOTYPE ####################################################################
+
+  prototype:
+    - match: '\s+'
+    - include: COMMENT
+
+################################################################################
+################################################################################
+
+# COMMENT ######################################################################
+
+  COMMENT:
+    - include: COMMENT.BLOCK
+    - include: COMMENT.LINE
+
+  COMMENT.BLOCK:
+    - match: '\/\*'
+      scope: delimiter
+      push: COMMENT.BLOCK.entry
+
+  COMMENT.BLOCK.entry:
+    - meta_scope: comment.block
+    - match: '\*\/'
+      scope: delimiter
+      pop: true
+
+  COMMENT.LINE:
+    - match: '\/\/'
+      scope: delimiter
+      push: COMMENT.LINE.entry
+
+  COMMENT.LINE.entry:
+    - meta_scope: comment.line
+    - match: '$'
+      pop: true
+
+# DECLARATION: CLASS ###########################################################
+
+  DECLARATION.CLASS:
+
+  DECLARATION.CLASS.entry:
+
+
+# DECLARATION: EXPORT ##########################################################
+
+  DECLARATION.EXPORT:
+    - match: 'export{{X}}'
+      scope: keyword.export
+      push: DECLARATION.EXPORT.entry
+
+  DECLARATION.EXPORT.entry:
+    - meta_scope: export
+    - include: DECLARATION.EXPORT.DEFAULT
+    - include: DECLARATION.EXPORT.DECLARATION
+    - include: DECLARATION.EXPORT.VARIABLE
+    - include: DECLARATION.EXPORT.NAMESPACE
+    - include: DECLARATION.EXPORT.NAMED
+    - include: DECLARATION.EXPORT.NAME
+    - include: ELSE-INVALID
+
+  DECLARATION.EXPORT.DEFAULT:
+    - match: 'default{{X}}'
+      scope: keyword.default
+      set: [ DECLARATION.EXPORT.DEFAULT.exit, DECLARATION.EXPORT.DEFAULT.entry ]
+
+  DECLARATION.EXPORT.DEFAULT.entry:
+    - include: DECLARATION.EXPORT.DEFAULT.CLASS
+    - include: DECLARATION.EXPORT.DEFAULT.FUNCTION
+    - include: DECLARATION.EXPORT.DEFAULT.DECORATOR
+    - match: '{{ANYTHING}}'
+      push: [ DECLARATION.EXPORT.terminus,  ]
+
+  DECLARATION.EXPORT.DEFAULT.CLASS:
+    - match: 'class{{X}}'
+
+  DECLARATION.EXPORT.DEFAULT.DECORATOR:
+    - match: '@'
+
+  DECLARATION.EXPORT.
+
+  DECLARATION.EXPORT.DECLARATION:
+
+  DECLARATION.EXPORT.VARIABLE:
+
+  DECLARATION.EXPORT.NAMESPACE:
+
+  DECLARATION.EXPORT.NAMED:
+
+  DECLARATION.EXPORT.NAME: # ES7 #
+
+  DECLARATION.EXPORT.DEFAULT.exit:
+    - meta_scope: export
+    - include: ELSE-POP
+
+  DECLARATION.EXPORT.terminus:
+    # How about some grammar arcana? By appearances, the production expected
+    # after 'export default' is an assignment expression. Indeed, this is one of
+    # the valid productions. However a default export of 'function' or 'class'
+    # is actually a declaration even here. Oh, not terribly strange. But it gets
+    # stranger: naturally, one would think that anonymous classes and functions
+    # would still belong to the expression production, since these are, by
+    # definition, expressions ... not so! An anonymous class or function in a
+    # default export is in fact a special production of their declaration forms,
+    # while an assignment expression here is specifically forbidden from
+    # starting with either. Thus, `export default function() {}();` is actually
+    # a semantic error! And further, when the default export is a class or
+    # function, regardless of anonymity, it does not take a semicolon. 
+    - match: ';'
+      scope: terminator
+      pop: true
+    - include: ELSE-POP
+
+# DECLARATION: IMPORT ##########################################################
+
+  DECLARATION.IMPORT:
+    - match: 'import{{X}}'
+      scope: keyword.import
+      push: [ DECLARATION.IMPORT.specifier, DECLARATION.IMPORT.entry ]
+
+  DECLARATION.IMPORT.entry:
+    - include: DECLARATION.IMPORT.NAME
+    - include: DECLARATION.IMPORT.NAMED
+    - include: DECLARATION.IMPORT.NAMESPACE
+    - include: ELSE-POP
+
+  DECLARATION.IMPORT.exit:
+    - meta_content_scope: import
+    - match: ';'
+      scope: import terminator
+      pop: true
+    - include: ELSE-POP
+
+  DECLARATION.IMPORT.NAME:
+    - match: '{{ID}}'
+      scope: binding
+      captures:
+        1: identifier.class
+        2: identifier
+      set: DECLARATION.IMPORT.NAME.entry
+
+  DECLARATION.IMPORT.NAME.entry:
+    - match: ','
+      scope: separator
+      set: DECLARATION.IMPORT.NAME.exit
+    - match: '{{ANYTHING}}'
+      set: DECLARATION.IMPORT.from
+
+  DECLARATION.IMPORT.NAME.exit:
+    - include: DECLARATION.IMPORT.NAMED
+    - include: DECLARATION.IMPORT.NAMESPACE
+    - include: ELSE-INVALID
+
+  DECLARATION.IMPORT.NAMED:
+    - match: '\{'
+      scope: delimiter
+      set: [ DECLARATION.IMPORT.from, DECLARATION.IMPORT.NAMED.entry ]
+
+  DECLARATION.IMPORT.NAMED.entry:
+    - match: '\}'
+      scope: delimiter
+      pop: true
+    - match: '{{IDGEN}}\s+(as){{X}}'
+      # BREAKABLE: { ID \n as ID }
+      captures:
+        1: name
+        2: keyword.as
+      set: DECLARATION.IMPORT.NAMED.as
+    - match: '{{ID}}'
+      captures:
+        1: identifier.class
+        2: identifier
+      set: DECLARATION.IMPORT.NAMED.exit
+    - include: ELSE-INVALID
+
+  DECLARATION.IMPORT.NAMED.as:
+    - match: '{{ID}}'
+      captures:
+        1: identifier.class
+        2: identifier
+      set: DECLARATION.IMPORT.NAMED.exit
+    - include: ELSE-INVALID
+
+  DECLARATION.IMPORT.NAMED.exit:
+    - match: '\}'
+      scope: delimiter
+      pop: true
+    - match: ','
+      scope: separator
+      set: DECLARATION.IMPORT.NAMED.entry
+    - match: 'as{{X}}'
+      # BREAK RECOVERY: { ID \n as ID }
+      scope: keyword.as
+      set: DECLARATION.IMPORT.NAMED.as
+    - include: ELSE-INVALID
+
+  DECLARATION.IMPORT.NAMESPACE:
+    - match: '\*'
+      scope: keyword.namespace
+      set: [ DECLARATION.IMPORT.from, DECLARATION.IMPORT.NAMESPACE.entry ]
+
+  DECLARATION.IMPORT.NAMESPACE.entry:
+    - match: 'as{{X}}'
+      scope: keyword.as
+      set: DECLARATION.IMPORT.NAMESPACE.name
+    - include: ELSE-INVALID
+
+  DECLARATION.IMPORT.NAMESPACE.name:
+    - match: '{{ID}}'
+      scope: binding
+      captures:
+        1: identifier.class
+        2: identifier
+      pop: true
+    - include: ELSE-INVALID
+
+  DECLARATION.IMPORT.from:
+    - match: 'from{{X}}'
+      scope: keyword.from
+      pop: true
+    - include: ELSE-INVALID
+
+  DECLARATION.IMPORT.specifier:
+    - meta_scope: import
+    - match: ''''
+      scope: delimiter
+      set: [ DECLARATION.IMPORT.exit, STRING.SINGLE.entry ]
+    - match: '"'
+      set: [ DECLARATION.IMPORT.exit, STRING.DOUBLE.entry ]
+
+# DECORATOR ####################################################################
+
+  DECORATOR.CLASS:
+    - match: '@'
+      scope: keyword.decorator
+      set: [ DECORATOR.CLASS.exit, DECORATOR.CLASS.entry ]
+
+  DECORATOR.CLASS.entry:
+    - meta_scope: decorator
+    - include: EXPRESSION.ASSIGNMENT.entry
+
+  DECORATOR.CLASS.exit:
+    - match: 'class{{X}}'
+      scope: keyword.class
+      push: DECLARATION.CLASS.entry
+    - include: ELSE-INVALID
+
+# EXPRESSION ###################################################################
+
+# Note the absence of EXPRESSION and EXPRESSION.ASSIGNMENT. It is necessary that
+# these contexts work a bit differently from statements. A comment marks all
+# contexts that follow the expression-popping pattern.
+
+  EXPRESSION.entry:
+    - match: '{{ANYTHING}}'
+      set: [ EXPRESSION.exit, EXPRESSION.ASSIGNMENT.entry ]
+
+  EXPRESSION.exit:
+    - meta_scope: expression
+    - match: ','
+      scope: operator.comma
+      push: EXPRESSION.ASSIGNMENT.entry
+    - include: ELSE-POP
+
+  EXPRESSION.ASSIGNMENT.entry:
+    # EXPRESSION COMPONENT - WILL POP CURRENT CONTEXT IF MATCHED
+    - include: EXPRESSION.ASSIGNMENT.common
+    - include: ELSE-INVALID
+
+  EXPRESSION.ASSIGNMENT.common:
+    # EXPRESSION COMPONENT - WILL POP CURRENT CONTEXT IF MATCHED
+    - include: STRING
+
+# MODULE #######################################################################
+
+  MODULE:
+    - meta_scope: scope.module
+    - include: DECLARATION.IMPORT
+    - include: DECLARATION.EXPORT
+    - include: MODULE.DECORATOR
+    - include: STATEMENT-LIST
+
+  MODULE.DECORATOR:
+    # This is needed because at the module level, a decorator can begin either
+    # a conventional class declaration or an export declaration.
+    - match: '@'
+      scope: keyword.decorator
+      push: [ MODULE.DECORATOR.entry, DECORATOR.CLASS.entry ]
+
+  MODULE.DECORATOR.entry:
+    - match: 'export{{X}}'
+      scope: export keyword.export
+      set: MODULE.DECORATOR.export
+    - match: '(?=class{{X}})'
+      pop: true
+    - include: ELSE-INVALID
+
+  MODULE.DECORATOR.export:
+    - match: 'default{{X}}'
+      scope: export keyword.default
+      set: MODULE.DECORATOR.default
+
+  MODULE.DECORATOR.default:
+    - match: 'class{{X}}'
+      scope: keyword.class
+      set: [ , DECLARATION.EXPORT.DEFAULT.CLASS.entry ]
+    - include: ELSE-INVALID
+
+# STATEMENT-LIST ###############################################################
+
+  STATEMENT-LIST:
+    - include: STATEMENT.EMPTY
+    - include: STATEMENT.BLOCK
+    - include: STATEMENT.EXPRESSION
+
+  STATEMENT.BLOCK:
+    - match: '\{'
+      scope: delimiter
+      push: STATEMENT.BLOCK.entry
+
+  STATEMENT.BLOCK.entry:
+    - meta_scope: block scope.lexical
+    - match: '\}'
+      scope: delimiter
+      pop: true
+    - include: STATEMENT-LIST
+
+  STATEMENT.EMPTY:
+    - match: ';'
+      scope: pointless terminator
+
+  STATEMENT.EXPRESSION:
+    - match: '{{ANYTHING}}'
+      push: [ STATEMENT.EXPRESSION.exit, EXPRESSION.entry ]
+
+  STATEMENT.EXPRESSION.exit:
+    - meta_scope: statement
+    - match: ';'
+      scope: terminator
+      pop: true
+    - include: ELSE-POP
+
+# STRING #######################################################################
+
+  STRING:
+    # EXPRESSION COMPONENT - WILL POP CURRENT CONTEXT IF MATCHED
+    - include: STRING.SINGLE
+    - include: STRING.DOUBLE
+    - include: STRING.INTERPOLATED
+
+  STRING.DOUBLE:
+    # EXPRESSION COMPONENT - WILL POP CURRENT CONTEXT IF MATCHED
+    - match: '"'
+      scope: delimiter
+      set: STRING.DOUBLE.entry
+
+  STRING.DOUBLE.entry:
+    - meta_scope: string.double
+    - meta_include_prototype: false
+    - match: '\\"'
+      scope: escape.delimiter
+    - include: STRING.common.quoted
+    - match: '"'
+      scope: delimiter
+      pop: true
+
+  STRING.INTERPOLATED:
+    # EXPRESSION COMPONENT - WILL POP CURRENT CONTEXT IF MATCHED
+    - match: '`'
+      scope: delimiter
+      set: STRING.INTERPOLATED.entry
+
+  STRING.INTERPOLATED.entry:
+    - meta_scope: string.interpolated
+    - meta_include_prototype: false
+    - match: '\$\\\{|\\(\$\{|`)'
+      scope: escape.delimiter
+    - match: '\\\n'
+      scope: pointless escape.newline
+    - include: STRING.common
+    - match: '`'
+      scope: delimiter
+      pop: true
+    - match: '\$\{'
+      scope: interpolation delimiter
+      push: STRING.INTERPOLATED.EXPRESSION.entry
+
+  STRING.INTERPOLATED.EXPRESSION.entry:
+    - match: '{{ANYTHING}}'
+      set: [ STRING.INTERPOLATED.EXPRESSION.exit, EXPRESSION.entry ]
+
+  STRING.INTERPOLATED.EXPRESSION.exit:
+    - meta_content_scope: interpolation
+    - match: '\}'
+      scope: interpolation delimiter
+      pop: true
+    - include: ELSE-INVALID
+
+  STRING.SINGLE:
+    # EXPRESSION COMPONENT - WILL POP CURRENT CONTEXT IF MATCHED
+    - match: ''''
+      scope: delimiter
+      set: STRING.SINGLE.entry
+
+  STRING.SINGLE.entry:
+    - meta_scope: string.single
+    - meta_include_prototype: false
+    - match: '\\'''
+      scope: escape.delimiter
+    - include: STRING.common.quoted
+    - match: ''''
+      scope: delimiter
+      pop: true
+
+  STRING.common:
+    - match: '\\[\\bfnrtv]'
+      scope: escape
+    - match: '{{UNICODEESCAPE}}'
+      scope: escape.unicode
+    - match: '\\x\h\h'
+      scope: escape.hexadecimal
+    - match: '\\(?:[1-7][0-7]{0,2}|[0-7]{2,3})'
+      scope: invalid escape.octal
+    - match: '\\0'
+      scope: escape.null
+    - match: '\\.'
+      scope: pointless escape
+
+  STRING.common.quoted:
+    - include: STRING.common
+    - match: '\\\n'
+      scope: escape.newline
+    - match: '\n'
+      scope: invalid.newline
+      pop: true
