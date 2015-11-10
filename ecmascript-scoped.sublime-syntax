@@ -128,13 +128,12 @@ contexts:
 
   DECLARATION.CLASS.entry:
 
-
 # DECLARATION: EXPORT ##########################################################
 
   DECLARATION.EXPORT:
     - match: 'export{{X}}'
       scope: keyword.export
-      push: DECLARATION.EXPORT.entry
+      push: [ DECLARATION.EXPORT.exit, DECLARATION.EXPORT.entry ]
 
   DECLARATION.EXPORT.entry:
     - meta_scope: export
@@ -149,36 +148,84 @@ contexts:
   DECLARATION.EXPORT.DEFAULT:
     - match: 'default{{X}}'
       scope: keyword.default
-      set: [ DECLARATION.EXPORT.DEFAULT.exit, DECLARATION.EXPORT.DEFAULT.entry ]
+      set: DECLARATION.EXPORT.DEFAULT.entry
 
   DECLARATION.EXPORT.DEFAULT.entry:
     - include: DECLARATION.EXPORT.DEFAULT.CLASS
     - include: DECLARATION.EXPORT.DEFAULT.FUNCTION
     - include: DECLARATION.EXPORT.DEFAULT.DECORATOR
     - match: '{{ANYTHING}}'
-      push: [ DECLARATION.EXPORT.terminus,  ]
+      set: [ DECLARATION.EXPORT.terminus, EXPRESSION.ASSIGNMENT.entry ]
 
   DECLARATION.EXPORT.DEFAULT.CLASS:
     - match: 'class{{X}}'
 
+  DECLARATION.EXPORT.DEFAULT.FUNCTION:
+    - match: 'function{{X}}'
+    - match: 'async{{X}}'
+
   DECLARATION.EXPORT.DEFAULT.DECORATOR:
     - match: '@'
 
-  DECLARATION.EXPORT.
-
   DECLARATION.EXPORT.DECLARATION:
+    - match: 'async{{X}}'
+    - match: 'class{{X}}'
+    - match: 'const{{X}}'
+    - match: 'function{{X}}'
+    - match: 'let{{X}}'
 
   DECLARATION.EXPORT.VARIABLE:
+    - match: 'var{{X}}'
 
   DECLARATION.EXPORT.NAMESPACE:
+    - match: '\*'
+      scope: keyword.namespace
+      set: [ DECLARATION.EXPORT.imported, DECLARATION.EXPORT.NAMESPACE.entry ]
+
+  DECLARATION.EXPORT.NAMESPACE.entry:
+    - match: 'as{{X}}' # ES7
+      scope: keyword.as
+      set: DECLARATION.EXPORT.NAMESPACE.name
+    - include: ELSE-POP
+
+  DECLARATION.EXPORT.NAMESPACE.name:
+    - match: '{{ID}}'
+      scope: binding
+      captures:
+        1: identifier.class
+        2: identifier
+      pop: true
+    - include: ELSE-INVALID
 
   DECLARATION.EXPORT.NAMED:
+    - match: '\{'
 
-  DECLARATION.EXPORT.NAME: # ES7 #
+  DECLARATION.EXPORT.NAME: # ES7
+    - match: '{{ID}}'
+      scope: binding
+      captures:
+        1: identifier.class
+        2: identifier
+      set: DECLARATION.EXPORT.imported
 
   DECLARATION.EXPORT.DEFAULT.exit:
     - meta_scope: export
     - include: ELSE-POP
+
+  DECLARATION.EXPORT.imported:
+    - match: 'from{{X}}'
+      scope: export keyword.from
+      set: [ DECLARATION.EXPORT.terminus, DECLARATION.EXPORT.specifier ]
+    - include: ELSE-INVALID
+
+  DECLARATION.EXPORT.specifier:
+    - meta_scope: import
+    - match: ''''
+      scope: delimiter
+      set: STRING.SINGLE.entry
+    - match: '"'
+      scope: delimiter
+      set: STRING.DOUBLE.entry
 
   DECLARATION.EXPORT.terminus:
     # How about some grammar arcana? By appearances, the production expected
@@ -313,6 +360,7 @@ contexts:
       scope: delimiter
       set: [ DECLARATION.IMPORT.exit, STRING.SINGLE.entry ]
     - match: '"'
+      scope: delimiter
       set: [ DECLARATION.IMPORT.exit, STRING.DOUBLE.entry ]
 
 # DECORATOR ####################################################################
