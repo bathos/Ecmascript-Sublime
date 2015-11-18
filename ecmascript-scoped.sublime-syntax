@@ -48,7 +48,7 @@ variables:
   IDPART:  '(?:[\$_‍‍{{IDCONTINUE}}]|{{UNICODEESCAPE}})*'
   IDCAP: '(\p{Lu}{{IDPART}})'
   IDGEN: '([{{IDSTART}}]{{IDPART}})'
-  IDPROP: '{{IDCAP}}|{{IDGEN}}'
+  IDPROP: '(?:{{IDCAP}}|{{IDGEN}})'
   ID: '(?!(?:{{RESERVED}})[^\$_‍‍{{IDCONTINUE}}])(?<![{{IDCONTINUE}}])(?:{{IDCAP}}|{{IDGEN}})'
 
 ################################################################################
@@ -154,7 +154,6 @@ contexts:
     - include: EXPRESSION.FUNCTION
     - include: EXPRESSION.DO
     - include: EXPRESSION.CONSTANT
-    - include: EXPRESSION.REFERENCE
     # Bracket-initialized
     - include: EXPRESSION.COMPREHENSION.ARRAY
     - include: EXPRESSION.BINDING.ARRAY
@@ -163,11 +162,13 @@ contexts:
     - include: EXPRESSION.BINDING.OBJECT
     - include: EXPRESSION.LITERAL.OBJECT
     # Paren-initialized
-    - include: EXPRESSION.ARROW
+    - include: EXPRESSION.FUNCTION.ARROW
     - include: EXPRESSION.COMPREHENSION.GENERATOR
     - include: EXPRESSION.PARENTHETICAL
+    # Open-ended
+    - include: EXPRESSION.REFERENCE
 
-  # Four exits (plus two special cases): these alternate exit cases (and note,
+  # Four exits (plus one special case): these alternate exit cases (and note,
   # each is inclusive of its predecessors) are our half-assed way of following,
   # to a limited extent, some of the grammatical constraints of expression
   # formation. Since the grammatical designation of an expression (component) is
@@ -190,12 +191,12 @@ contexts:
     - match: '\?'
       scope: operator.logical
       set:
-        - EXPRESSION.ASS.ENTRY
+        - - include: EXPRESSION.ASS.entry
         - - match: ':'
             scope: operator.logical
             pop: true
           - include: ELSE-INVALID
-        - EXPRESSION.ASS.entry
+        - - include: EXPRESSION.ASS.entry
     - match: '(?:[\+\-\/%]|\*{2})(?!=)'
       scope: operator.arithmetical
       set: EXPRESSION.ASS.entry
@@ -213,7 +214,8 @@ contexts:
     # in an unfortunate position; and in the case of a computed property, it
     # will also fail if the accessor expression includes brackets; and in the
     # case of a regular method name, it is both extra sensitive to line breaks
-    # and fails if the arguments contain parens (in default values).
+    # and fails if the arguments contain parens (in default values). Finally,
+    # this does not account for numeric literal property names.
     - match: >-
         (?x)
           \*
@@ -224,7 +226,7 @@ contexts:
           (?! \s* {{IDGEN}} \s* \([^)]*\) \s* \{)
       scope: operator.arithmetical
       set: EXPRESSION.ASS.entry
-    - match: '[!=]==?|[<>]=|instanceof{{X}}|in{{X}}'
+    - match: '[!=]==?|[<>]=|in(?:stanceof)?{{X}}'
       scope: operator.relational
       set: EXPRESSION.ASS.entry
     - match: '&&|\|\|(?!=)'
@@ -240,7 +242,7 @@ contexts:
     # sublime-syntax with much success).
     - match: '::'
       scope: operator.evaluative
-      scope: EXPRESSION.ASS.entry
+      set: EXPRESSION.ASS.entry
     - include: ELSE-POP
 
   # ACCESSIBLE, OPERABLE
@@ -252,10 +254,10 @@ contexts:
       set:
         - match: 'prototype{{X}}'
           scope: property prototype
-          set: EXPRESSION.exit.4
+          set: EXPRESSION.ASS.exit.4
         - match: '__proto__{{X}}'
           scope: property proto
-          set: EXPRESSION.exit.4
+          set: EXPRESSION.ASS.exit.4
         # We attempt to capture invocation/instantiation here, and the call
         # scope will then be inclusive of the identifier. This can be broken
         # by linebreaks, though it will not otherwise be disruptive.
@@ -264,13 +266,13 @@ contexts:
             1: identifier.class
             2: identifier.general
             3: arguments delim
-          set: [ EXPRESSION.exit.3, EXPRESSION.ARGUMENTS.entry ]
+          set: [ EXPRESSION.ASS.exit.3, EXPRESSION.ARGUMENTS.entry ]
         - match: '{{IDPROP}}'
           scope: property
           captures:
             1: identifier.class
             2: identifier.general
-          set: EXPRESSION.exit.4
+          set: EXPRESSION.ASS.exit.4
         - include: ELSE-INVALID
     # Prevent decorator expressions from eating computed properties, hopefully.
     # This is a sloppy patch for a defect in the proposed grammar.
@@ -285,13 +287,13 @@ contexts:
     - match: '\['
       scope: delim
       set:
-        - EXPRESSION.ASS.exit.4
+        - - include: EXPRESSION.ASS.exit.4
         - - meta_scope: property
           - match: '\]'
             scope: delim
             pop: true
           - include: ELSE-INVALID
-        - EXPRESSION.ASS.entry
+        - - include: EXPRESSION.ASS.entry
     - include: EXPRESSION.ASS.exit.1
 
   # INVOCABLE, ACCESSIBLE, OPERABLE
@@ -301,10 +303,10 @@ contexts:
   EXPRESSION.ASS.exit.3:
     - match: '\('
       scope: arguments delim
-      set: [ EXPRESSION.exit.3, EXPRESSION.ARGUMENTS.entry ]
+      set: [ EXPRESSION.ASS.exit.3, EXPRESSION.ARGUMENTS.entry ]
     - match: '`'
       scope: delim
-      set: [ EXPRESSION.exit.2, EXPRESSION.STRING.INTERPOLATED.entry ]
+      set: [ EXPRESSION.ASS.exit.2, EXPRESSION.STRING.INTERPOLATED.entry ]
     - include: EXPRESSION.ASS.exit.2
 
   # ASSIGNABLE, INVOCABLE, ACCESSIBLE, OPERABLE
@@ -330,35 +332,271 @@ contexts:
       set: EXPRESSION.ASS.exit.1
     - include: EXPRESSION.ASS.exit.3
 
-  # SPECIAL: AMBIGUOUS SINGLE IDENTIFIER TRAP
-  # The AE thus far is as #4, but is conceivably the argument of an arrow
-  # function with an obnoxiously placed linebreak
-  EXPRESSION.ASS.exit.5:
-    - match: '=>'
-      scope: keyword.function.arrow
-    - include: EXPRESSION.ASS.exit.4
-
   # SPECIAL: AMBIGUOUS OBJECT/ARRAY LITERAL TRAP
   # The AE thus far is as #2, but is conceivably the binding pattern of an
   # assignment with an obnoxiously placed linebreak
-  EXPRESSION.ASS.exit.6:
+  EXPRESSION.ASS.exit.5:
     - match: '=(?!=)'
       scope: operator.assignment
     - include: EXPRESSION.ASS.exit.2
 
-# EXPRESSION: ARROW ############################################################
-
-  EXPRESSION.ARROW:
-
 # EXPRESSION: BINDING PATTERNS #################################################
 
   EXPRESSION.BINDING.ARRAY:
+    - match: '\[(?=(?<brackets>[^\[\]]|\[\g<brackets>*\])*\]\s*=[^=])'
+      scope: delim
+      set:
+        - EXPRESSION.ASS.exit.4
+        - EXPRESSION.BINDING.ARRAY.exit
+        - EXPRESSION.BINDING.ARRAY.entry
+
+  EXPRESSION.BINDING.ARRAY.entry:
+    - match: '{{ID}}'
+      captures:
+        1: identifier.class
+        2: identifier.general
+      set:
+        - EXPRESSION.BINDING.ARRAY.member
+        - EXPRESSION.DEFAULT-ASSIGNMENT
+    - match: '\.{3}'
+      scope: keyword.rest
+      set:
+        - EXPRESSION.BINDING.ARRAY.terminus
+        - EXPRESSION.BINDING.rest
+    - match: '\['
+      scope: delim
+      set:
+        - EXPRESSION.BINDING.ARRAY.member
+        - EXPRESSION.BINDING.ARRAY.exit
+        - EXPRESSION.BINDING.ARRAY.entry
+    - match: '\{'
+      scope: delim
+      set:
+        - EXPRESSION.BINDING.ARRAY.member
+        - EXPRESSION.BINDING.OBJECT.exit
+        - EXPRESSION.BINDING.OBJECT.entry
+    - include: EXPRESSION.BINDING.ARRAY.member
+
+  EXPRESSION.BINDING.ARRAY.exit:
+    - meta_scope: pattern.array
+    - include: ELSE-POP
+
+  EXPRESSION.BINDING.ARRAY.member:
+    - match: ','
+      scope: separator.comma
+      set: EXPRESSION.BINDING.ARRAY.entry
+    - include: EXPRESSION.BINDING.ARRAY.terminus
+
+  EXPRESSION.BINDING.ARRAY.terminus:
+    - match: '\]'
+      scope: delim
+      pop: true
+    - include: ELSE-INVALID
+
   EXPRESSION.BINDING.OBJECT:
+    - match: '\{(?=(?<braces>[^\{\}]|\{\g<braces>*\})*\}\s*=[^=])'
+      scope: delim
+      set:
+        - EXPRESSION.ASS.exit.4
+        - EXPRESSION.BINDING.OBJECT.exit
+        - EXPRESSION.BINDING.OBJECT.entry
+
+  EXPRESSION.BINDING.OBJECT.entry:
+    # ES7 destructured rest object (obj takes ownKeys not otherwise gobbled)
+    - match: '\.{3}'
+      scope: keyword.rest
+      set:
+        - EXPRESSION.BINDING.OBJECT.terminus
+        - EXPRESSION.BINDING.rest
+    - match: '(?=[\d\.])'
+      set:
+        - EXPRESSION.BINDING.OBJECT.member
+        - EXPRESSION.BINDING.OBJECT.property
+        - EXPRESSION.NUMBER.entry
+    - match: ''''
+      scope: delim
+      set:
+        - EXPRESSION.BINDING.OBJECT.member
+        - EXPRESSION.BINDING.OBJECT.property
+        - EXPRESSION.STRING.SINGLE.entry
+    - match: '"'
+      scope: delim
+      set:
+        - EXPRESSION.BINDING.OBJECT.member
+        - EXPRESSION.BINDING.OBJECT.property
+        - EXPRESSION.STRING.DOUBLE.entry
+    - match: '\['
+      scope: delim
+      set:
+        - - include: EXPRESSION.BINDING.OBJECT.member
+        - - include: EXPRESSION.BINDING.OBJECT.property
+        - - meta_scope: property.computed
+          - match: '\]'
+            scope: delim
+            pop: true
+          - include: ELSE-INVALID
+        - - include: EXPRESSION.ASS.entry
+    # Newline-sensitive: cannot be matched perfectly
+    - match: '{{ID}}\s*(:)'
+      scope: property.binding
+      captures:
+        3: separator.colon
+    - match: '{{ID}}'
+      captures:
+        1: identifier.class
+        2: identifier.general
+      set:
+        - EXPRESSION.BINDING.OBJECT.member
+        - EXPRESSION.BINDING.OBJECT.colon-cleanse
+    - include: EXPRESSION.BINDING.OBJECT.terminus
+
+  EXPRESSION.BINDING.OBJECT.exit:
+    - meta_scope: pattern.object
+    - include: ELSE-POP
+
+  EXPRESSION.BINDING.OBJECT.colon-cleanse:
+    # Recovery scope for the unmatchable sequence 'key\n:'
+    - match: ':'
+      scope: property.binding separator.colon
+      set: EXPRESSION.BINDING.OBJECT.target
+    - include: ELSE-POP
+
+  EXPRESSION.BINDING.OBJECT.member:
+    # A dangling comma in a non-empty property list is explicitly permitted, so
+    # we don’t need to fuss much here.
+    - match: ','
+      scope: separator.comma
+      set: EXPRESSION.BINDING.OBJECT.entry
+    - include: EXPRESSION.BINDING.OBJECT.terminus
+
+  EXPRESSION.BINDING.OBJECT.property:
+    - meta_content_scope: property.binding
+    - match: ':'
+      scope: separator.colon
+      set: EXPRESSION.BINDING.OBJECT.target
+    - include: ELSE-INVALID
+
+  EXPRESSION.BINDING.OBJECT.target:
+    - match: '{{ID}}'
+      captures:
+        1: identifier.class
+        2: identifier.general
+      set: EXPRESSION.DEFAULT-ASSIGNMENT
+    - match: '\['
+      scope: delim
+      set:
+        - EXPRESSION.DEFAULT-ASSIGNMENT
+        - EXPRESSION.BINDING.ARRAY.exit
+        - EXPRESSION.BINDING.ARRAY.entry
+    - match: '\{'
+      scope: delim
+      set:
+        - EXPRESSION.DEFAULT-ASSIGNMENT
+        - EXPRESSION.BINDING.OBJECT.exit
+        - EXPRESSION.BINDING.OBJECT.entry
+    - include: ELSE-INVALID
+
+  EXPRESSION.BINDING.OBJECT.terminus:
+    - match: '\}'
+      scope: delim
+      pop: true
+    - include: ELSE-INVALID
+
+  EXPRESSION.BINDING.rest:
+    - match: '{{ID}}'
+      captures:
+        1: identifier.class
+        2: identifier.general
+      pop: true
+    - include: ELSE-INVALID
 
 # EXPRESSION: COMPREHENSIONS ###################################################
 
+  # I haven’t been able to find a formal grammar for comprehensions that seems
+  # to have *anything* to do with the implementation found in Babel. If you know
+  # where this thing comes from, please point me towards the spec -- it’s tough
+  # to work blind. Given the extent of its removal from anything I’ve turned up
+  # regarding comprehensions on ES Discuss, I’ve begun to wonder if this ought
+  # to be included at all in an ‘EcmaScript’ syntax definition -- even one that
+  # is otherwise happy to include proposed features.
+
+  # Babel permits linebreaks between the opening paren and its 'for'. As in many
+  # other cases, the limitations of Sublime Syntax prevent us from recognizing
+  # such a thing correctly at the outset.
+
   EXPRESSION.COMPREHENSION.ARRAY:
+    - match: '(\[)\s*(for){{X}}'
+      captures:
+        1: delim
+        2: keyword.for
+      set:
+        - EXPRESSION.ASS.exit.2
+        - EXPRESSION.COMPREHENSION.ARRAY.exit
+        - EXPRESSION.COMPREHENSION.entry
+
+  EXPRESSION.COMPREHENSION.ARRAY.exit:
+    - meta_scope: comprehension.array
+    - match: '\]'
+      scope: delim
+      pop: true
+    - include: ELSE-INVALID
+
   EXPRESSION.COMPREHENSION.GENERATOR:
+    - match: '(\()\s*(for){{X}}'
+      captures:
+        1: delim
+        2: keyword.for
+      set:
+        - EXPRESSION.ASS.exit.2
+        - EXPRESSION.COMPREHENSION.GENERATOR.exit
+        - EXPRESSION.COMPREHENSION.entry
+
+  EXPRESSION.COMPREHENSION.GENERATOR.exit:
+    - meta_scope: comprehension.generator
+    - match: '\)'
+      scope: delim
+      pop: true
+    - include: ELSE-INVALID
+
+  EXPRESSION.COMPREHENSION.entry:
+    - match: '\('
+      scope: delim
+      set:
+        - match: '{{ID}}'
+          capture:
+            1: identifier.class
+            2: identifier.general
+          set:
+            - match: 'of{{X}}'
+              scope: keyword.of
+              set:
+                - - match: '\)'
+                    scope: delim
+                    set: EXPRESSION.COMPREHENSION.exit.1
+                - - include: EXPRESSION.ASS.entry
+            - include: ELSE-INVALID
+        - include: ELSE-INVALID
+    - include: ELSE-INVALID
+
+  EXPRESSION.COMPREHENSION.exit.1:
+    - match: 'for{{X}}'
+      scope: keyword.for
+      set: EXPRESSION.COMPREHENSION.entry
+    - include: EXPRESSION.COMPREHENSION.exit.2
+
+  EXPRESSION.COMPREHENSION.exit.2:
+    - match: 'if{{X}}'
+      scope: keyword.if
+      set:
+        - match: '\('
+          scope: delim
+          set:
+            - - match: '\)'
+                scope: delim
+                set: EXPRESSION.COMPREHENSION.exit.2
+            - - include: EXPRESSION.ASS.entry
+        - include: ELSE-INVALID
+    - include: EXPRESSION.ASS.entry
 
 # EXPRESSION: CONSTANTS ########################################################
 
@@ -387,36 +625,309 @@ contexts:
       scope: delim
       set: [ EXPRESSION.ASS.exit.2, EXPRESSION.STRING.INTERPOLATED.entry ]
 
-# EXPRESSION: FUNCTIONS ########################################################
+# EXPRESSION: FUNCTIONS, ETC ###################################################
+
+  EXPRESSION.CLASS:
+    - match: 'class{{X}}'
+      scope: keyword.class
+      set: [ EXPRESSION.ASS.exit.3, CLASS.exit, EXPRESSION.CLASS.entry ]
+    - match: '@'
+      scope: keyword.decorator
+      set:
+        - - include: EXPRESSION.CLASS
+          - include: ELSE-INVALID
+        - - meta_scope: decorator
+          - include: ELSE-POP
+        - - include: EXPRESSION.ASS.entry
+
+  EXPRESSION.CLASS.entry:
+    - match: '{{ID}}'
+      captures:
+        1: identifier.class
+        2: identifier.general
+      set: EXPRESSION.CLASS.body.1
+    - include: EXPRESSION.CLASS.body.1
+
+  EXPRESSION.CLASS.body.1:
+    - match: 'extends{{ID}}'
+      scope: keyword.extends
+      push:
+        - - include: EXPRESSION.CLASS.body.2
+        - - meta_scope: super-expression
+          - include: ELSE-POP
+        - - include: EXPRESSION.ASS.entry
+    - include: EXPRESSION.CLASS.body.2
+
+  EXPRESSION.CLASS.body.2:
+    - match: '\{'
+      scope: delim
+      set: CLASS.BODY.entry
+    - include: ELSE-INVALID
 
   EXPRESSION.DO:
-  EXPRESSION.CLASS:
+    # The ES7 do expression is not actually a function, but behaves very much
+    # like an IIFE in that it ‘expressionizes’ a scope closure and has a body
+    # composed by a statement list.
+    - match: 'do{{X}}'
+      scope: keyword.do-expression
+      set:
+        - match: '\{'
+          scope: delim
+          push:
+            # Could evaluate to anything but an assignable reference.
+            - - include: EXPRESSION.ASS.exit.3
+            - - meta_scope: scope.lexical block.do-expression
+              - match: '\}'
+                scope: delim
+                pop: true
+              - include: STATEMENT
+        - include: ELSE-INVALID
+
   EXPRESSION.FUNCTION:
+    # Note that the grammar for async functions specifies no-line-terminator
+    # between the keywords, so there is no ambiguity possible and no extra
+    # lateral transition. The same is, unfortunately, not true of the generator
+    # star, so a recovery context is required.
+    - match: '(async)\s+(function){{X}}'
+      captures:
+        1: keyword.async
+        2: keyword.function
+      set:
+        - EXPRESSION.ASS.exit.3
+        - FUNCTION.ASYNC.exit
+        - EXPRESSION.FUNCTION.entry.1
+    - match: '(function)\s*(\*)'
+      captures:
+        1: keyword.function
+        2: keyword.generator
+      set:
+        - EXPRESSION.ASS.exit.3
+        - FUNCTION.GENERATOR.exit
+        - EXPRESSION.FUNCTION.entry.1
+    - match: 'function{{X}}'
+      scope: keyword.function
+      set:
+        - EXPRESSION.ASS.exit.3
+        - FUNCTION.FUNCTION.exit
+        - EXPRESSION.FUNCTION.entry.2
+
+  EXPRESSION.FUNCTION.entry.1:
+    - match: '{{ID}}'
+      captures:
+        1: identifier.class
+        2: identifier.general
+      set: EXPRESSION.FUNCTION.body
+    - include: EXPRESSION.FUNCTION.body
+
+  EXPRESSION.FUNCTION.entry.2:
+    # A recovery match for 'function\n*'. The function will remain miscoped at
+    # the root, but otherwise matching can continue correctly.
+    - match: '\*'
+      scope: keyword.generator
+      set: EXPRESSION.FUNCTION.entry.1
+    - include: EXPRESSION.FUNCTION.entry.1
+
+  EXPRESSION.FUNCTION.body:
+    - match: '\{'
+      scope: delim
+      set: FUNCTION.body.entry
+    - include: ELSE-INVALID
+
+  EXPRESSION.FUNCTION.ARROW:
+    # Note that, thankfully, a newline between params & the arrow is an error.
+    # Therefore we do not need to do any funny dancing around to identify an
+    # arrow function unambiguously.
+    #
+    # Match the open paren of an *upcoming* occurence’s params
+    - match: '(?x) \( (?= (?<parens> [^\(\)] | \( \g<parens>* \) )* \)\s*=> )'
+      scope: delim
+      set:
+        - EXPRESSION.ASS.exit.3
+        - FUNCTION.FUNCTION.exit
+        - EXPRESSION.FUNCTION.ARROW.arrow
+        - FUNCTION.PARAMETERS.entry
+    # Match a single unparenthetical parameter & its arrow
+    - match: '{{ID}}\s*(=>)'
+      captures:
+        1: parameters parameter
+        2: parameters parameter
+        3: keyword.arrow
+      set:
+        - EXPRESSION.ASS.exit.3
+        - FUNCTION.FUNCTION.exit
+        - EXPRESSION.FUNCTION.ARROW.body
+    # Match the open paren of an *upcoming* occurence’s params, async
+    - match: '(?x) (async)\s* \( (?= (?<parens> [^\(\)] | \( \g<parens>* \) )* \)\s*=> )'
+      scope: delim
+      set:
+        - EXPRESSION.ASS.exit.3
+        - FUNCTION.ASYNC.exit
+        - EXPRESSION.FUNCTION.ARROW.arrow
+        - FUNCTION.PARAMETERS.entry
+    # Match a single unparenthetical parameter & its arrow, async
+    - match: '(async)\s+{{ID}}\s*(=>)'
+      captures:
+        1: keyword.async
+        2: parameters parameter
+        3: parameters parameter
+        4: keyword.arrow
+      set:
+        - EXPRESSION.ASS.exit.3
+        - FUNCTION.ASYNC.exit
+        - EXPRESSION.FUNCTION.ARROW.body
+
+  EXPRESSION.FUNCTION.ARROW.arrow:
+    - match: '=>'
+      scope: keyword.arrow
+      set: EXPRESSION.FUNCTION.ARROW.body
+    - include: ELSE-INVALID
+
+  EXPRESSION.FUNCTION.ARROW.body:
+    - match: '\{'
+      scope: delim
+      set: FUNCTION.body.entry
+    - include: EXPRESSION.ASS.entry
 
 # EXPRESSION: LITERAL: ARRAY ###################################################
 
   EXPRESSION.LITERAL.ARRAY:
+    - match: '\['
+      scope: delim
+      set:
+        # A recovery case for the unmatchable sequence '[\nfor'
+        - match: 'for{{X}}'
+          scope: comprehension.array keyword.for
+          set:
+            - EXPRESSION.ASS.exit.2
+            - EXPRESSION.COMPREHENSION.ARRAY.exit
+            - EXPRESSION.COMPREHENSION.entry
+        - match: '{{ANYTHING}}'
+          set:
+            - EXPRESSION.ASS.exit.5
+            - EXPRESSION.LITERAL.ARRAY.exit
+            - EXPRESSION.LITERAL.ARRAY.entry
+
+  EXPRESSION.LITERAL.ARRAY.entry:
+    - match: '\]'
+      scope: delim
+      pop: true
+    - match: ','
+      scope: separator.comma
+    - match: '\.{3}'
+      scope: keyword.spread
+      set: [ EXPRESSION.LITERAL.ARRAY.member, EXPRESSION.ASS.entry ]
+    - match: '{{ANYTHING}}'
+      set: [ EXPRESSION.LITERAL.ARRAY.member, EXPRESSION.ASS.entry ]
+
+  EXPRESSION.LITERAL.ARRAY.member:
+    - match: ','
+      scope: separator.comma
+      set: EXPRESSION.LITERAL.ARRAY.entry
+    - match: '\]'
+      scope: delim
+      pop: true
+
+  EXPRESSION.LITERAL.ARRAY.exit:
+    - meta_scope: literal.array
+    - include: ELSE-POP
 
 # EXPRESSION: LITERAL: OBJECT ##################################################
 
   EXPRESSION.LITERAL.OBJECT:
+    - match: '\{'
+      scope: delim
+      set:
+        - EXPRESSION.ASS.exit.5
+        - EXPRESSION.LITERAL.OBJECT.exit
+        - EXPRESSION.LITERAL.OBJECT.entry
+
+  EXPRESSION.LITERAL.OBJECT.entry:
+    - match: '\}'
+      scope: delim
+      pop: true
+
+  EXPRESSION.LITERAL.OBJECT.exit:
+    - meta_scope: literal.object
+    - include: ELSE-POP
 
 # EXPRESSION: PARENTHETICAL ####################################################
 
   EXPRESSION.PARENTHETICAL:
+    - match: '\('
+      scope: parenthetical-expression delim
+      set:
+        # A recovery case for the unmatchable sequence '(\nfor'
+        - match: 'for{{X}}'
+          scope: comprehension.generator keyword.for
+          set:
+            - EXPRESSION.ASS.exit.2
+            - EXPRESSION.COMPREHENSION.GENERATOR.exit
+            - EXPRESSION.COMPREHENSION.entry
+        - match: '{{ANYTHING}}'
+          set:
+            # Since we really don’t know what’s gonna go on in here, we need to
+            # exit in the most permissive way.
+            - - include: EXPRESSION.ASS.exit.4
+            - - meta_scope: parenthetical-expression
+              - match: '\)'
+                scope: delim
+                pop: true
+              - include: ELSE-INVALID
+            - - include: EXPRESSION.entry
 
 # EXPRESSION: REFERENCE ########################################################
 
   EXPRESSION.REFERENCE:
+    - match: 'poop'
+      scope: identifier.general
+      pop: true
+    # TODO
 
 # EXPRESSION: UNARY PREFIX OPERATORS ###########################################
 
   EXPRESSION.UNARY:
-    - match: '(?:delete|typeof|void|::){{X}}'
+    # The prefix operators don’t cause any scope transitions. This is a rather
+    # fuzzy zone since unary expressions prefixes must be followed by other
+    # unary expressions; we cannot model this. Also, the prefix arithmetical
+    # operators, as well as delete, are really only valid before unary
+    # expressions that are ultimately references, but even the formal spec
+    # doesn’t seem to model that fact at the grammar level. Finally note that
+    # the :: operator in this form is technically a new production, entered from
+    # LHS or CallExpression, though for our purposes this should do. The 'new'
+    # keyword is technically followed only by MemberExpression. Yield * is the
+    # only item here that is grammatically perfect out-of-the-box; yield is
+    # okay, too, but needs special futzing because its AE is optional.
+    - match: '(?:delete|typeof|void){{X}}|::'
       scope: operator.evaluative
     - match: '\+\+|\-\-'
+      scope: operator.assignment.arithmetical.prefix
+    - match: '[\+\-]'
+      scope: numeric.sign
+    - match: '!'
+      scope: operator.logical
+    - match: '~'
+      scope: operator.bitwise
+    - match: 'await{{X}}'
+      scope: keyword.await
+    - match: '(yield)\s*(\*)'
+      captures:
+        1: keyword.yield
+        2: keyword.delegate
+    - match: 'yield{{X}}'
+      scope: keyword.yield
+      set:
+        - match: '$'
+          pop: true
+        - include: EXPRESSION.ASS.common
+        - include: ELSE-POP
 
 # EXPRESSION: SHARED COMPONENTS ################################################
+
+  EXPRESSION.DEFAULT-ASSIGNMENT:
+    - match: '=(?!=)'
+      scope: operator.assignment.default
+      set: EXPRESSION.ASS.entry
+    - include: ELSE-POP
 
   EXPRESSION.ARGUMENTS.entry:
     - meta_scope: invocation
@@ -460,13 +971,119 @@ contexts:
 
   EXPRESSION.STRING.DOUBLE.entry:
     # Can be entered from constant or may appear as an object literal key
+    - meta_scope: string
+    - meta_include_prototype: false
+    - match: '\\"'
+      scope: character.escape
+    - match: '"'
+      scope: delim
+      pop: true
+    - include: EXPRESSION.STRING.common.quoted
 
   EXPRESSION.STRING.INTERPOLATED.entry:
     # Can be entered from constant or from following identifier (tag)
     - meta_scope: string.interpolated
+    - meta_include_prototype: false
+    - match: '(\\\$)\{|\$(\\\{)'
+      captures: character.escape
+    - match: '`'
+      scope: delim
+      pop: true
+    - match: '\$\{'
+      scope: delim
+      push:
+        - - meta_scope: string.interpolated.expression
+          - match: '\}'
+            scope: delim
+            pop: true
+          - include: ELSE-INVALID
+        - - include: EXPRESSION.ASS.entry
 
   EXPRESSION.STRING.SINGLE.entry:
     # Can be entered from constant or may appear as an object literal key
+    - meta_scope: string
+    - meta_include_prototype: false
+    - match: '\\'''
+      scope: character.escape
+    - match: ''''
+      scope: delim
+      pop: true
+
+  EXPRESSION.STRING.common:
+    - match: '\\[\\bfnrtv]'
+      scope: character.escape
+    - match: '{{UNICODEESCAPE}}'
+      scope: character.escape.unicode
+    - match: '\\x\h\h'
+      scope: character.escape.hexadecimal
+    - match: '\\(?:[1-7][0-7]{0,2}|[0-7]{2,3})'
+      scope: invalid.octal-escape
+    - match: '\\0'
+      scope: character.escape.null
+    - match: '\\.'
+      scope: pointless character.escape
+
+  EXPRESSION.STRING.common.quoted:
+    - match: '\\\n'
+      scope: character.escape.newline
+    - match: '\n'
+      scope: invalid
+      pop: true
+    - include: EXPRESSION.STRING.common
+
+# EXPRESSION & DECLARATION SHARED COMPONENTS ###################################
+
+  CLASS.BODY.entry:
+    - match: '\}'
+      scope: delim
+      pop: true
+    - match: ';'
+      scope: pointless
+    # TODO
+    # - decorator -> decorator | any below
+    # - static -> any below
+    # - get/set -> name -> params* -> body
+    # - async -> name -> params -> body
+    # - * -> name -> params -> body
+    # - [ -> exp -> ] -> params -> body
+    # - ' -> str-sgl -> params -> body
+    # - " -> str-dbl -> params -> body
+    # - \d -> num -> params -> body
+    # - {{ID}} -> params -> body
+    # also, do we give a shit about stupid instance props syntax? adds so many
+    # complications. and we need to be careful about ensuring generalizable
+    # portions (for object literal) are not constrained
+
+  CLASS.exit:
+    - meta_scope: function.class
+    - include: ELSE-POP
+
+  FUNCTION.body.entry:
+    - meta_scope: scope.function body
+    - match: '\}'
+      scope: delim
+      pop: true
+    - include: STATEMENT
+
+  FUNCTION.ASYNC.exit:
+    - meta_scope: function.async
+    - include: ELSE-POP
+
+  FUNCTION.FUNCTION.exit:
+    - meta_scope: function.function
+    - include: ELSE-POP
+
+  FUNCTION.GENERATOR.exit:
+    - meta_scope: function.generator
+    - include: ELSE-POP
+
+  FUNCTION.PARAMETERS.entry:
+    - meta_scope: parameters
+    - match: '\)'
+      scope: delim
+      pop: true
+    # TODO
+    - include: ELSE-INVALID
 
 # MODULE #######################################################################
 
@@ -510,7 +1127,7 @@ contexts:
     # - include: STATEMENT.VAR
     # - include: STATEMENT.WHILE
     - include: STATEMENT.WITH
-    # - include: STATEMENT.EXPRESSION
+    - include: STATEMENT.EXPRESSION
 
 # STATEMENT: BLOCK #############################################################
 
@@ -568,6 +1185,18 @@ contexts:
   STATEMENT.EMPTY:
     - match: ';'
       scope: statement.empty terminator
+
+# STATEMENT: EXPRESSION ########################################################
+
+  STATEMENT.EXPRESSION:
+    - match: '{{ANYTHING}}'
+      push:
+        - - meta_scope: statement.expression
+          - match: ';'
+            scope: terminator
+            pop: true
+          - include: ELSE-POP
+        - - include: EXPRESSION.entry
 
 # STATEMENT: RETURN ############################################################
 
