@@ -2251,7 +2251,7 @@ contexts:
           (?! [=\*])
           (?! \s* " [^"]+ " \s* \( )
           (?! \s* '' [^'']+ '' \s* \( )
-          (?! \s* \[ [\]]+ \] \s* \( )
+          (?! \s* \[ [^\]]+ \] \s* \( )
           (?! \s* {{identifier}} \s* \([^)]*\) \s* \{)
       scope: keyword.operator.arithmetic.multiplication.es
       set: assignmentExpression
@@ -3507,12 +3507,13 @@ contexts:
       set: [ literalArray_AFTER_MEMBER, assignmentExpression ]
 
   literalArray_AFTER_MEMBER:
-    # This context is a safety catch for recovering correct scope when it turns
-    # out this was really a multiline binding pattern.
-    - match:  '(?<=\])(?==)'
-      set: bindingArray_AFTER_ELEM
-    - match: '{{PLA_anything}}'
+    - match: ','
+      scope: punctuation.separator.array-element.es
       set: literalArray_OPEN
+    - match: '\]'
+      scope: punctuation.definition.array.end.es
+      pop: true
+    - include: other_illegal
 
   literalObject_OPEN:
     - match: '((\}))'
@@ -4736,12 +4737,12 @@ contexts:
     - include: statements
 
   string_COMMON_QUOTED:
-    - include: string_COMMON_ESCAPES
     - match: '\\\n'
       scope: constant.character.escape.newline.es
     - match: '\n'
       scope: invalid.illegal.newline.es
       pop: true
+    - include: string_COMMON_ESCAPES
 
   string_COMMON_ESCAPES:
     - match: '\\[\\bfnrtv]'
