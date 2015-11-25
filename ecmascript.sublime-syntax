@@ -94,7 +94,7 @@ variables:
     Symbol | Uint(?:8(?:Clamped)?|16|32)Array | (?:Weak)?(?:Map|Set)
   intrinsicFunctions: >-
     (?:de|en)codeURI(?:Component)? |
-    eval | is(?:Finite|Nan) | parse(?:Float|Int) |
+    eval | is(?:Finite|NaN) | parse(?:Float|Int) |
     (?:set|clear)(?:Timeout|Interval|Immediate)
 
   # NUMERIC LITERALS ###########################################################
@@ -2157,7 +2157,7 @@ contexts:
 
   ae_IDENTIFIERS_INTRINSIC:
     # CONSTRUCTORS
-    - match: '(((({{intrinsicConstructors}})))\s*)((\())'
+    - match: '(?x) (((({{intrinsicConstructors}})))\s*)((\())'
       captures:
         1: variable.other.readwrite.es
         2: meta.instance.constructor # ^BS
