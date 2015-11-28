@@ -648,24 +648,8 @@ contexts:
       captures:
         1: identifier.class
         2: identifier.general
-      set: EXPRESSION.CLASS.body.1
-    - include: EXPRESSION.CLASS.body.1
-
-  EXPRESSION.CLASS.body.1:
-    - match: 'extends{{ID}}'
-      scope: keyword.extends
-      push:
-        - - include: EXPRESSION.CLASS.body.2
-        - - meta_scope: super-expression
-          - include: ELSE-POP
-        - - include: EXPRESSION.ASS.entry
-    - include: EXPRESSION.CLASS.body.2
-
-  EXPRESSION.CLASS.body.2:
-    - match: '\{'
-      scope: delim
-      set: CLASS.BODY.entry
-    - include: ELSE-INVALID
+      set: CLASS.super-or-body
+    - include: CLASS.super-or-body
 
   EXPRESSION.DO:
     # The ES7 do expression is not actually a function, but behaves very much
@@ -1365,12 +1349,44 @@ contexts:
 
 # EXPRESSION & DECLARATION SHARED COMPONENTS ###################################
 
-  CLASS.BODY.entry:
+  CLASS.body.entry:
+    - match: '\{'
+      scope: delim
+      set: CLASS.body.exit
+    - include: ELSE-INVALID
+
+  CLASS.body.exit:
     - match: '\}'
       scope: delim
       pop: true
     - match: ';'
-      scope: pointless
+      scope: pointless separator.semicolon
+    # Decorator
+    - match: '@'
+    # Computed, numeric and string keys. These are always treated as method
+    # names, despite the fact that the ES7 class properties proposal permits
+    # the full range of key forms. The issue is that the decorator grammar’s
+    # currently unresolved ambiguous cases are compounded by properties. Though
+    # the problem lies with the decorator grammar rather than the property
+    # grammar, Babel’s current solution is to only permit literal class
+    # properties; we are following suit.
+    - match: '\['
+    - match: ''''
+    - match: '"'
+    - match: '(?=[\d\.])'
+    # Method prefixes
+    - match: 'async{{X}}'
+    - match: 'get{{X}}(?!\s+\()'
+    - match: 'set{{X}}(?!\s+\()'
+    - match: 'static{{X}}'
+    - match: '\*'
+    # Note: The grammar for the ES7 class properties proposal is currently very
+    # tough to pull off alongside decorators. The decorator proposal is actually
+    # where the problem lies, but since Babel’s current solution is to limit the
+    # grammar for property declarations to literal names, I’ve followed suit.
+    - match: '{{ID}}\s*(=)'
+    - match: '{{ID}}'
+    - match: ELSE-INVALID
     # TODO
     # - decorator -> decorator | any below
     # - static -> any below
@@ -1388,7 +1404,19 @@ contexts:
 
   CLASS.exit:
     - meta_scope: function.class
+    - meta_include_prototype: false
+    - include: COMMENT
     - include: ELSE-POP
+
+  CLASS.super-or-body:
+    - match: 'extends{{ID}}'
+      scope: keyword.extends
+      push:
+        - - include: CLASS.body.entry
+        - - meta_scope: super-expression
+          - include: ELSE-POP
+        - - include: EXPRESSION.ASS.entry
+    - include: CLASS.body.entry
 
   FUNCTION.body.entry:
     - meta_scope: scope.function body
@@ -1399,14 +1427,20 @@ contexts:
 
   FUNCTION.ASYNC.exit:
     - meta_scope: function.async
+    - meta_include_prototype: false
+    - include: COMMENT
     - include: ELSE-POP
 
   FUNCTION.FUNCTION.exit:
     - meta_scope: function.function
+    - meta_include_prototype: false
+    - include: COMMENT
     - include: ELSE-POP
 
   FUNCTION.GENERATOR.exit:
     - meta_scope: function.generator
+    - meta_include_prototype: false
+    - include: COMMENT
     - include: ELSE-POP
 
   FUNCTION.PARAMETERS.entry:
@@ -1642,7 +1676,7 @@ contexts:
   STATEMENT:
     - include: STATEMENT.BLOCK
     - include: STATEMENT.BREAK
-    # - include: STATEMENT.CLASS
+    - include: STATEMENT.CLASS
     - include: STATEMENT.CONST-LET-VAR
     - include: STATEMENT.CONTINUE
     - include: STATEMENT.DEBUGGER
@@ -1685,6 +1719,22 @@ contexts:
             scope: label
             set: LINEBREAK-HERE
           - include: NO-LINEBREAK-HERE
+
+# STATEMENT: CLASS #############################################################
+
+  STATEMENT.CLASS:
+    - match: '@'
+      # TODO
+    - match: 'class{{X}}'
+      scope: keyword.class
+      set:
+        - - include: CLASS.exit
+        - - match: '{{ID}}'
+            captures:
+              1: identifier.class
+              2: identifier.general
+            set: CLASS.super-or-body
+          - include: ELSE-INVALID
 
 # STATEMENT: CONST, LET & VAR ##################################################
 
