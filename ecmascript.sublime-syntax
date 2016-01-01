@@ -975,6 +975,17 @@ contexts:
     - match: 'class'
       scope: storage.type.class.es
       set: classDeclaration_AFTER_CLASS
+    # TEMPORARY, WILL PROBABLY BE REMOVED WHEN BABEL REINTRODUCES DECORATORS
+    # In Babel 5, the class decorator implementation departed from the proposal
+    # grammar and introduced its own production, <decorator> <exportStatement>,
+    # where the exportStatement was a new production restricted to only those
+    # which contain class declarations. I’m not sure if this was intentional or
+    # accidental, but there’s no sign that this will ever be part of the actual
+    # proposal (it looks nice, but syntactically, it doesn’t really make sense),
+    # and I suspect Babel 6 will rectify this when it implements the new version
+    # of the decorator proposal.
+    - match: '(?=export\s+(default\s+)?class)'
+      pop: true
     - include: other_illegal_pop
 
   constLetVarDeclaration_AFTER_WORD:
