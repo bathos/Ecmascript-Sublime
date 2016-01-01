@@ -1681,6 +1681,21 @@ contexts:
       captures:
         1: variable.language.proto.es # for compatibility
       set: ae_AFTER_THING
+    - match: '(({{identifierName}}))(?=\s*=\s*async\s+function{{idEnd}})'
+      captures:
+        1: variable.other.readwrite.property.es
+        2: entity.name.method.async.es
+      set: ae_AFTER_THING
+    - match: '(({{identifierName}}))(?=\s*=\s*function\s*\*)'
+      captures:
+        1: variable.other.readwrite.property.es
+        2: entity.name.method.generator.es
+      set: ae_AFTER_THING
+    - match: '(({{identifierName}}))(?=\s*=\s*function{{idEnd}})'
+      captures:
+        1: variable.other.readwrite.property.es
+        2: entity.name.method.es
+      set: ae_AFTER_THING
     - match: '(({{identifierName}}))\s*(=)\s*(\()(?=(?<parens>[^\(\)]|\(\g<parens>*\))*\)\s*=>)'
       captures:
         1: variable.other.readwrite.property.es
@@ -1699,7 +1714,7 @@ contexts:
     - match: '(({{identifierName}}))\s*(=)\s*((async))\s+({{identifier}})\s*(=>)'
       captures:
         1: variable.other.readwrite.property.es
-        2: entity.name.method.es
+        2: entity.name.method.async.es
         3: keyword.operator.assignment.es
         4: storage.type.js
         5: storage.modifier.async.expression.es
@@ -1709,7 +1724,7 @@ contexts:
     - match: '(({{identifierName}}))\s*(=)\s*((async))\s*(\()'
       captures:
         1: variable.other.readwrite.property.es
-        2: entity.name.method.es
+        2: entity.name.method.async.es
         3: keyword.operator.assignment.es
         4: storage.type.js # ^BS
         5: storage.modifier.async.expression.es
