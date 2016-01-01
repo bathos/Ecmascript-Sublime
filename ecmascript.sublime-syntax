@@ -1681,6 +1681,40 @@ contexts:
       captures:
         1: variable.language.proto.es # for compatibility
       set: ae_AFTER_THING
+    - match: '(({{identifierName}}))\s*(=)\s*(\()(?=(?<parens>[^\(\)]|\(\g<parens>*\))*\)\s*=>)'
+      captures:
+        1: variable.other.readwrite.property.es
+        2: entity.name.method.es
+        3: keyword.operator.assignment.es
+        4: punctuation.definition.parameters.function.arrow.begin.es
+      set: [ ae_ARROW_AFTER_PARAMS, parameters ]
+    - match: '(({{identifierName}}))\s*(=)\s*({{identifier}})\s*(=>)'
+      captures:
+        1: variable.other.readwrite.property.es
+        2: entity.name.method.es
+        3: keyword.operator.assignment.es
+        4: variable.parameter.es
+        5: storage.type.function.arrow.es
+      set: ae_ARROW_AFTER_ARROW
+    - match: '(({{identifierName}}))\s*(=)\s*((async))\s+({{identifier}})\s*(=>)'
+      captures:
+        1: variable.other.readwrite.property.es
+        2: entity.name.method.es
+        3: keyword.operator.assignment.es
+        4: storage.type.js
+        5: storage.modifier.async.expression.es
+        6: variable.parameter.es
+        7: storage.type.function.arrow.es
+      set: ae_ASYNC_ARROW_AFTER_ARROW
+    - match: '(({{identifierName}}))\s*(=)\s*((async))\s*(\()'
+      captures:
+        1: variable.other.readwrite.property.es
+        2: entity.name.method.es
+        3: keyword.operator.assignment.es
+        4: storage.type.js # ^BS
+        5: storage.modifier.async.expression.es
+        6: punctuation.definition.parameters.function.arrow.begin.es
+      set: [ ae_ASYNC_ARROW_AFTER_PARAMS, parameters ]
     - match: '{{identifierName}}'
       scope: variable.other.readwrite.property.es
       set: ae_AFTER_THING
@@ -2016,13 +2050,70 @@ contexts:
 
   ae_IDENTIFIERS:
     - include: ae_IDENTIFIERS_LANGUAGE
-    - match: '((async) )?({{identifier}})\s*(=>)'
+    - match: '(({{identifier}}))\s*(=)\s*(\()(?=(?<parens>[^\(\)]|\(\g<parens>*\))*\)\s*=>)'
+      captures:
+        1: variable.other.readwrite.es
+        2: entity.name.function.arrow.es
+        3: keyword.operator.assignment.es
+        4: punctuation.definition.parameters.function.arrow.begin.es
+      set: [ ae_ARROW_AFTER_PARAMS, parameters ]
+    - match: '(({{identifier}}))\s*(=)\s*({{identifier}})\s*(=>)'
+      captures:
+        1: variable.other.readwrite.es
+        2: entity.name.function.arrow.es
+        3: keyword.operator.assignment.es
+        4: variable.parameter.es
+        5: storage.type.function.arrow.es
+      set: ae_ARROW_AFTER_ARROW
+    - match: '(({{identifier}}))\s*(=)\s*((async))\s+({{identifier}})\s*(=>)'
+      captures:
+        1: variable.other.readwrite.es
+        2: entity.name.function.async.arrow.es
+        3: keyword.operator.assignment.es
+        4: storage.type.js
+        5: storage.modifier.async.expression.es
+        6: variable.parameter.es
+        7: storage.type.function.arrow.es
+      set: ae_ASYNC_ARROW_AFTER_ARROW
+    - match: '(({{identifier}}))\s*(=)\s*((async))\s*(\()'
+      captures:
+        1: variable.other.readwrite.es
+        2: entity.name.function.async.arrow.es
+        3: keyword.operator.assignment.es
+        4: storage.type.js # ^BS
+        5: storage.modifier.async.expression.es
+        6: punctuation.definition.parameters.function.arrow.begin.es
+      set: [ ae_ASYNC_ARROW_AFTER_PARAMS, parameters ]
+    - match: '(({{identifier}}))\s*(=)\s*(?=function\s*\*)'
+      captures:
+        1: variable.other.readwrite.es
+        2: entity.name.function.generator.es
+        3: keyword.operator.assignment.es
+      set: ae_AFTER_IDENTIFIER
+    - match: '(({{identifier}}))\s*(=)\s*(?=function{{idEnd}})'
+      captures:
+        1: variable.other.readwrite.es
+        2: entity.name.function.es
+        3: keyword.operator.assignment.es
+      set: ae_AFTER_IDENTIFIER
+    - match: '(({{identifier}}))\s*(=)\s*(?=async\s+function{{idEnd}})'
+      captures:
+        1: variable.other.readwrite.es
+        2: entity.name.function.async.es
+        3: keyword.operator.assignment.es
+      set: ae_AFTER_IDENTIFIER
+    - match: '({{identifier}})\s*(=>)'
+      captures:
+        1: variable.parameter.es
+        2: storage.type.function.arrow.es
+      set: ae_ARROW_AFTER_ARROW
+    - match: '((async))\s+({{identifier}})\s*(=>)'
       captures:
         1: storage.type.js
         2: storage.modifier.async.expression.es
         3: variable.parameter.es
         4: storage.type.function.arrow.es
-      set: ae_ARROW_AFTER_ARROW
+      set: ae_ASYNC_ARROW_AFTER_ARROW
     - include: ae_IDENTIFIERS_INTRINSIC
     - include: ae_IDENTIFIERS_ENVIRONMENTAL
     - match: '((({{identifierAllCapsStrict}})))\s*((\())'
