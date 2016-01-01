@@ -2118,8 +2118,15 @@ contexts:
     # NODE OBJECTS
     # Omitted ‘root’ intentionally (identifier too common). ‘require’ makes a
     # second appearance moonlighting as a namespace object.
-    - match: '(global|GLOBAL|process|__(?:dir|file)name|module|exports|require){{idEnd}}'
+    - match: '(global|GLOBAL|process|__(?:dir|file)name|require){{idEnd}}'
       scope: support.variable.node.es
+      set: ae_AFTER_THING
+    - match: '(?:(module)(?:(\.)(exports))?|(exports)){{idEnd}}'
+      captures:
+        1: support.variable.node.module.es
+        2: keyword.operator.accessor.es
+        3: support.variable.node.module.es
+        4: support.variable.node.module.es
       set: ae_AFTER_THING
     # VERY SPECIAL LIBRARIES OF LEGEND
     # This is iffy territory for me. The criteria should be clear though. These

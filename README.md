@@ -586,6 +586,7 @@ in ‘.regexp’ do not also have ‘.es’.
     - `support.variable.builtin` (e.g. `Math`)
   - **Domain-Specific Objects**
     - `support.class.node` (that is, `Buffer`)
+    - `support.variable.node.module` (module & exports environmental vars)
     - `support.function.node.require`
     - `support.variable.dom` (e.g. `document`; kept this list minimal though)
     - `support.variable.dom-library` (e.g. `$`)
