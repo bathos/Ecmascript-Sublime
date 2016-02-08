@@ -403,6 +403,50 @@ settings:
   settings:
     foreground: '#89C0B6'
 
+- name: JSX Punctuation; Namespace; Attributes
+  scope: >-
+    meta.namespace.jsx,
+    keyword.operator.accessor.jsx,
+    punctuation.definition.attribute.begin.jsx,
+    punctuation.definition.attribute.end.jsx,
+    punctuation.definition.interpolation.begin.jsx,
+    punctuation.definition.interpolation.end.jsx,
+    punctuation.definition.tag.begin.jsx,
+    punctuation.definition.tag.end.jsx,
+    punctuation.separator.attribute-value.jsx,
+    punctuation.separator.class.jsx,
+    punctuation.separator.namespace.jsx,
+    string.attribute.jsx
+  settings:
+    foreground: '#6E5C67'
+
+- name: JSX Attribute Name
+  scope: variable.other.attribute.jsx
+  settings:
+    foreground: '#8E5C7B'
+
+- name: JSX Element Name
+  scope: entity.name.tag.jsx
+  settings:
+    foreground: '#8C3F6E'
+
+- name: JSX Text
+  scope: string.text.jsx
+  settings:
+    foreground: '#725A43'
+
+- name: JSX Text Entity Reference
+  scope: variable.other.entity-reference.jsx
+  settings:
+    fontStyle: bold
+    foreground: '#916C49'
+
+- name: JSX Interpolated Content
+  scope: meta.interpolation.jsx
+  settings:
+    background: '#212121'
+    fontStyle: italic
+
 # REGEX ########################################################################
 
 - name: Regex Char Classes & Punctuation

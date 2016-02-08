@@ -2,7 +2,7 @@
 ---
 name: Ecmascript
 file_extensions: [ js, es, es6 ]
-scope: source.es
+scope: source.js source.es
 
 # es 20:15
 # though I walk through the valley of the shadow
@@ -83,6 +83,7 @@ variables:
   identifierStart: '(?:[\$_{{ID_Start}}]|{{unicodeEscape}})'
   allThreeIDs: '({{identifierAllCaps}})|({{identifierInitCap}})|({{identifier}})'
   unicodeEscape: '\\u(?:\h{4}|\{\h+\})'
+  jsxIdentifer: '{{identifierName}}(?:-(?:{{identifierPart}})*)*'
 
   # WELL-KNOWN IDENTIFIERS #####################################################
   # Note, Symbol is not a real constructor -- but even ECMA 262 calls it one. 
@@ -1611,6 +1612,7 @@ contexts:
     - include: ae_GENERATOR_COMPREHENSION
     - include: ae_PARENTHESIZED
     - include: ae_DO
+    - include: ae_JSX
 
   ae_AFTER_IDENTIFIER:
     - match: '=>'
@@ -4906,3 +4908,144 @@ contexts:
         1: meta.directive.use-strict.es
         2: punctuation.definition.string.quoted.double.begin.es
         3: punctuation.definition.string.quoted.double.end.es
+
+# JSX EXTENSIONS ###############################################################
+
+  ae_JSX:
+    - match: '<'
+      scope: punctuation.definition.tag.begin.jsx
+      set: [ ae_AFTER_THING, ae_JSX_ELEMENT ]
+
+  ae_JSX_ATTRIBUTES:
+    - match: '\{'
+      scope: punctuation.definition.interpolation.begin.jsx
+      set:
+        - meta_scope: meta.interpolation.jsx 
+        - match: '\.{3}'
+          scope: keyword.operator.spread.jsx
+          set: [ ae_JSX_ATTRIBUTES_INTERPOLATION_END, assignmentExpression ]
+        - include: other_illegal
+    - match: '(({{jsxIdentifer}})(:){{jsxIdentifer}})'
+      captures:
+        1: variable.other.attribute.jsx
+        2: meta.namespace.jsx
+        3: punctuation.separator.namespace.jsx
+      set: ae_JSX_ATTRIBUTES_VALUE
+    - match: '{{jsxIdentifer}}'
+      scope: variable.other.attribute.jsx
+      set: ae_JSX_ATTRIBUTES_VALUE
+    - match: '{{jsxIdentifer}}'
+      scope: variable.other.attribute.jsx
+      set: ae_JSX_ATTRIBUTES_VALUE
+    - match:  '/>'
+      scope: punctuation.definition.tag.end.jsx
+      pop: true
+    - match:  '>'
+      scope: punctuation.definition.tag.end.jsx
+      set: [ ae_JSX_ELEMENT_CLOSE, ae_JSX_CONTENT ]
+    - include: other_illegal
+
+  ae_JSX_ATTRIBUTES_DOUBLE:
+    - meta_include_prototype: false
+    - meta_scope: 'string.attribute.jsx'
+    - match: '"'
+      scope: punctuation.definition.attribute.end.jsx
+      pop: true
+
+  ae_JSX_ATTRIBUTES_INTERPOLATION_END:
+    - meta_scope: meta.interpolation.jsx
+    - match: '\}'
+      scope: punctuation.definition.interpolation.end.jsx
+      set: ae_JSX_ATTRIBUTES
+    - include: other_illegal
+
+  ae_JSX_ATTRIBUTES_SINGLE:
+    - meta_include_prototype: false
+    - meta_scope: 'string.attribute.jsx'
+    - match: ''''
+      scope: punctuation.definition.attribute.end.jsx
+      pop: true
+
+  ae_JSX_ATTRIBUTES_VALUE:
+    - match: '='
+      scope: punctuation.separator.attribute-value.jsx
+      set:
+        - match: '"'
+          scope: punctuation.definition.attribute.begin.jsx
+          set: [ ae_JSX_ATTRIBUTES, ae_JSX_ATTRIBUTES_DOUBLE ]
+        - match: ''''
+          scope: punctuation.definition.attribute.begin.jsx
+          set: [ ae_JSX_ATTRIBUTES, ae_JSX_ATTRIBUTES_SINGLE ]
+        - match: '\{'
+          scope: punctuation.definition.interpolation.begin.jsx
+          set: [ ae_JSX_ATTRIBUTES_INTERPOLATION_END, assignmentExpression ]
+        - match: '<'
+          scope: punctuation.definition.tag.begin.jsx
+          set: [ ae_JSX_ATTRIBUTES, ae_JSX_ELEMENT ]
+        - include: other_illegal
+    - include: other_illegal
+
+  ae_JSX_DOT:
+    - match: '\.'
+      scope: keyword.operator.accessor.jsx
+      push:
+        - match: '{{jsxIdentifer}}'
+          scope: entity.name.tag.jsx
+          pop: true
+        - include: other_illegal
+    - include: else_pop
+
+  ae_JSX_CONTENT:
+    - meta_include_prototype: false
+    - match: '&[^&;\{\}<>\s]+;'
+      scope: variable.other.entity-reference.jsx
+    - match: '[^\{\}<>]'
+      scope: string.text.jsx
+    - match: '\{'
+      scope: punctuation.definition.attribute.begin.jsx
+      set: [ ae_JSX_CONTENT_INTERPOLATION_END, assignmentExpression ]
+    - match: '<(?!\/)'
+      scope: punctuation.definition.tag.begin.jsx
+      push: ae_JSX_ELEMENT
+    - include: else_pop
+
+  ae_JSX_CONTENT_INTERPOLATION_END:
+    - meta_scope: meta.interpolation.jsx
+    - match: '\}'
+      scope: punctuation.definition.interpolation.end.jsx
+      set: ae_JSX_CONTENT
+    - include: other_illegal
+
+  ae_JSX_ELEMENT:
+    - match: '(({{jsxIdentifer}})(:){{jsxIdentifer}})'
+      captures:
+        1: entity.name.tag.jsx
+        2: meta.namespace.jsx
+        3: punctuation.separator.namespace.jsx
+      set: [ ae_JSX_ATTRIBUTES, ae_JSX_DOT ]
+    - match: '{{jsxIdentifer}}'
+      scope: entity.name.tag.jsx
+      set: [ ae_JSX_ATTRIBUTES, ae_JSX_DOT ]
+    - include: other_illegal
+
+  ae_JSX_ELEMENT_CLOSE:
+    - match: '</'
+      scope: punctuation.definition.tag.begin.jsx
+      set:
+        - match: '(({{jsxIdentifer}})(:){{jsxIdentifer}})'
+          captures:
+            1: entity.name.tag.jsx
+            2: entity.namespace.tag.jsx
+            3: punctuation.separator.namespace.jsx
+          set: [ ae_JSX_ELEMENT_CLOSE_end, ae_JSX_DOT ]
+        - match: '{{jsxIdentifer}}'
+          scope: entity.name.tag.jsx
+          set: [ ae_JSX_ELEMENT_CLOSE_end, ae_JSX_DOT ]
+        - include: other_illegal
+    - include: other_illegal
+
+  ae_JSX_ELEMENT_CLOSE_end:
+    - match: '>'
+      scope: punctuation.definition.tag.end.jsx
+      pop: true
+    - include: other_illegal

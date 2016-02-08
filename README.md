@@ -9,6 +9,13 @@ this ‘released.’
 
 > Sublime syntax is only currently only available in Sublime Text’s dev channel.
 
+**New in 0.3**
+
+ - JSX support
+ - Adds source.js at root to increase compatibility with other packages
+
+![JSX example](https://github.com/bathos/Ecmascript-Sublime/raw/master/example-jsx.png)
+
 **New in 0.2**
 
  - ‘Villa-Lobos’ theme
@@ -592,6 +599,24 @@ in ‘.regexp’ do not also have ‘.es’.
     - `support.variable.dom-library` (e.g. `$`)
     - `support.variable.functional-library` (e.g. `_`)
     - `support.variable.node` (e.g. `process`)
+- **JSX**
+  - `entity.name.tag.jsx` (element name)
+  - `keyword.operator.accessor.jsx` (access dot in ‘namespaced’ element name)
+  - `keyword.operator.spread.jsx` (spread operator in attribute interpolation)
+  - `meta.interpolation.jsx` (covers interpolated sequences)
+  - `meta.namespace.jsx` (html/xml namespace prefixes -- not same as what jsx calls namespace)
+  - `punctuation.definition.attribute.begin.jsx` (single or double quotes)
+  - `punctuation.definition.attribute.end.jsx`
+  - `punctuation.definition.interpolation.begin.jsx` (curly braces)
+  - `punctuation.definition.interpolation.end.jsx`
+  - `punctuation.definition.tag.begin.jsx` (element tag delimiter)
+  - `punctuation.definition.tag.end.jsx`
+  - `punctuation.separator.attribute-value.jsx` (equals sign)
+  - `punctuation.separator.namespace.jsx` (colon)
+  - `string.attribute.jsx` (literal attribute value)
+  - `string.text.jsx` (literal chardata)
+  - `variable.other.entity-reference.jsx` (html/xml entity refs)
+  - `variable.other.attribute.jsx` (attribute name)
 - **Other**
   - `invalid`
   - `invalid.deprecated` (e.g. `with`)

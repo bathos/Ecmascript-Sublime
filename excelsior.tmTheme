@@ -704,6 +704,76 @@
 		</dict>
 		<dict>
 			<key>name</key>
+			<string>JSX Punctuation; Namespace; Attributes</string>
+			<key>scope</key>
+			<string>meta.namespace.jsx, keyword.operator.accessor.jsx, punctuation.definition.attribute.begin.jsx, punctuation.definition.attribute.end.jsx, punctuation.definition.interpolation.begin.jsx, punctuation.definition.interpolation.end.jsx, punctuation.definition.tag.begin.jsx, punctuation.definition.tag.end.jsx, punctuation.separator.attribute-value.jsx, punctuation.separator.class.jsx, punctuation.separator.namespace.jsx, string.attribute.jsx</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#6E5C67</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>JSX Attribute Name</string>
+			<key>scope</key>
+			<string>variable.other.attribute.jsx</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#8E5C7B</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>JSX Element Name</string>
+			<key>scope</key>
+			<string>entity.name.tag.jsx</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#8C3F6E</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>JSX Text</string>
+			<key>scope</key>
+			<string>string.text.jsx</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#725A43</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>JSX Text Entity Reference</string>
+			<key>scope</key>
+			<string>variable.other.entity-reference.jsx</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
+				<key>foreground</key>
+				<string>#916C49</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>JSX Interpolated Content</string>
+			<key>scope</key>
+			<string>meta.interpolation.jsx</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#212121</string>
+				<key>fontStyle</key>
+				<string>italic</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
 			<string>Regex Char Classes &amp; Punctuation</string>
 			<key>scope</key>
 			<string>string.regexp constant.other.character-class.predefined, string.regexp constant.other.character-class punctuation, string.regexp constant.other.character-class.set</string>
