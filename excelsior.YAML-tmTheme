@@ -264,6 +264,7 @@ settings:
     punctuation.definition.object,
     punctuation.definition.parameters.constructor,
     punctuation.separator.key-value,
+    punctuation.terminator.property,
     storage.modifier.extends,
     storage.type.class
   settings:
@@ -289,6 +290,7 @@ settings:
 
 - name: Object Literal Property
   scope: >-
+    variable.other.readwrite.property.class,
     variable.other.readwrite.property.object-literal
   settings:
     foreground: '#F4CAB5'

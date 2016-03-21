@@ -896,6 +896,15 @@ contexts:
         1: punctuation.definition.tag.js # ^BS
         2: punctuation.definition.decorator.es
       push: decoratorExpression
+    - match: '({{identifierName}})\s*(=)'
+      captures:
+        1: variable.other.readwrite.property.class.es
+        2: punctuation.separator.key-value.es
+      push:
+        - - match: ';'
+            scope: punctuation.terminator.property.es
+            pop: true
+        - - include: assignmentExpression
     - include: classDeclaration_METHOD_COMMON
 
   classDeclaration_METHOD_COMMON:

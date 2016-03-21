@@ -261,7 +261,7 @@ in ‘.regexp’ do not also have ‘.es’.
     - `punctuation.decimal`
   - **Objects**
     - `punctuation.definition.object` (the braces in `let x = { a: 1 };`)
-    - `punctuation.separator.key-value` (the colon in `let x = { a: 1 };`)
+    - `punctuation.separator.key-value` (the colon in `let x = { a: 1 };` and the equals sign in the class properties proposal)
     - `punctuation.separator.object-member` (commas between properties)
     - `variable.other.readwrite.property.object-literal`
     - `variable.other.readwrite.property.object-literal.allCap`
@@ -374,10 +374,12 @@ in ‘.regexp’ do not also have ‘.es’.
       - `punctuation.definition.constructor.body`
       - `punctuation.definition.decorator`
       - `punctuation.definition.parameters.constructor`
+      - `punctuation.terminator.property` (es7? class property semicolon)
       - `storage.modifier.extends`
       - `storage.modifier.static`
       - `storage.type.class`
       - `storage.type.class.expression`
+      - `variable.other.readwrite.property.class.es` (es7? class property key)
     - **Functions**
       - `entity.name.function`
       - `entity.name.function.allCap`

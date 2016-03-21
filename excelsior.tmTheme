@@ -482,7 +482,7 @@
 			<key>name</key>
 			<string>Class &amp; Object Literal</string>
 			<key>scope</key>
-			<string>entity.name.class, entity.name.constructor, punctuation.definition.class.body, punctuation.definition.constructor.body, punctuation.definition.object, punctuation.definition.parameters.constructor, punctuation.separator.key-value, storage.modifier.extends, storage.type.class</string>
+			<string>entity.name.class, entity.name.constructor, punctuation.definition.class.body, punctuation.definition.constructor.body, punctuation.definition.object, punctuation.definition.parameters.constructor, punctuation.separator.key-value, punctuation.terminator.property, storage.modifier.extends, storage.type.class</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -526,7 +526,7 @@
 			<key>name</key>
 			<string>Object Literal Property</string>
 			<key>scope</key>
-			<string>variable.other.readwrite.property.object-literal</string>
+			<string>variable.other.readwrite.property.class, variable.other.readwrite.property.object-literal</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
