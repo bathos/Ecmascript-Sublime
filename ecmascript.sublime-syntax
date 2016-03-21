@@ -918,7 +918,7 @@ contexts:
         1: storage.type.js # ^BS
         2: storage.modifier.async.method.es
       set: [ classDeclaration_AFTER_BRACE, asyncMethod_AFTER_ASYNC ]
-    - match: '(({{identifier}}))'
+    - match: '(({{identifierName}}))'
       captures:
         1: entity.name.method.js # ^BS -- monokai
         2: entity.name.method.es
@@ -4806,13 +4806,13 @@ contexts:
         (?x) ((
           ([gimyu])
           (?:
-            (?!\1) ([gimyu])
+            (?!\3) ([gimyu])
             (?:
-              (?!\1|\2) ([gimyu])
+              (?!\3|\4) ([gimyu])
               (?:
-                (?!\1|\2|\3) ([gimyu])
+                (?!\3|\4|\5) ([gimyu])
                 (?:
-                  (?!\1|\2|\3|\4) ([gimyu])
+                  (?!\3|\4|\5|\6) ([gimyu])
                 )?
               )?
             )?
@@ -4822,7 +4822,7 @@ contexts:
       captures:
         1: string.regexp.js keyword.other.js # ^BS
         2: string.regexp.flags.es
-      pop: true
+      set: else_pop
     - match: '\w+'
       scope: invalid.illegal.token
       pop: true
@@ -4934,9 +4934,6 @@ contexts:
     - match: '{{jsxIdentifer}}'
       scope: variable.other.attribute.jsx
       set: ae_JSX_ATTRIBUTES_VALUE
-    - match: '{{jsxIdentifer}}'
-      scope: variable.other.attribute.jsx
-      set: ae_JSX_ATTRIBUTES_VALUE
     - match:  '/>'
       scope: punctuation.definition.tag.end.jsx
       pop: true
@@ -4983,6 +4980,8 @@ contexts:
           scope: punctuation.definition.tag.begin.jsx
           set: [ ae_JSX_ATTRIBUTES, ae_JSX_ELEMENT ]
         - include: other_illegal
+    - match: '(?<=\s)|(?=[\>\{])'
+      set: ae_JSX_ATTRIBUTES
     - include: other_illegal
 
   ae_JSX_DOT:
