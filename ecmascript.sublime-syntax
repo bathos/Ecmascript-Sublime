@@ -2278,7 +2278,7 @@ contexts:
       scope: support.variable.functional-library.es
       set: ae_AFTER_THING
     # JQUERY, ZEPTO, PROTOTYPE & MOOTOOLS; ALSO MAJOR FRAMEWORKS
-    - match: '(?:\$|angular|Polymer|React){{idEnd}}'
+    - match: '(?:\$|angular|Polymer|React(DOM)?){{idEnd}}'
       scope: support.variable.dom-library.es
       set: ae_AFTER_THING
     # HELLSCAPE OBJECTS
