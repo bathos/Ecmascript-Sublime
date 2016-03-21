@@ -5035,7 +5035,7 @@ contexts:
         - match: '(({{jsxIdentifer}})(:){{jsxIdentifer}})'
           captures:
             1: entity.name.tag.jsx
-            2: entity.namespace.tag.jsx
+            2: meta.namespace.jsx
             3: punctuation.separator.namespace.jsx
           set: [ ae_JSX_ELEMENT_CLOSE_end, ae_JSX_DOT ]
         - match: '{{jsxIdentifer}}'
