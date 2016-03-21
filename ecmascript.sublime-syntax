@@ -864,6 +864,7 @@ contexts:
     - include: other_illegal_pop
 
   classDeclaration_AFTER_HERITAGE:
+    - meta_scope: meta.super-expression.es
     - match: '((\{))'
       captures:
         1: punctuation.definition.class.body.begin.es

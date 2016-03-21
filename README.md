@@ -369,6 +369,7 @@ in ‘.regexp’ do not also have ‘.es’.
     - **Classes**
       - `entity.name.class`
       - `entity.name.constructor`
+      - `meta.super-expression`
       - `punctuation.definition.class.body`
       - `punctuation.definition.constructor.body`
       - `punctuation.definition.decorator`
