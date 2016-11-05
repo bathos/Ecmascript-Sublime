@@ -17,7 +17,7 @@ scope: source.js source.es
 # fallback scopes for various reasons, though they won’t cause any real coloring
 # problems; in fact some are improvments where we’ve disambiguated a previous
 # conflation. Captures with no ‘BS’ annotations either correspond directly
-# already to, or are more specific versions of, scopes from BS & JSNext. 
+# already to, or are more specific versions of, scopes from BS & JSNext.
 
 variables:
   # CONTEXT CONTROL PATTERNS ###################################################
@@ -86,7 +86,7 @@ variables:
   jsxIdentifer: '{{identifierName}}(?:-(?:{{identifierPart}})*)*'
 
   # WELL-KNOWN IDENTIFIERS #####################################################
-  # Note, Symbol is not a real constructor -- but even ECMA 262 calls it one. 
+  # Note, Symbol is not a real constructor -- but even ECMA 262 calls it one.
   intrinsicConstructors: >-
     Array(?:Buffer)? | Boolean | Date | DataView |
     (?:Eval|Range|Reference|Syntax|Type|URI)?Error |
@@ -338,7 +338,7 @@ contexts:
       set: [ classDeclaration_AFTER_DECORATOR, decoratorExpression ]
     # EXPRESSION STATEMENT
     # Though expression statements are a subset of possible expressions, the
-    # disallowed cases are all captured by previous matches. 
+    # disallowed cases are all captured by previous matches.
     - include: expression
 
   blockStatement:
@@ -1605,7 +1605,7 @@ contexts:
 
   assignmentExpression:
     - include: assignmentExpression_CORE
-    - include: other_illegal_pop
+    - include: else_pop
 
   assignmentExpression_CORE:
     - include: ae_LITERAL_VALUES
@@ -1630,7 +1630,7 @@ contexts:
       set: ae_ARROW_AFTER_ARROW
     - include: ae_AFTER_THING
 
-  # The ‘thing’ in question is a ‘value’ that is conceivably invocable. 
+  # The ‘thing’ in question is a ‘value’ that is conceivably invocable.
   ae_AFTER_THING:
     - match: '((\())'
       captures:
@@ -1646,9 +1646,9 @@ contexts:
 
   # The ‘value’ in question is anything which might be followed by property
   # access or infix operators other than assignment operators -- or it could
-  # just be the end of the assignment expression. 
+  # just be the end of the assignment expression.
   ae_AFTER_VALUE:
-    # Refinement for error cases that are artifacts of active typing 
+    # Refinement for error cases that are artifacts of active typing
     - match: '\.(?=\s*[\}\)\]])'
       scope: invalid.illegal.token
       pop: true
@@ -1768,7 +1768,7 @@ contexts:
     - match: '{{identifierName}}'
       scope: variable.other.readwrite.property.es
       set: ae_AFTER_THING
-    # Refinement for error cases that are artifacts of active typing 
+    # Refinement for error cases that are artifacts of active typing
     - match: '(?=[\}\)\]])'
       pop: true
     - include: other_illegal_pop
@@ -2282,7 +2282,7 @@ contexts:
     # The inclusion of Ramda’s R is very questionable, I admit. It doesn’t yet
     # meet the criteria I just gave. On the other hand it’s not a very likely
     # identifier for other things and it’s quickly becoming a common functional
-    # language extension. I’m going back and forth on this one still. 
+    # language extension. I’m going back and forth on this one still.
     - match: '(_|R){{idEnd}}'
       scope: support.variable.functional-library.es
       set: ae_AFTER_THING
@@ -2298,7 +2298,7 @@ contexts:
     # about identifiers so generic as ‘history’ and ‘location’ which are just as
     # likely to show up in non-browser contexts. In any case, the following are
     # the items that seem to be considered ‘core’ global objects, while
-    # everything else (perhaps?) is better understood as a window property. 
+    # everything else (perhaps?) is better understood as a window property.
     - match: '(document|frames|history|location|navigator|screen|window){{idEnd}}'
       scope: support.variable.dom.es
       set: ae_AFTER_THING
@@ -2584,7 +2584,7 @@ contexts:
     # but at least no ‘illegal’ sections.
     #
     # Note that ‘ae_AFTER_THING’ is fine since = is preestablished as the next
-    # character. 
+    # character.
     - match: '(?x) ((\{)) (?= (?<brackets> [^\{\}] | \{ \g<brackets>* \} )* \}\s*=[^=])'
       captures:
         1: punctuation.definition.binding.object.begin.es
@@ -2673,7 +2673,7 @@ contexts:
     # The current strawman spec suggests this is the reasonable place for await.
     # Syntactically, it isn’t like yield. I’m unsure if this is intended to be a
     # no-linebreak-here situation. Babel currently gets upset by newlines before
-    # the operand, but the spec doesn’t say anything about this. 
+    # the operand, but the spec doesn’t say anything about this.
     - match: 'await{{idEnd}}'
       scope: keyword.control.flow.await
 
@@ -2790,8 +2790,8 @@ contexts:
         (?x)
           (new) \s+
           (?: ({{identifier}}) (\.) )
-          (?: ({{identifier}}) (\.) 
-            (?: ({{identifier}}) (\.) 
+          (?: ({{identifier}}) (\.)
+            (?: ({{identifier}}) (\.)
               (?:
                 ({{identifier}}) (\.)
               )?
@@ -3580,8 +3580,8 @@ contexts:
         (?x)
           (new) \s+
           (?: ({{identifier}}) (\.) )
-          (?: ({{identifier}}) (\.) 
-            (?: ({{identifier}}) (\.) 
+          (?: ({{identifier}}) (\.)
+            (?: ({{identifier}}) (\.)
               (?:
                 ({{identifier}}) (\.)
               )?
@@ -4699,7 +4699,7 @@ contexts:
     # Child contexts are tricky here because we need to be able to terminate
     # the parent context from anywhere. Since the conditions of termination are
     # simple enough, we can just include this lookahead in any child context.
-    # The regex root context will then handle the ‘actual’ termination. 
+    # The regex root context will then handle the ‘actual’ termination.
     - match: '(?=[\n\/])'
       pop: true
 
@@ -4930,7 +4930,7 @@ contexts:
     - match: '\{'
       scope: punctuation.definition.interpolation.begin.jsx
       set:
-        - meta_scope: meta.interpolation.jsx 
+        - meta_scope: meta.interpolation.jsx
         - match: '\.{3}'
           scope: keyword.operator.spread.jsx
           set: [ ae_JSX_ATTRIBUTES_INTERPOLATION_END, assignmentExpression ]
