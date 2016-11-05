@@ -1,11 +1,14 @@
 # [PackageDev] target_format: plist, ext: tmPreferences
 name: Comments
-scope: source.es - string.text.jsx
+scope: source.js source.es string.text.jsx - meta.interpolation.jsx
 settings:
   shellVariables:
   - name: TM_COMMENT_START
-    value: '// '
+    value: '{/* '
+  - name: TM_COMMENT_END
+    value: ' */}'
   - name: TM_COMMENT_START_2
-    value: /*
+    value: '{/* '
   - name: TM_COMMENT_END_2
-    value: '*/'
+    value: ' */}'
+
