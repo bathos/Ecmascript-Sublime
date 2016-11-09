@@ -1605,7 +1605,7 @@ contexts:
 
   assignmentExpression:
     - include: assignmentExpression_CORE
-    - include: else_pop
+    - include: other_illegal_pop
 
   assignmentExpression_CORE:
     - include: ae_LITERAL_VALUES
