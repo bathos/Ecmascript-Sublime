@@ -1269,6 +1269,16 @@ contexts:
         3: storage.type.function.js # ^BS -- Cobalt
         4: storage.type.function.async.es
       set: asyncDeclaration_AFTER_FUNCTION
+    # ES proposal: re-export default without 'default' (supported by Babel)
+    # Technically if this proposal gets in, I’m guessing it would also permit
+    # constructions like...
+    #
+    # export Foo, { bar } from 'baz'
+    #
+    # ...but I’m not gonna bother with that quite yet.
+    - match: '{{identifier}}'
+      scope: variable.other.readwrite.export.es
+      set: moduleDeclaration_BEFORE_FROM
     - include: other_illegal_pop
 
   moduleDeclaration_AFTER_DEFAULT:
