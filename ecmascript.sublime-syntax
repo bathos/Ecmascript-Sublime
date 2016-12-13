@@ -4982,7 +4982,7 @@ contexts:
       scope: string.text.jsx
     - match: '\{'
       scope: punctuation.definition.attribute.begin.jsx
-      set: [ ae_JSX_CONTENT_INTERPOLATION_END, assignmentExpression ]
+      set: ae_JSX_CONTENT_INTERPOLATION_END
     - match: '<(?!\/)'
       scope: punctuation.definition.tag.begin.jsx
       push: ae_JSX_ELEMENT
@@ -4993,7 +4993,7 @@ contexts:
     - match: '\}'
       scope: punctuation.definition.interpolation.end.jsx
       set: ae_JSX_CONTENT
-    - include: other_illegal
+    - include: assignmentExpression
 
   ae_JSX_ELEMENT:
     - match: '(({{jsxIdentifer}})(:){{jsxIdentifer}})'
