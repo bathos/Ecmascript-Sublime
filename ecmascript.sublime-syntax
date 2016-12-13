@@ -1396,6 +1396,12 @@ contexts:
         2: keyword.operator.module.js # ^BS
         3: storage.modifier.module.as.es
       set: moduleDeclaration_EXPORT_BINDING_AFTER_AS
+    - match: '(default)\s+((as)){{idEnd}}'
+      captures:
+        1: storage.modifier.module.default.es
+        2: keyword.operator.module.js # ^BS
+        3: storage.modifier.module.as.es
+      set: moduleDeclaration_EXPORT_BINDING_AFTER_AS
     - match: '{{identifier}}'
       scope: variable.other.readwrite.export.es
       set: moduleDeclaration_AFTER_EXPORT_BINDING_SPECIFIER_AMBIG
