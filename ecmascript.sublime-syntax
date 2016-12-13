@@ -881,6 +881,18 @@ contexts:
     # Semicolons in the class body are technically legal for uncertain reasons.
     - match: ';'
       scope: punctuation.terminator.statement.es
+    # Proposed ‘class fields’:
+    - match: '((static))\s+({{identifierName}})\s*(=)'
+      captures:
+        1: storage.modifier.static.es
+        2: storage.type.js # ^BS
+        3: variable.other.readwrite.property.class.es
+        4: punctuation.separator.key-value.es
+      push:
+        - - match: ';'
+            scope: punctuation.terminator.property.es
+            pop: true
+        - - include: assignmentExpression
     - match: '((static)){{idEnd}}'
       captures:
         1: storage.modifier.static.es
@@ -896,6 +908,7 @@ contexts:
         1: punctuation.definition.tag.js # ^BS
         2: punctuation.definition.decorator.es
       push: decoratorExpression
+    # Proposed ‘class fields’:
     - match: '({{identifierName}})\s*(=)'
       captures:
         1: variable.other.readwrite.property.class.es
