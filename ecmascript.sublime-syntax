@@ -2139,19 +2139,19 @@ contexts:
         1: variable.other.readwrite.es
         2: entity.name.function.generator.es
         3: keyword.operator.assignment.es
-      set: ae_AFTER_IDENTIFIER
+      set: assignmentExpression
     - match: '(({{identifier}}))\s*(=)\s*(?=function{{idEnd}})'
       captures:
         1: variable.other.readwrite.es
         2: entity.name.function.es
         3: keyword.operator.assignment.es
-      set: ae_AFTER_IDENTIFIER
+      set: assignmentExpression
     - match: '(({{identifier}}))\s*(=)\s*(?=async\s+function{{idEnd}})'
       captures:
         1: variable.other.readwrite.es
         2: entity.name.function.async.es
         3: keyword.operator.assignment.es
-      set: ae_AFTER_IDENTIFIER
+      set: assignmentExpression
     - match: '({{identifier}})\s*(=>)'
       captures:
         1: variable.parameter.es
@@ -2314,9 +2314,6 @@ contexts:
         5: punctuation.definition.arguments.begin.es
         6: meta.brace.round.js # ^BS
       set: [ ae_AFTER_THING, arguments ]
-    - match: 'Promise{{idEnd}}'
-      scope: support.class.builtin.promise.es
-      set: ae_AFTER_PROMISE
     - match: '(?x) ({{intrinsicConstructors}}){{idEnd}}'
       scope: variable.other.readwrite.es
       captures:
@@ -2341,37 +2338,6 @@ contexts:
     - match: '(?x) ({{intrinsicFunctions}}){{idEnd}}'
       scope: support.function.builtin.es
       set: ae_AFTER_THING
-
-  ae_AFTER_PROMISE:
-    - match: '\.'
-      scope: keyword.operator.accessor.es
-      set: ae_AFTER_PROMISE_ACCESSOR
-    - include: ae_AFTER_THING
-
-  ae_AFTER_PROMISE_ACCESSOR:
-    - match: '((((all|race|reject|resolve))))\s*((\())'
-      captures:
-        1: variable.other.readwrite.property.es
-        2: meta.function-call # ^BS
-        3: meta.invocation.es
-        4: support.method.builtin.promise.es
-        5: punctuation.definition.arguments.promise.begin.es
-        6: meta.brace.round.js # ^BS
-      set: [ ae_NEW_PROMISE_AFTER_AE, assignmentExpression ]
-    - match: '((all|race|reject|resolve)){{idEnd}}'
-      captures:
-        1: variable.other.readwrite.property.es
-        2: support.method.builtin.promise.es
-      set: ae_AFTER_PROMISE_METHOD
-    - include: ae_AFTER_ACCESSOR_OPERATOR
-
-  ae_AFTER_PROMISE_METHOD:
-    - match: '((\())'
-      captures:
-        1: punctuation.definition.arguments.promise.begin.es
-        2: meta.brace.round.js # ^BS
-      set: [ ae_NEW_PROMISE_AFTER_AE, assignmentExpression ]
-    - include: ae_AFTER_THING
 
   ae_INFIX_OPS:
     # TERNARY
@@ -2710,22 +2676,6 @@ contexts:
       set: assignmentExpression
     - include: other_illegal_pop
 
-  ae_NEW_PROMISE:
-    - match: '((\())'
-      captures:
-        1: punctuation.definition.arguments.promise.begin.es
-        2: meta.brace.round.js # ^BS
-      set: [ ae_NEW_PROMISE_AFTER_AE, assignmentExpression ]
-    - include: other_illegal_pop
-
-  ae_NEW_PROMISE_AFTER_AE:
-    - match: '((\)))'
-      captures:
-        1: punctuation.definition.arguments.promise.end.es
-        2: meta.brace.round.js # ^BS
-      set: ae_AFTER_THING
-    - include: other_illegal_pop
-
   ae_YIELD_NEW:
     # Grouped simply because they both have weird rules. Yield is unique
     # because it’s the only time ‘assignment expression or nothing’ is valid.
@@ -2759,15 +2709,6 @@ contexts:
     #        .target,new. target,new.target new .target ,new.target,new.
     #        target,new .target,new.target , new. target,new .target,new
     #                          .target == ANGKOR WAT
-    - match: >-
-        (new)\s+((((Promise)))){{idEnd}}
-      captures:
-        1: keyword.operator.new.es
-        2: variable.other.readwrite
-        3: meta.instance.constructor entity.name.type.new # ^BS
-        4: meta.instantiation
-        5: support.class.builtin.promise.es
-      set: ae_NEW_PROMISE
     - match: >-
         (?x)
           (new) \s+ (((

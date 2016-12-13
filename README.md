@@ -20,7 +20,7 @@ this ‘released.’
 
  - ‘Villa-Lobos’ theme
  - Async functions/methods/arrows are fully scoped the way generators are
- - Promise and its methods are uniquely scoped
+ - <strike>Promise and its methods are uniquely scoped</strike>
  - Added ‘todo’ scope per http://www.sublimetext.com/forum/viewtopic.php?f=2&t=18882
  - Various minor fixes, like allowing multiple spreads in an array literal
 
@@ -627,9 +627,7 @@ in ‘.regexp’ do not also have ‘.es’.
   - `invalid.illegal.octal-escape` (e.g. `'\\101'`; not valid since ES3)
   - `invalid.illegal.token` (syntax error)
   - `meta.whitespace`
-  - `punctuation.definition.arguments.promise` (included so promises and async functions could share colors)
   - `punctuation.definition.expression` (parentheses of a parenthetic expression)
-  - `support.class.builtin.promise` (singled out for reason stated above)
   - `variable.other.readwrite.decorator` (if a decorator expression begins with an identifier, as is typical, it will have this scope applied)
 
 ### Symbol Helper Scopes
