@@ -1745,7 +1745,7 @@ contexts:
       captures:
         1: variable.language.proto.es # for compatibility
       set: ae_AFTER_THING
-    - match: '(({{identifierName}}))(?=\s*=\s*async\s+function{{idEnd}})'
+    - match: '(({{identifierName}}))(?=\s*=\s*async\s+function\b)'
       captures:
         1: variable.other.readwrite.property.es
         2: entity.name.method.async.es
@@ -1755,7 +1755,7 @@ contexts:
         1: variable.other.readwrite.property.es
         2: entity.name.method.generator.es
       set: ae_AFTER_THING
-    - match: '(({{identifierName}}))(?=\s*=\s*function{{idEnd}})'
+    - match: '(({{identifierName}}))(?=\s*=\s*function\b)'
       captures:
         1: variable.other.readwrite.property.es
         2: entity.name.method.es
@@ -2009,7 +2009,7 @@ contexts:
         1: storage.type.function.js # ^BS -- Cobalt
         2: storage.type.function.expression.es
       set: ae_FUNCTION_AFTER_FUNCTION
-    - match: '((async))\s*((function)){{idEnd}}'
+    - match: '((async))\s+((function)){{idEnd}}'
       captures:
         1: storage.type.js # ^BS
         2: storage.modifier.async.expression.es
