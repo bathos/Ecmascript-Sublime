@@ -4964,6 +4964,35 @@ contexts:
       set: ae_JSX_ATTRIBUTES
     - include: other_illegal
 
+  ae_JSX_CONTENT:
+    - meta_include_prototype: false
+    - match: '&[^&;\{\}<>\s]+;'
+      scope: variable.other.entity-reference.jsx
+    - match: '[^\{\}<>]'
+      scope: string.text.jsx
+    - match: '\{'
+      scope: punctuation.definition.interpolation.begin.jsx
+      set: ae_JSX_CONTENT_INTERPOLATION
+    - match: '<(?!\/)'
+      scope: punctuation.definition.tag.begin.jsx
+      push: ae_JSX_ELEMENT
+    - include: else_pop
+
+  ae_JSX_CONTENT_INTERPOLATION:
+    - meta_scope: meta.interpolation.jsx
+    - match: '\}'
+      scope: punctuation.definition.interpolation.end.jsx
+      set: ae_JSX_CONTENT
+    - match: '{{PLA_anything}}'
+      set: [ ae_JSX_CONTENT_INTERPOLATION_END, assignmentExpression ]
+
+  ae_JSX_CONTENT_INTERPOLATION_END:
+    - meta_scope: meta.interpolation.jsx
+    - match: '\}'
+      scope: punctuation.definition.interpolation.end.jsx
+      set: ae_JSX_CONTENT
+    - include: other_illegal
+
   ae_JSX_DOT:
     - match: '\.'
       scope: keyword.operator.accessor.jsx
@@ -4973,27 +5002,6 @@ contexts:
           pop: true
         - include: other_illegal
     - include: else_pop
-
-  ae_JSX_CONTENT:
-    - meta_include_prototype: false
-    - match: '&[^&;\{\}<>\s]+;'
-      scope: variable.other.entity-reference.jsx
-    - match: '[^\{\}<>]'
-      scope: string.text.jsx
-    - match: '\{'
-      scope: punctuation.definition.attribute.begin.jsx
-      set: ae_JSX_CONTENT_INTERPOLATION_END
-    - match: '<(?!\/)'
-      scope: punctuation.definition.tag.begin.jsx
-      push: ae_JSX_ELEMENT
-    - include: else_pop
-
-  ae_JSX_CONTENT_INTERPOLATION_END:
-    - meta_scope: meta.interpolation.jsx
-    - match: '\}'
-      scope: punctuation.definition.interpolation.end.jsx
-      set: ae_JSX_CONTENT
-    - include: assignmentExpression
 
   ae_JSX_ELEMENT:
     - match: '(({{jsxIdentifer}})(:){{jsxIdentifer}})'
