@@ -3,7 +3,7 @@
 A sublime-syntax language definition for Ecmascript / Javascript / ES6 / ES2015
 / Babel or what have you.
 
-> Sublime syntax is only currently only available in Sublime Text’s dev channel.
+> Sublime syntax is only available in Sublime Text 3.0.
 
 **New in 1.0**
 
