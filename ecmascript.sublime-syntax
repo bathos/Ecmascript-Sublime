@@ -156,6 +156,16 @@ contexts:
     # Captured for practical reasons (keeps other patterns simpler)
     - match: '\s+'
       scope: meta.whitespace.es
+    # MERGE CONFLICTS
+    - match: '<<<<<<< (.+)'
+      scope: 'invalid.merge-conflict.delimiter'
+      push:
+        - meta_scope: invalid.merge-conflict
+        - match: '======='
+          scope: 'invalid.merge-conflict.delimiter'
+        - match: '>>>>>>> (.+)'
+          scope: 'invalid.merge-conflict.delimiter'
+          pop: true
     # COMMENTS
     - match: '((\/\/))'
       captures:

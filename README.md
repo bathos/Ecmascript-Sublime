@@ -3,11 +3,17 @@
 A sublime-syntax language definition for Ecmascript / Javascript / ES6 / ES2015
 / Babel or what have you.
 
-Although a fair amount of work remains before I’m ready to call this ‘1.0.0’,
-the definition and first theme (Excelsior) are now robust enough to consider
-this ‘released.’
-
 > Sublime syntax is only currently only available in Sublime Text’s dev channel.
+
+**New in 1.0**
+
+ - Highlighting for merge conflict markers (cannot be perfect by its nature, but
+   better than nothing)
+ - New theme, Sibelius, which is probably the first tasteful one. Between that
+   and the fact that this has been around for a year, bugs seem under control,
+   and a fair number of people are using this, I figured I should do '1.0'.
+
+![Sibelius example](https://github.com/bathos/Ecmascript-Sublime/raw/master/sibelius.png)
 
 **New in 0.3**
 
@@ -173,15 +179,12 @@ sure what habitual global users would like to see.
 
 ## Themes
 
-The first theme, Excelsior, is finished but for continued tweaking. At present
-there are three total:
+At present there are four:
 
- - Excelsior
- - Villa-Lobos
- - Carthage
-
-The third of those is particularly weak, and none is as clean as someone with
-better self-control would have it.
+ - Carthage (eh)
+ - Excelsior (most elaborate; I love it, but it’s too much)
+ - Sibelius (most sane)
+ - Villa-Lobos (okay)
 
 As of version 0.1.2, I’ve also added many additional scopes and tweaked a number
 of things to increase interoperability with existing themes. Monokai, Cobalt,
@@ -197,7 +200,7 @@ referencing when designing themes but you’d be insane to actually use it.
 
 If you’re interested in adding support for Ecmascript Sublime to your theme, or
 are developing a new theme with this in mind, you’ll probably want a list of
-the targettable scopes...
+the targetable scopes...
 
 ## Scopes
 
@@ -626,6 +629,8 @@ in ‘.regexp’ do not also have ‘.es’.
   - `invalid.illegal.newline` (e.g., inside a single-quote string)
   - `invalid.illegal.octal-escape` (e.g. `'\\101'`; not valid since ES3)
   - `invalid.illegal.token` (syntax error)
+  - `invalid.merge-conflict`
+  - `invalid.merge-conflict.delimiter` (e.g. `'<<<<<<< HEAD'`)
   - `meta.whitespace`
   - `punctuation.definition.expression` (parentheses of a parenthetic expression)
   - `variable.other.readwrite.decorator` (if a decorator expression begins with an identifier, as is typical, it will have this scope applied)

@@ -1,0 +1,285 @@
+# [PackageDev] target_format: plist, ext: tmTheme
+name: Sibelius
+
+settings:
+- settings:
+    foreground: '#FFFFFF'
+    background: '#000000'
+    gutter: '#323232'
+    caret: '#C9C9C9'
+
+    bracketContentsOptions: 'stippled_underline'
+    bracketsOptions: 'stippled_underline'
+
+    guide: '#333333'
+    stackGuide: '#444444'
+    activeGuide: '#555555'
+
+    lineHighlight: '#3E3E3E'
+    multiEditHighlight: '#A5EB5144'
+    searchHighlight: '#E9EE5F99'
+    selection: '#575757'
+
+# BINDINGS & CONTROL FLOW ######################################################
+
+- name: Bindings & Control Flow 1
+  scope: >-
+    keyword.control,
+    entity.other.property-binding,
+    punctuation.definition,
+    punctuation.separator,
+    punctuation.terminator.statement,
+    storage.type
+  settings:
+    foreground: '#dbd5b5'
+
+- name: Bindings & Control Flow 2
+  scope: >-
+    entity.name,
+    variable
+  settings:
+    foreground: '#ebe8d6'
+
+- name: Bindings & Control Flow 3
+  scope: >-
+    keyword.operator.module,
+    punctuation.definition.module-binding,
+    punctuation.separator.module-binding,
+    storage.modifier.module,
+    storage.type.module,
+    variable.parameter.catch
+  settings:
+    foreground: '#9b9781'
+
+# CLASSES & OBJECTS ############################################################
+
+- name: Classes & Objects 1
+  scope: >-
+    entity.name.class,
+    entity.name.constructor,
+    entity.name.method,
+    keyword.operator.new,
+    punctuation.definition.class,
+    punctuation.definition.constructor,
+    punctuation.definition.method,
+    punctuation.definition.object,
+    punctuation.definition.parameters.constructor,
+    punctuation.definition.parameters.method,
+    punctuation.terminator.property,
+    storage.modifier.extends,
+    storage.type.class,
+    variable.language,
+    variable.language meta.invocation,
+    variable.other.readwrite.initCap
+  settings:
+    foreground: '#2b9eb3'
+
+- name: Classes & Objects 2
+  scope: >-
+    entity.name.accessor,
+    entity.name.function.initCap,
+    keyword.operator.accessor,
+    keyword.operator.bind,
+    meta.instantiation,
+    punctuation.definition.accessor,
+    punctuation.definition.parameters.accessor,
+    punctuation.separator.key-value,
+    punctuation.separator.object-member,
+    variable.other.readwrite.property
+  settings:
+    foreground: '#8bcad5'
+
+- name: Classes & Objects 3
+  scope: >-
+    meta.super-expression,
+    punctuation.definition.decorator,
+    storage.modifier.accessor,
+    storage.modifier.async.method,
+    storage.modifier.static storage.type,
+    storage.modifier.generator.asterisk.method,
+    variable.other.readwrite.decorator,
+    variable.other.readwrite.property.proto,
+    variable.other.readwrite.property.prototype
+  settings:
+    foreground: '#1b6572'
+
+# FUNCTIONS ####################################################################
+
+- name: Functions 1
+  scope: >-
+    keyword.control.do-expression.do,
+    keyword.operator,
+    punctuation.definition.block.do-expression,
+    punctuation.definition.function,
+    storage.type.function,
+    variable.parameter
+  settings:
+    foreground: '#fcab10'
+
+- name: Functions 2
+  scope: >-
+    entity.name.function,
+    meta.invocation,
+    punctuation.definition.arguments,
+    punctuation.separator.argument
+  settings:
+    foreground: '#fdd17c'
+
+- name: Functions 3
+  scope: >-
+    entity.name.statement,
+    entity.other.property-binding.parameter,
+    keyword.control.flow.return,
+    keyword.control.flow.throw,
+    keyword.other.debugger,
+    keyword.other.rest.parameter,
+    punctuation.definition.binding.array.parameter,
+    punctuation.definition.binding.object.parameter,
+    punctuation.definition.parameters,
+    punctuation.separator.array-element.binding.parameter,
+    punctuation.separator.label-statement,
+    punctuation.separator.object-member.binding.parameter,
+    punctuation.separator.parameter,
+    punctuation.separator.property-binding.parameter,
+    variable.language.arguments
+  settings:
+    foreground: '#bc7e0b'
+
+# ITERATION, LOOPING, ARRAYS ###################################################
+
+- name: Iteration, Looping & Arrays 1
+  scope: >-
+    keyword.control.loop,
+    keyword.operator.spread,
+    punctuation.definition.function.async,
+    punctuation.definition.generator,
+    punctuation.definition.parameters.function.async,
+    punctuation.definition.parameters.generator,
+    storage.modifier.async,
+    storage.modifier.generator,
+    storage.type.function.async,
+    storage.type.function.generator
+  settings:
+    foreground: '#48af63'
+
+- name: Iteration, Looping & Arrays 2
+  scope: >-
+    entity.name.function.async,
+    entity.name.function.generator,
+    keyword.control.flow.continue,
+    keyword.control.loop,
+    keyword.other.rest,
+    punctuation.definition.array,
+    punctuation.definition.block.loop,
+    punctuation.definition.comprehension,
+    punctuation.definition.expression.conditional.comprehension,
+    punctuation.definition.expression.loop,
+    punctuation.separator.array-element,
+    punctuation.separator.loop-expression
+  settings:
+    foreground: '#9bd3a9'
+
+- name: Iteration, Looping & Arrays 3
+  scope: >-
+    keyword.control.flow.await,
+    keyword.control.flow.yield
+  settings:
+    foreground: '#2c703e'
+
+# STRINGS ######################################################################
+
+- name: Strings 1
+  scope: >-
+    constant.character.escape.pointless,
+    string
+  settings:
+    foreground: '#c4bbb8'
+
+- name: Strings 2
+  scope: >-
+    constant.character.escape,
+    punctuation.definition.string,
+    variable.other.readwrite.tag
+  settings:
+    foreground: '#d9d3d1'
+
+# CONSTANTS, REGEXP & JSX ######################################################
+
+- name: RegExp 1
+  scope: >-
+    constant.character.escape.pointless.regexp,
+    entity.name.tag.jsx,
+    keyword.operator.accessor.jsx,
+    keyword.operator.spread.jsx,
+    punctuation.definition.attribute.begin.jsx,
+    punctuation.definition.attribute.end.jsx,
+    punctuation.definition.interpolation.begin.jsx,
+    punctuation.definition.interpolation.end.jsx,
+    punctuation.definition.tag.begin.jsx,
+    punctuation.definition.tag.end.jsx,
+    punctuation.definition.string.regexp,
+    punctuation.separator.attribute-value.jsx,
+    punctuation.separator.namespace.jsx,
+    string.regexp
+  settings:
+    foreground: '#c46bae'
+
+- name: RegExp 2
+  scope: >-
+    constant,
+    constant.character.escape.control-char.regexp,
+    constant.character.escape.hexadecimal.regexp,
+    constant.character.escape.null.regexp,
+    constant.character.escape.regexp,
+    constant.character.escape.unicode.regexp,
+    constant.other.character-class,
+    punctuation.definition.character-class,
+    string.attribute.jsx,
+    string.text.jsx
+  settings:
+    foreground: '#deaed2'
+
+- name: RegExp 3
+  scope: >-
+    keyword.control.anchor.regexp,
+    keyword.operator.negation.regexp,
+    keyword.operator.or.regexp,
+    keyword.operator.quantifier.regexp,
+    keyword.other.back-reference.regexp,
+    meta.namespace.jsx,
+    punctuation.definition.assertion,
+    punctuation.definition.group,
+    string.regexp.flags,
+    variable.other.attribute.jsx,
+    variable.other.entity-reference.jsx
+  settings:
+    foreground: '#844775'
+
+# COMMENTS #####################################################################
+
+- name: Comments 1
+  scope: >-
+    comment
+  settings:
+    foreground: '#999999'
+
+- name: Comments 2
+  scope: >-
+    comment.line.shebang
+  settings:
+    background: '#999999'
+    foreground: '#000000'
+
+# INVALID ######################################################################
+
+- name: Invalid 1
+  scope: >-
+    invalid.illegal
+  settings:
+    foreground: '#00CC99'
+
+- name: Invalid 2
+  scope: >-
+    invalid.merge-conflict
+  settings:
+    background: '#BFDBF7'
