@@ -27,7 +27,9 @@ settings:
     keyword.control,
     entity.other.property-binding,
     punctuation.definition,
+    punctuation.definition.parameters.catch,
     punctuation.separator,
+    punctuation.separator.array-element.binding,
     punctuation.terminator.statement,
     storage.type
   settings:
@@ -57,6 +59,7 @@ settings:
   scope: >-
     entity.name.class,
     entity.name.constructor,
+    entity.name.function.initCap,
     entity.name.method,
     keyword.operator.new,
     punctuation.definition.class,
@@ -68,24 +71,32 @@ settings:
     punctuation.terminator.property,
     storage.modifier.extends,
     storage.type.class,
+    support.class,
     variable.language,
     variable.language meta.invocation,
-    variable.other.readwrite.initCap
+    variable.other.readwrite.initCap,
+    text.html entity.name.tag,
+    text.html punctuation.definition.tag,
+    punctuation.definition.mapping
   settings:
     foreground: '#2b9eb3'
 
 - name: Classes & Objects 2
   scope: >-
     entity.name.accessor,
-    entity.name.function.initCap,
     keyword.operator.accessor,
     keyword.operator.bind,
     meta.instantiation,
+    meta.instantiation support.class,
     punctuation.definition.accessor,
     punctuation.definition.parameters.accessor,
     punctuation.separator.key-value,
     punctuation.separator.object-member,
-    variable.other.readwrite.property
+    variable.other.readwrite.property,
+    entity.name.tag,
+    entity.other.attribute-name,
+    meta.attribute-with-value punctuation.definition.string,
+    punctuation.separator.mapping
   settings:
     foreground: '#8bcad5'
 
@@ -112,7 +123,10 @@ settings:
     punctuation.definition.block.do-expression,
     punctuation.definition.function,
     storage.type.function,
-    variable.parameter
+    variable.parameter,
+    entity.name.other.anchor.yaml,
+    meta.tag.sgml entity.name.tag,
+    meta.tag.sgml punctuation.definition.tag
   settings:
     foreground: '#fcab10'
 
@@ -121,7 +135,13 @@ settings:
     entity.name.function,
     meta.invocation,
     punctuation.definition.arguments,
-    punctuation.separator.argument
+    punctuation.separator.argument,
+    meta.tag.sgml,
+    punctuation.definition.block.scalar,
+    support.other.chomping-indicator,
+    punctuation.alias.yaml,
+    variable.other.alias.yaml,
+    text.html string
   settings:
     foreground: '#fdd17c'
 
@@ -141,7 +161,9 @@ settings:
     punctuation.separator.object-member.binding.parameter,
     punctuation.separator.parameter,
     punctuation.separator.property-binding.parameter,
-    variable.language.arguments
+    variable.language.arguments,
+    constant.language.merge.yaml,
+    punctuation.anchor.yaml
   settings:
     foreground: '#bc7e0b'
 
@@ -175,7 +197,10 @@ settings:
     punctuation.definition.expression.conditional.comprehension,
     punctuation.definition.expression.loop,
     punctuation.separator.array-element,
-    punctuation.separator.loop-expression
+    punctuation.separator.loop-expression,
+    punctuation.definition.block.sequence,
+    punctuation.definition.sequence,
+    punctuation.separator.sequence
   settings:
     foreground: '#9bd3a9'
 
@@ -191,7 +216,8 @@ settings:
 - name: Strings 1
   scope: >-
     constant.character.escape.pointless,
-    string
+    string,
+    text.html
   settings:
     foreground: '#c4bbb8'
 
@@ -220,7 +246,9 @@ settings:
     punctuation.definition.string.regexp,
     punctuation.separator.attribute-value.jsx,
     punctuation.separator.namespace.jsx,
-    string.regexp
+    string.regexp,
+    text.html constant,
+    text.html punctuation.definition.entity
   settings:
     foreground: '#c46bae'
 
@@ -235,7 +263,9 @@ settings:
     constant.other.character-class,
     punctuation.definition.character-class,
     string.attribute.jsx,
-    string.text.jsx
+    string.text.jsx,
+    keyword.other.directive,
+    punctuation.definition.directive
   settings:
     foreground: '#deaed2'
 
@@ -251,7 +281,8 @@ settings:
     punctuation.definition.group,
     string.regexp.flags,
     variable.other.attribute.jsx,
-    variable.other.entity-reference.jsx
+    variable.other.entity-reference.jsx,
+    entity.other.document.begin
   settings:
     foreground: '#844775'
 
@@ -259,15 +290,16 @@ settings:
 
 - name: Comments 1
   scope: >-
-    comment
+    comment,
+    punctuation.definition.comment
   settings:
-    foreground: '#999999'
+    foreground: '#888888'
 
 - name: Comments 2
   scope: >-
     comment.line.shebang
   settings:
-    background: '#999999'
+    background: '#888888'
     foreground: '#000000'
 
 # INVALID ######################################################################

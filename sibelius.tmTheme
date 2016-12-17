@@ -41,7 +41,7 @@
 			<key>name</key>
 			<string>Bindings &amp; Control Flow 1</string>
 			<key>scope</key>
-			<string>keyword.control, entity.other.property-binding, punctuation.definition, punctuation.separator, punctuation.terminator.statement, storage.type</string>
+			<string>keyword.control, entity.other.property-binding, punctuation.definition, punctuation.definition.parameters.catch, punctuation.separator, punctuation.separator.array-element.binding, punctuation.terminator.statement, storage.type</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -74,7 +74,7 @@
 			<key>name</key>
 			<string>Classes &amp; Objects 1</string>
 			<key>scope</key>
-			<string>entity.name.class, entity.name.constructor, entity.name.method, keyword.operator.new, punctuation.definition.class, punctuation.definition.constructor, punctuation.definition.method, punctuation.definition.object, punctuation.definition.parameters.constructor, punctuation.definition.parameters.method, punctuation.terminator.property, storage.modifier.extends, storage.type.class, variable.language, variable.language meta.invocation, variable.other.readwrite.initCap</string>
+			<string>entity.name.class, entity.name.constructor, entity.name.function.initCap, entity.name.method, keyword.operator.new, punctuation.definition.class, punctuation.definition.constructor, punctuation.definition.method, punctuation.definition.object, punctuation.definition.parameters.constructor, punctuation.definition.parameters.method, punctuation.terminator.property, storage.modifier.extends, storage.type.class, support.class, variable.language, variable.language meta.invocation, variable.other.readwrite.initCap, text.html entity.name.tag, text.html punctuation.definition.tag, punctuation.definition.mapping</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -85,7 +85,7 @@
 			<key>name</key>
 			<string>Classes &amp; Objects 2</string>
 			<key>scope</key>
-			<string>entity.name.accessor, entity.name.function.initCap, keyword.operator.accessor, keyword.operator.bind, meta.instantiation, punctuation.definition.accessor, punctuation.definition.parameters.accessor, punctuation.separator.key-value, punctuation.separator.object-member, variable.other.readwrite.property</string>
+			<string>entity.name.accessor, keyword.operator.accessor, keyword.operator.bind, meta.instantiation, meta.instantiation support.class, punctuation.definition.accessor, punctuation.definition.parameters.accessor, punctuation.separator.key-value, punctuation.separator.object-member, variable.other.readwrite.property, entity.name.tag, entity.other.attribute-name, meta.attribute-with-value punctuation.definition.string, punctuation.separator.mapping</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -107,7 +107,7 @@
 			<key>name</key>
 			<string>Functions 1</string>
 			<key>scope</key>
-			<string>keyword.control.do-expression.do, keyword.operator, punctuation.definition.block.do-expression, punctuation.definition.function, storage.type.function, variable.parameter</string>
+			<string>keyword.control.do-expression.do, keyword.operator, punctuation.definition.block.do-expression, punctuation.definition.function, storage.type.function, variable.parameter, entity.name.other.anchor.yaml, meta.tag.sgml entity.name.tag, meta.tag.sgml punctuation.definition.tag</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -118,7 +118,7 @@
 			<key>name</key>
 			<string>Functions 2</string>
 			<key>scope</key>
-			<string>entity.name.function, meta.invocation, punctuation.definition.arguments, punctuation.separator.argument</string>
+			<string>entity.name.function, meta.invocation, punctuation.definition.arguments, punctuation.separator.argument, meta.tag.sgml, punctuation.definition.block.scalar, support.other.chomping-indicator, punctuation.alias.yaml, variable.other.alias.yaml, text.html string</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -129,7 +129,7 @@
 			<key>name</key>
 			<string>Functions 3</string>
 			<key>scope</key>
-			<string>entity.name.statement, entity.other.property-binding.parameter, keyword.control.flow.return, keyword.control.flow.throw, keyword.other.debugger, keyword.other.rest.parameter, punctuation.definition.binding.array.parameter, punctuation.definition.binding.object.parameter, punctuation.definition.parameters, punctuation.separator.array-element.binding.parameter, punctuation.separator.label-statement, punctuation.separator.object-member.binding.parameter, punctuation.separator.parameter, punctuation.separator.property-binding.parameter, variable.language.arguments</string>
+			<string>entity.name.statement, entity.other.property-binding.parameter, keyword.control.flow.return, keyword.control.flow.throw, keyword.other.debugger, keyword.other.rest.parameter, punctuation.definition.binding.array.parameter, punctuation.definition.binding.object.parameter, punctuation.definition.parameters, punctuation.separator.array-element.binding.parameter, punctuation.separator.label-statement, punctuation.separator.object-member.binding.parameter, punctuation.separator.parameter, punctuation.separator.property-binding.parameter, variable.language.arguments, constant.language.merge.yaml, punctuation.anchor.yaml</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -151,7 +151,7 @@
 			<key>name</key>
 			<string>Iteration, Looping &amp; Arrays 2</string>
 			<key>scope</key>
-			<string>entity.name.function.async, entity.name.function.generator, keyword.control.flow.continue, keyword.control.loop, keyword.other.rest, punctuation.definition.array, punctuation.definition.block.loop, punctuation.definition.comprehension, punctuation.definition.expression.conditional.comprehension, punctuation.definition.expression.loop, punctuation.separator.array-element, punctuation.separator.loop-expression</string>
+			<string>entity.name.function.async, entity.name.function.generator, keyword.control.flow.continue, keyword.control.loop, keyword.other.rest, punctuation.definition.array, punctuation.definition.block.loop, punctuation.definition.comprehension, punctuation.definition.expression.conditional.comprehension, punctuation.definition.expression.loop, punctuation.separator.array-element, punctuation.separator.loop-expression, punctuation.definition.block.sequence, punctuation.definition.sequence, punctuation.separator.sequence</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -173,7 +173,7 @@
 			<key>name</key>
 			<string>Strings 1</string>
 			<key>scope</key>
-			<string>constant.character.escape.pointless, string</string>
+			<string>constant.character.escape.pointless, string, text.html</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -195,7 +195,7 @@
 			<key>name</key>
 			<string>RegExp 1</string>
 			<key>scope</key>
-			<string>constant.character.escape.pointless.regexp, entity.name.tag.jsx, keyword.operator.accessor.jsx, keyword.operator.spread.jsx, punctuation.definition.attribute.begin.jsx, punctuation.definition.attribute.end.jsx, punctuation.definition.interpolation.begin.jsx, punctuation.definition.interpolation.end.jsx, punctuation.definition.tag.begin.jsx, punctuation.definition.tag.end.jsx, punctuation.definition.string.regexp, punctuation.separator.attribute-value.jsx, punctuation.separator.namespace.jsx, string.regexp</string>
+			<string>constant.character.escape.pointless.regexp, entity.name.tag.jsx, keyword.operator.accessor.jsx, keyword.operator.spread.jsx, punctuation.definition.attribute.begin.jsx, punctuation.definition.attribute.end.jsx, punctuation.definition.interpolation.begin.jsx, punctuation.definition.interpolation.end.jsx, punctuation.definition.tag.begin.jsx, punctuation.definition.tag.end.jsx, punctuation.definition.string.regexp, punctuation.separator.attribute-value.jsx, punctuation.separator.namespace.jsx, string.regexp, text.html constant, text.html punctuation.definition.entity</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -206,7 +206,7 @@
 			<key>name</key>
 			<string>RegExp 2</string>
 			<key>scope</key>
-			<string>constant, constant.character.escape.control-char.regexp, constant.character.escape.hexadecimal.regexp, constant.character.escape.null.regexp, constant.character.escape.regexp, constant.character.escape.unicode.regexp, constant.other.character-class, punctuation.definition.character-class, string.attribute.jsx, string.text.jsx</string>
+			<string>constant, constant.character.escape.control-char.regexp, constant.character.escape.hexadecimal.regexp, constant.character.escape.null.regexp, constant.character.escape.regexp, constant.character.escape.unicode.regexp, constant.other.character-class, punctuation.definition.character-class, string.attribute.jsx, string.text.jsx, keyword.other.directive, punctuation.definition.directive</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -217,7 +217,7 @@
 			<key>name</key>
 			<string>RegExp 3</string>
 			<key>scope</key>
-			<string>keyword.control.anchor.regexp, keyword.operator.negation.regexp, keyword.operator.or.regexp, keyword.operator.quantifier.regexp, keyword.other.back-reference.regexp, meta.namespace.jsx, punctuation.definition.assertion, punctuation.definition.group, string.regexp.flags, variable.other.attribute.jsx, variable.other.entity-reference.jsx</string>
+			<string>keyword.control.anchor.regexp, keyword.operator.negation.regexp, keyword.operator.or.regexp, keyword.operator.quantifier.regexp, keyword.other.back-reference.regexp, meta.namespace.jsx, punctuation.definition.assertion, punctuation.definition.group, string.regexp.flags, variable.other.attribute.jsx, variable.other.entity-reference.jsx, entity.other.document.begin</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -228,11 +228,11 @@
 			<key>name</key>
 			<string>Comments 1</string>
 			<key>scope</key>
-			<string>comment</string>
+			<string>comment, punctuation.definition.comment</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#999999</string>
+				<string>#888888</string>
 			</dict>
 		</dict>
 		<dict>
@@ -243,7 +243,7 @@
 			<key>settings</key>
 			<dict>
 				<key>background</key>
-				<string>#999999</string>
+				<string>#888888</string>
 				<key>foreground</key>
 				<string>#000000</string>
 			</dict>
