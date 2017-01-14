@@ -297,7 +297,8 @@ settings:
 
 - name: Comments 2
   scope: >-
-    comment.line.shebang
+    comment.line.shebang,
+    comment.line.shebang punctuation.definition.comment.begin
   settings:
     background: '#888888'
     foreground: '#000000'
@@ -308,7 +309,8 @@ settings:
   scope: >-
     invalid.illegal
   settings:
-    foreground: '#00CC99'
+    background: '#00CC99'
+    foreground: '#000000'
 
 - name: Invalid 2
   scope: >-

@@ -239,7 +239,7 @@
 			<key>name</key>
 			<string>Comments 2</string>
 			<key>scope</key>
-			<string>comment.line.shebang</string>
+			<string>comment.line.shebang, comment.line.shebang punctuation.definition.comment.begin</string>
 			<key>settings</key>
 			<dict>
 				<key>background</key>
@@ -255,8 +255,10 @@
 			<string>invalid.illegal</string>
 			<key>settings</key>
 			<dict>
-				<key>foreground</key>
+				<key>background</key>
 				<string>#00CC99</string>
+				<key>foreground</key>
+				<string>#000000</string>
 			</dict>
 		</dict>
 		<dict>
