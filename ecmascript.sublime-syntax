@@ -4210,12 +4210,6 @@ contexts:
     - match: '\.{3}'
       scope: keyword.other.rest.es # -BS
       set: bindingArray_AFTER_ELLIPSIS
-    - match: '{{allThreeIDs}}'
-      captures:
-        1: variable.other.readwrite.allCap.es # -BS
-        2: variable.other.readwrite.initCap.es
-        3: variable.other.readwrite.es
-      set: bindingArray_AFTER_ELEM
     - match: '((\[))'
       captures:
         1: punctuation.definition.binding.array.begin.es
@@ -4226,7 +4220,9 @@ contexts:
         1: punctuation.definition.binding.object.begin.es
         2: meta.brace.curly.js # ^BS
       set: [ bindingArray_AFTER_ELEM, bindingObject ]
-    - include: other_illegal
+    # Actually must be an LHS, but we cannot readily describe that constraint:
+    - match: '{{PLA_anything}}'
+      set: [ bindingArray_AFTER_ELEM, assignmentExpression ]
 
   bindingArray_AFTER_ELEM:
     - match: '((\]))'
@@ -4344,12 +4340,6 @@ contexts:
     - include: other_illegal
 
   bindingObject_AFTER_PROPERTY:
-    - match: '{{allThreeIDs}}'
-      captures:
-        1: variable.other.readwrite.allCap.es # -BS
-        2: variable.other.readwrite.initCap.es
-        3: variable.other.readwrite.es
-      set: bindingObject_AFTER_ELEM
     - match: '((\[))'
       captures:
         1: punctuation.definition.binding.array.begin.es
@@ -4360,9 +4350,9 @@ contexts:
         1: punctuation.definition.binding.object.begin.es
         2: meta.brace.curly.js # ^BS
       set: [ bindingObject_AFTER_ELEM, bindingObject ]
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: bindingObject_AFTER_ELEM
+    # Actually must be an LHS, but we cannot readily describe that constraint:
+    - match: '{{PLA_anything}}'
+      set: [ bindingObject_AFTER_ELEM, assignmentExpression ]
 
   bindingObject_AFTER_ELEM:
     - match: '((\}))'
