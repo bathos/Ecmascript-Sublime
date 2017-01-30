@@ -3852,7 +3852,7 @@ contexts:
     - include: statements
 
   asyncMethod_AFTER_ASYNC:
-    - match: '(({{identifier}}))'
+    - match: '(({{identifierName}}))'
       captures:
         1: entity.name.method.js # ^BS -- monokai
         2: entity.name.method.async.es
@@ -3933,7 +3933,7 @@ contexts:
     - include: statements
 
   accessorMethod_AFTER_GET:
-    - match: '(({{identifier}}))'
+    - match: '(({{identifierName}}))'
       captures:
         1: entity.name.method.js # ^BS -- monokai
         2: entity.name.accessor.get.es
@@ -3998,7 +3998,7 @@ contexts:
     - include: other_illegal
 
   accessorMethod_AFTER_SET:
-    - match: '(({{identifier}}))'
+    - match: '(({{identifierName}}))'
       captures:
         1: entity.name.method.js # ^BS -- monokai
         2: entity.name.accessor.set.es
@@ -4082,7 +4082,7 @@ contexts:
     - include: statements
 
   generatorMethod_AFTER_ASTERISK:
-    - match: '(({{identifier}}))'
+    - match: '(({{identifierName}}))'
       captures:
         1: entity.name.method.js # ^BS -- monokai
         2: entity.name.method.generator.es
