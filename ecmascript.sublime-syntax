@@ -173,7 +173,7 @@ contexts:
         2: punctuation.definition.comment.begin.es
       push:
         - meta_scope: comment.line.es
-        - match: '$'
+        - match: '\n'
           pop: true
         - match: '\/\/+'
           scope: meta.comment.border.es
