@@ -1923,7 +1923,8 @@ contexts:
         1: punctuation.definition.function.arrow.body.begin.es
         2: meta.brace.curly.js # ^BS
       set: ae_ARROW_AFTER_BRACE
-    - include: assignmentExpression
+    - match: '{{PLA_anything}}'
+      set: assignmentExpression
 
   ae_ARROW_AFTER_BRACE:
     - match: '((\}))'
@@ -1955,7 +1956,8 @@ contexts:
         1: punctuation.definition.function.async.arrow.body.begin.es
         2: meta.brace.curly.js # ^BS
       set: ae_ASYNC_ARROW_AFTER_BRACE
-    - include: assignmentExpression
+    - match: '{{PLA_anything}}'
+      set: assignmentExpression
 
   ae_ASYNC_ARROW_AFTER_BRACE:
     - match: '((\}))'
@@ -3022,7 +3024,8 @@ contexts:
         1: punctuation.definition.function.arrow.body.begin.es
         2: meta.brace.curly.js
       set: ae_NO_IN_ARROW_AFTER_BRACE
-    - include: assignmentExpression_NO_IN
+    - match: '{{PLA_anything}}'
+      set: assignmentExpression_NO_IN
   ae_NO_IN_ARROW_AFTER_BRACE:
     - match: '((\}))'
       captures:
