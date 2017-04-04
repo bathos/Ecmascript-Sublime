@@ -4843,7 +4843,7 @@ contexts:
       captures:
         1: entity.quasi.element.js punctuation.quasi.element.begin.js # ^BS
         2: punctuation.definition.string.interpolated.element.begin.es
-      set: templateString_ELEMENT
+      set: [ templateString_ELEMENT, expression ]
 
   templateString_ELEMENT:
     - match: '((\}))'
@@ -4851,7 +4851,7 @@ contexts:
         1: entity.quasi.element.js punctuation.quasi.element.end.js # ^BS
         2: punctuation.definition.string.interpolated.element.end.es
       set: templateString_AFTER_OPEN
-    - include: statements
+    - include: other_illegal_pop
 
   string_COMMON_QUOTED:
     - include: string_COMMON_ESCAPES
