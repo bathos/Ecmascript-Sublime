@@ -157,15 +157,9 @@ contexts:
     - match: '\s+'
       scope: meta.whitespace.es
     # MERGE CONFLICTS
-    - match: '<<<<<<< (.+)'
-      scope: 'invalid.merge-conflict.delimiter'
-      push:
-        - meta_scope: invalid.merge-conflict
-        - match: '======='
-          scope: 'invalid.merge-conflict.delimiter'
-        - match: '>>>>>>> (.+)'
-          scope: 'invalid.merge-conflict.delimiter'
-          pop: true
+    - match: '<<<<<<< (.+)\n'
+      scope: 'invalid.merge-conflict.delimiter.our-changes'
+      push: merge_conflict_our_changes
     # COMMENTS
     - match: '((\/\/))'
       captures:
@@ -198,6 +192,18 @@ contexts:
           scope: meta.comment.box-drawing.es
         - match: '\b(?i:todo|hack)\b'
           scope: comment.line.todo.es
+
+  merge_conflict_our_changes:
+    - meta_scope: invalid.merge-conflict.our-changes
+    - match: '=======\n'
+      scope: 'invalid.merge-conflict.delimiter.separator'
+      set: merge_conflict_their_changes
+
+  merge_conflict_their_changes:
+    - meta_scope: invalid.merge-conflict.thier-changes
+    - match: '>>>>>>> (.+)\n'
+      scope: 'invalid.merge-conflict.delimiter.their-changes'
+      pop: true
 
   # If no match has been made, gently and quietly pop
   else_pop:
