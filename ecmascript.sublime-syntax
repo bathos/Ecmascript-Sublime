@@ -200,7 +200,7 @@ contexts:
       set: merge_conflict_their_changes
 
   merge_conflict_their_changes:
-    - meta_scope: invalid.merge-conflict.thier-changes
+    - meta_scope: invalid.merge-conflict.their-changes
     - match: '>>>>>>> (.+)\n'
       scope: 'invalid.merge-conflict.delimiter.their-changes'
       pop: true
