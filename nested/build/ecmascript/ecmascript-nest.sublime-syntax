@@ -2881,7 +2881,7 @@ contexts:
       set:
         - ae_AFTER_VALUE
         - regex_AFTER_OPEN
-    - match: '((({{identifier}})))\s*(\\`)'
+    - match: '(({{identifier}}))\s*(\\`)'
       captures:
         '1': entity.quasi.tag.name.js
         '2': variable.other.readwrite.tag.es
@@ -3803,7 +3803,7 @@ contexts:
       set:
         - ae_NO_IN_AFTER_VALUE
         - regex_AFTER_OPEN
-    - match: '((({{identifier}})))\s*(\\`)'
+    - match: '(({{identifier}}))\s*(\\`)'
       captures:
         '1': entity.quasi.tag.name.js
         '2': variable.other.readwrite.tag.es
