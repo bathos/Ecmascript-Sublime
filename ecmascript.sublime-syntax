@@ -966,10 +966,12 @@ contexts:
         1: storage.type.accessor.js # ^BS
         2: storage.modifier.accessor.set.es
       set: [ classDeclaration_AFTER_BRACE, accessorMethod_AFTER_SET ]
-    - match: '((async)){{idEnd}}'
+    - match: '((async)){{idEnd}}((\s*\*))?'
       captures:
         1: storage.type.js # ^BS
         2: storage.modifier.async.method.es
+        3: keyword.generator.asterisk.js # ^BS
+        4: storage.modifier.generator.asterisk.method.es
       set: [ classDeclaration_AFTER_BRACE, asyncMethod_AFTER_ASYNC ]
     - match: '(({{identifierName}}))'
       captures:
@@ -1183,6 +1185,15 @@ contexts:
     - include: statements
 
   asyncDeclaration_AFTER_FUNCTION:
+    - match: '((\*))'
+      captures:
+        1: keyword.generator.asterisk.js # ^BS
+        2: storage.modifier.generator.asterisk.method.es
+      set:
+        - match: '{{allThreeIDs}}'
+          scope: entity.name.function.async.es
+          set: asyncDeclaration_AFTER_NAME
+        - include: other_illegal_pop
     - match: '{{allThreeIDs}}'
       scope: entity.name.function.async.es
       set: asyncDeclaration_AFTER_NAME
@@ -1340,12 +1351,14 @@ contexts:
         1: storage.type.function.js # ^BS -- Cobalt
         2: storage.type.function.es
       set: moduleDeclaration_DEFAULT_AFTER_FUNCTION
-    - match: '((async))\s*((function)){{idEnd}}'
+    - match: '((async))\s*((function)){{idEnd}}((\s*\*))?'
       captures:
         1: storage.type.js # ^BS
         2: storage.modifier.async.es
         3: storage.type.function.js # ^BS -- Cobalt
         4: storage.type.function.async.es
+        5: keyword.generator.asterisk.js # ^BS
+        6: storage.modifier.generator.asterisk.method.es
       set: moduleDeclaration_DEFAULT_AFTER_ASYNC_FUNCTION
     - match: '((@))'
       captures:
@@ -2050,7 +2063,14 @@ contexts:
         2: storage.modifier.async.expression.es
         3: storage.type.function.js # ^BS -- Cobalt
         4: storage.type.function.async.expression.es
-      set: ae_ASYNC_AFTER_FUNCTION
+      set:
+        - - include: ae_ASYNC_AFTER_FUNCTION
+        - - match: '((\*))'
+            captures:
+              1: keyword.generator.asterisk.js # ^BS
+              2: storage.modifier.generator.asterisk.method.es
+            pop: true
+          - include: else_pop
     - match: 'class{{idEnd}}'
       scope: storage.type.class.expression.es
       set: ae_CLASS_AFTER_CLASS
