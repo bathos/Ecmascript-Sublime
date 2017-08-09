@@ -5,6 +5,10 @@ A sublime-syntax language definition for Ecmascript / Javascript / ES6 / ES2015
 
 > Sublime syntax is only available in Sublime Text 3.0.
 
+**New in 1.1**
+
+- Most currently-stage-3 proposals (likely ES2018) and some stage 2 now covered.
+
 **New in 1.0**
 
  - Highlighting for merge conflict markers (cannot be perfect by its nature, but
@@ -120,43 +124,22 @@ of matching groups in a regular expression:
 In addition to everything in the final draft of ES6, I’ve included support for
 certain ES7 strawmen that have already been implemented in Babel or Firefox. The
 depth is not always as great as with established language features, though.
-<s>For example, async/await keywords are supported, but I didn’t go whole hog by
-making the whole async function targettable. Once async is formalized -- the
-grammar is still up in the air -- then it will be implemented thoroughly like
-generators.</s> Done.
 
-The following candidate ES7 features, as they stand today anyway, are covered:
+The following proposed features, as they stand today anyway, are covered:
 
- - async / await (including methods, expressions, and arrows)
- - generator comprehensions
- - array comprehensions, but only as implemented by Babel and Mozilla. (Which
-   differs from the current spec, as I understand it.)
- - exponentiation and mallet operators
+ - generator & array comprehensions (should probably remove at some point)
  - class and method decorators
- - trailing commas where they don’t belong at all ugh
  - object literal spread and object binding pattern rest
  - bind operator
  - do expression
-
-There are two optional ES7 Babel transforms I haven’t done yet:
-
- - class properties
+ - async iteration (for-async & async generators)
+ - optional catch binding
+ - dynamic import & import.meta
+ - function.sent
+ - class fields
  - export extensions
 
-To be honest I don’t think class properties has a very great chance of entering
-ES7 in its current form, so I’m hesitant to implement it yet. Class syntax is
-a subset of object literal syntax + allowance of the `static` keyword; the
-equals-sign syntax (as opposed to a more obvious colon syntax) seems like an
-unlikely departure. Plus, they’re totally useless language cruft. If someone
-wants it though let me know and I’ll add it; barring that, this will wait for a
-more mature spec if it emerges.
-
-Export extensions is more immediately deserving but the spec has not yet added
-a grammar section. Waiting for that.
-
-I didn’t include JSX. If you use JSX, you should use Babel Sublime, which
-handles that in depth. I’m not opposed to adding it, but since I don’t use it
-myself it wasn’t a priority. (Pull reqs welcome.)  
+In addition to ES and some proposed ES, JSX is supported.
 
 ## SublimeText Symbols
 
