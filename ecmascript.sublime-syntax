@@ -736,6 +736,11 @@ contexts:
         1: punctuation.definition.parameters.catch.begin.es
         2: meta.brace.round.js # ^BS
       set: tryStatement_CATCH_PARAM
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.block.trycatch.begin.es
+        2: meta.brace.curly.js # ^BS
+      set: tryStatement_AFTER_CATCH_BRACE
     - include: other_illegal_pop
 
   tryStatement_CATCH_PARAM:
