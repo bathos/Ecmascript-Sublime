@@ -426,6 +426,15 @@ contexts:
         1: punctuation.definition.expression.loop.begin.es
         2: meta.brace.round.js # ^BS
       set: forStatement_AFTER_PAREN_OPEN
+    - match: 'await{{idEnd}}'
+      scope: keyword.control.flow.await
+      set:
+        - match: '((\())'
+          captures:
+            1: punctuation.definition.expression.loop.begin.es
+            2: meta.brace.round.js # ^BS
+          set: forStatement_AFTER_PAREN_OPEN
+        - include: other_illegal_pop
     - match: '(each){{idEnd}}'
       scope: keyword.control.flow.loop.es
       captures:
