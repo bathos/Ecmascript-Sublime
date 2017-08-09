@@ -88,11 +88,11 @@ variables:
   # WELL-KNOWN IDENTIFIERS #####################################################
   # Note, Symbol is not a real constructor -- but even ECMA 262 calls it one.
   intrinsicConstructors: >-
-    Array(?:Buffer)? | Boolean | Date | DataView |
+    Array(?:Buffer)? | Atomics | Boolean | Date | DataView |
     (?:Eval|Range|Reference|Syntax|Type|URI)?Error |
     Float(?:32|64)Array | Function | Int(?:8|16|32)Array |
-    Number | Object | Promise | Proxy | Reflect | RegExp | String |
-    Symbol | Uint(?:8(?:Clamped)?|16|32)Array | (?:Weak)?(?:Map|Set)
+    Number | Object | Promise | Proxy | Reflect | RegExp | SharedArrayBuffer |
+    String | Symbol | Uint(?:8(?:Clamped)?|16|32)Array | (?:Weak)?(?:Map|Set)
   intrinsicFunctions: >-
     (?:de|en)codeURI(?:Component)? |
     eval | is(?:Finite|Nan) | parse(?:Float|Int) |
