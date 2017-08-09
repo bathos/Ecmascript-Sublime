@@ -38,8 +38,15 @@ A sublime-syntax language definition for Ecmascript / Javascript / ES6 / ES2015
 - [SublimeText Symbols](#sublimetext-symbols)
 - [Themes](#themes)
 - [Scopes](#scopes)
+  - [‘Official’ Scopes](#%E2%80%98official%E2%80%99-scopes)
+  - [Symbol Helper Scopes](#symbol-helper-scopes)
+  - [Interoperability Scopes](#interoperability-scopes)
 - [About the Scope Conventions](#about-the-scope-conventions)
 - [More Infobarf for Someone Hypothetically Curious About the Definition Itself](#more-infobarf-for-someone-hypothetically-curious-about-the-definition-itself)
+  - [Why Is It Huge?](#why-is-it-huge)
+  - [Why Does Almost Everything Related to Expressions Appear Twice?](#why-does-almost-everything-related-to-expressions-appear-twice)
+  - [Does a Byzantine Maze of Context Transitions Make Highlighting Slow?](#does-a-byzantine-maze-of-context-transitions-make-highlighting-slow)
+  - [How Do I Break It?](#how-do-i-break-it)
 
 <!-- /MarkdownTOC -->
 
@@ -585,6 +592,7 @@ in ‘.regexp’ do not also have ‘.es’.
     - `variable.other.readwrite.property.initCap`
   - **Contextual References & Pseudo-References**
     - `variable.language.arguments`
+    - `variable.language.function-sent` (proposed generator initial next arg)
     - `variable.language.new-target.fake-accessor` (the dot in `new.target`)
     - `variable.language.new-target.fake-object` (the new in `new.target`)
     - `variable.language.new-target.fake-property` (the target in `new.target`)
