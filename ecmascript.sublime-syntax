@@ -352,6 +352,9 @@ contexts:
         1: punctuation.definition.tag.js # ^BS
         2: punctuation.definition.decorator.es
       set: [ classDeclaration_AFTER_DECORATOR, decoratorExpression ]
+    # EMPTY STATEMENT
+    - match: ';'
+      scope: punctuation.terminator.statement.es
     # EXPRESSION STATEMENT
     # Though expression statements are a subset of possible expressions, the
     # disallowed cases are all captured by previous matches.
