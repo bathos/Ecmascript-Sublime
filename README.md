@@ -8,6 +8,9 @@ A sublime-syntax language definition for Ecmascript / Javascript / ES6 / ES2015
 **New in 1.1**
 
 - Most currently-stage-3 proposals (likely ES2018) and some stage 2 now covered.
+- Added new theme, Haydn
+
+![Haydn example](https://github.com/bathos/Ecmascript-Sublime/raw/master/haydn-example.png)
 
 **New in 1.0**
 
