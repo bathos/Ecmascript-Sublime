@@ -593,6 +593,8 @@ in ‘.regexp’ do not also have ‘.es’.
   - **Contextual References & Pseudo-References**
     - `variable.language.arguments`
     - `variable.language.function-sent` (proposed generator initial next arg)
+    - `variable.language.import-dynamic`
+    - `variable.language.import-meta`
     - `variable.language.new-target.fake-accessor` (the dot in `new.target`)
     - `variable.language.new-target.fake-object` (the new in `new.target`)
     - `variable.language.new-target.fake-property` (the target in `new.target`)

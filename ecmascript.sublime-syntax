@@ -138,7 +138,7 @@ contexts:
   root:
     - include: useStrict
     # IMPORT DECLARATION
-    - match: '((import)){{idEnd}}'
+    - match: '((import)){{idEnd}}(?!\s*[\(\.])'
       captures:
         1: storage.type.module.import.es
         2: keyword.operator.module.js # ^BS
@@ -2280,6 +2280,19 @@ contexts:
     - match: 'super{{idEnd}}'
       scope: variable.language.super.es
       set: ae_AFTER_THING
+    # IMPORT META
+    - match: 'import\s*\.\s*meta\b'
+      scope: variable.language.import-meta
+      set: ae_AFTER_VALUE
+    # DYNAMIC IMPORT
+    - match: 'import\s*\('
+      scope: variable.language.import-dynamic
+      set:
+        - - match: '\)'
+            scope: variable.language.import-dynamic
+            set: ae_AFTER_THING
+          - include: other_illegal
+        - - include: assignmentExpression
     # ARGUMENTS
     - match: 'arguments{{idEnd}}'
       scope: variable.language.arguments.es
@@ -3244,6 +3257,17 @@ contexts:
     - match: 'super{{idEnd}}'
       scope: variable.language.super.es
       set: ae_NO_IN_AFTER_THING
+    - match: 'import\s*\.\s*meta\b'
+      scope: variable.language.import-meta
+      set: ae_NO_IN_AFTER_VALUE
+    - match: 'import\s*\('
+      scope: variable.language.import-dynamic
+      set:
+        - - match: '\)'
+            scope: variable.language.import-dynamic
+            set: ae_NO_IN_AFTER_THING
+          - include: other_illegal
+        - - include: assignmentExpression_NO_IN
     - match: 'arguments{{idEnd}}'
       scope: variable.language.arguments.es
       set: ae_NO_IN_AFTER_THING
