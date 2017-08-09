@@ -894,7 +894,7 @@ contexts:
         1: punctuation.definition.class.body.end.es
         2: meta.brace.curly.js # ^BS
       pop: true
-    # Semicolons in the class body are technically legal for uncertain reasons.
+    # Semicolons in the class body are legal.
     - match: ';'
       scope: punctuation.terminator.statement.es
     # Proposed ‘class fields’:
@@ -908,7 +908,8 @@ contexts:
         - - match: ';'
             scope: punctuation.terminator.property.es
             pop: true
-        - - include: assignmentExpression
+          - match: '{{PLA_anything}}'
+            set: assignmentExpression
     - match: '((static)){{idEnd}}'
       captures:
         1: storage.modifier.static.es
@@ -933,7 +934,8 @@ contexts:
         - - match: ';'
             scope: punctuation.terminator.property.es
             pop: true
-        - - include: assignmentExpression
+          - match: '{{PLA_anything}}'
+            set: assignmentExpression
     - include: classDeclaration_METHOD_COMMON
 
   classDeclaration_METHOD_COMMON:
