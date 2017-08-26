@@ -915,6 +915,22 @@ contexts:
     - match: ';'
       scope: punctuation.terminator.statement.es
     # Proposed ‘class fields’:
+    - match: '((static))\s+((({{identifierName}})))\s*(=)\s*(((async))\s+)?(?=\((?<parens>[^\(\)]|\(\g<parens>*\))*\)\s*=>)'
+      captures:
+        1: storage.modifier.static.es
+        2: storage.type.js # ^BS
+        3: entity.name.function.js # ^BS
+        4: meta.symbol-helper.arrow.es
+        5: variable.other.readwrite.property.class.es
+        6: punctuation.separator.key-value.es
+        8: storage.type.js
+        9: storage.modifier.async.expression.es
+      push:
+        - - match: ';'
+            scope: punctuation.terminator.property.es
+            pop: true
+          - match: '{{PLA_anything}}'
+            set: assignmentExpression
     - match: '((static))\s+({{identifierName}})\s*(=)'
       captures:
         1: storage.modifier.static.es
@@ -943,6 +959,20 @@ contexts:
         2: punctuation.definition.decorator.es
       push: decoratorExpression
     # Proposed ‘class fields’:
+    - match: '((({{identifierName}})))\s*(=)\s*(((async))\s+)?(?=\((?<parens>[^\(\)]|\(\g<parens>*\))*\)\s*=>)'
+      captures:
+        1: entity.name.function.js # ^BS
+        2: meta.symbol-helper.arrow.es
+        3: variable.other.readwrite.property.class.es
+        4: punctuation.separator.key-value.es
+        6: storage.type.js
+        7: storage.modifier.async.expression.es
+      push:
+        - - match: ';'
+            scope: punctuation.terminator.property.es
+            pop: true
+          - match: '{{PLA_anything}}'
+            set: assignmentExpression
     - match: '({{identifierName}})\s*(=)'
       captures:
         1: variable.other.readwrite.property.class.es
