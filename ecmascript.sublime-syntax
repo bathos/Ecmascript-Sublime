@@ -3086,7 +3086,7 @@ contexts:
     - match: '((\]))'
       captures:
         1: punctuation.definition.comprehension.array.end.es
-        2: meta.brace.square.js
+        2: meta.brace.square.js # ^BS
       set: ae_NO_IN_AFTER_VALUE
     - include: other_illegal
   ae_NO_IN_ARROW:
@@ -3731,8 +3731,10 @@ contexts:
 # OBJECT & ARRAY LITERALS ######################################################
 
   literalArray_OPEN:
-    - match: '\]'
-      scope: punctuation.definition.array.end.es
+    - match: '((\]))'
+      captures:
+        1: punctuation.definition.array.end.es
+        2: meta.brace.square.js # ^BS
       pop: true
     - match: ','
       scope: punctuation.separator.array-element.es
