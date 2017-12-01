@@ -3813,6 +3813,15 @@ contexts:
         5: constant.other.object.key.js # ^BS
         6: punctuation.separator.key-value.es
       set: [ literalObject_AFTER_AE, assignmentExpression ]
+    # ACTUALLY DESTRUCTURING POSSIBLY!
+    # We could be inside an ambiguous destructing sequence. This could be in
+    # parameters or it might be an assignment. We simply cannot know. :(
+    - match: '(?={{allThreeIDs}}\s*=)'
+      captures:
+        1: variable.other.readwrite.property.shorthand.allCap.es # -BS
+        2: variable.other.readwrite.property.shorthand.initCap.es
+        3: variable.other.readwrite.property.shorthand.es
+      set: bindingObject
     # IDENTIFIER REFERENCE (probably)
     # We match references (shorthand properties) last because we must rely on
     # other punctuation to identify ‘regular’ properties and methods.
