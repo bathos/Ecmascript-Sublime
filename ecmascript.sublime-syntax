@@ -1,7 +1,7 @@
 %YAML 1.2
 ---
 name: Ecmascript
-file_extensions: [ js, es, es6 ]
+file_extensions: [ js, jsx, es, es6, mjs ]
 scope: source.js source.es
 
 # es 20:15
@@ -5046,12 +5046,53 @@ contexts:
       set: ae_JSX_ATTRIBUTES
     - include: other_illegal
 
+  ae_JSX_ATTRIBUTES_INTERPOLATION_END_STYLE_JSX:
+    - meta_scope: meta.interpolation.jsx
+    - match: '\}'
+      scope: punctuation.definition.interpolation.end.jsx
+      set: ae_JSX_ATTRIBUTES_STYLE_JSX
+    - include: other_illegal
+
   ae_JSX_ATTRIBUTES_SINGLE:
     - meta_include_prototype: false
     - meta_scope: 'string.attribute.jsx'
     - match: ''''
       scope: punctuation.definition.attribute.end.jsx
       pop: true
+
+  ae_JSX_ATTRIBUTES_STYLE:
+    - match: 'jsx{{idEnd}}(?!\s*=)'
+      scope: variable.other.attribute.jsx
+      set: ae_JSX_ATTRIBUTES_STYLE_JSX
+    - include: ae_JSX_ATTRIBUTES
+
+  ae_JSX_ATTRIBUTES_STYLE_JSX:
+    - match: '\{'
+      scope: punctuation.definition.interpolation.begin.jsx
+      set:
+        - meta_scope: meta.interpolation.jsx
+        - match: '\.{3}'
+          scope: keyword.operator.spread.jsx
+          set:
+            - ae_JSX_ATTRIBUTES_INTERPOLATION_END_STYLE_JSX
+            - assignmentExpression
+        - include: other_illegal
+    - match: '(({{jsxIdentifer}})(:){{jsxIdentifer}})'
+      captures:
+        1: variable.other.attribute.jsx
+        2: meta.namespace.jsx
+        3: punctuation.separator.namespace.jsx
+      set: ae_JSX_ATTRIBUTES_VALUE_STYLE_JSX
+    - match: '{{jsxIdentifer}}'
+      scope: variable.other.attribute.jsx
+      set: ae_JSX_ATTRIBUTES_VALUE_STYLE_JSX
+    - match:  '/>'
+      scope: punctuation.definition.tag.end.jsx
+      pop: true
+    - match:  '>'
+      scope: punctuation.definition.tag.end.jsx
+      set: [ ae_JSX_ELEMENT_CLOSE, ae_JSX_CONTENT_STYLE_JSX ]
+    - include: other_illegal
 
   ae_JSX_ATTRIBUTES_VALUE:
     - match: '='
@@ -5072,6 +5113,27 @@ contexts:
         - include: other_illegal
     - match: '(?<=\s)|(?=[\>\{])'
       set: ae_JSX_ATTRIBUTES
+    - include: other_illegal
+
+  ae_JSX_ATTRIBUTES_VALUE_STYLE_JSX:
+    - match: '='
+      scope: punctuation.separator.attribute-value.jsx
+      set:
+        - match: '"'
+          scope: punctuation.definition.attribute.begin.jsx
+          set: [ ae_JSX_ATTRIBUTES_STYLE_JSX, ae_JSX_ATTRIBUTES_DOUBLE ]
+        - match: ''''
+          scope: punctuation.definition.attribute.begin.jsx
+          set: [ ae_JSX_ATTRIBUTES_STYLE_JSX, ae_JSX_ATTRIBUTES_SINGLE ]
+        - match: '\{'
+          scope: punctuation.definition.interpolation.begin.jsx
+          set: [ ae_JSX_ATTRIBUTES_INTERPOLATION_END_STYLE_JSX, assignmentExpression ]
+        - match: '<'
+          scope: punctuation.definition.tag.begin.jsx
+          set: [ ae_JSX_ATTRIBUTES_STYLE_JSX, ae_JSX_ELEMENT ]
+        - include: other_illegal
+    - match: '(?<=\s)|(?=[\>\{])'
+      set: ae_JSX_ATTRIBUTES_STYLE_JSX
     - include: other_illegal
 
   ae_JSX_CONTENT:
@@ -5103,6 +5165,27 @@ contexts:
       set: ae_JSX_CONTENT
     - include: other_illegal
 
+  ae_JSX_CONTENT_INTERPOLATION_STYLE_JSX:
+    - meta_scope: meta.interpolation.jsx
+    - match: '\}'
+      scope: punctuation.definition.interpolation.end.jsx
+      set: ae_JSX_CONTENT
+    - match: '`'
+      scope: punctuation.definition.string.interpolated.begin.es
+      set:
+        - ae_JSX_CONTENT_INTERPOLATION_END
+        - ae_AFTER_VALUE
+        - ae_STYLED_JSX_STRING
+    - match: '{{PLA_anything}}'
+      set: [ ae_JSX_CONTENT_INTERPOLATION_END, assignmentExpression ]
+
+  ae_JSX_CONTENT_STYLE_JSX:
+    - meta_include_prototype: false
+    - match: '\{'
+      scope: punctuation.definition.interpolation.begin.jsx
+      set: ae_JSX_CONTENT_INTERPOLATION_STYLE_JSX
+    - include: ae_JSX_CONTENT
+
   ae_JSX_DOT:
     - match: '\.'
       scope: keyword.operator.accessor.jsx
@@ -5120,6 +5203,9 @@ contexts:
         2: meta.namespace.jsx
         3: punctuation.separator.namespace.jsx
       set: [ ae_JSX_ATTRIBUTES, ae_JSX_DOT ]
+    - match: 'style{{idEnd}}'
+      scope: entity.name.tag.jsx
+      set: [ ae_JSX_ATTRIBUTES_STYLE, ae_JSX_DOT ]
     - match: '{{jsxIdentifer}}'
       scope: entity.name.tag.jsx
       set: [ ae_JSX_ATTRIBUTES, ae_JSX_DOT ]
@@ -5146,3 +5232,26 @@ contexts:
       scope: punctuation.definition.tag.end.jsx
       pop: true
     - include: other_illegal
+
+  ae_STYLED_JSX_STRING:
+    - meta_include_prototype: false
+    - meta_scope: string.interpolated.es # -BS (throughout, exceptions noted)
+    - match: '`'
+      scope: punctuation.definition.string.interpolated.end.es
+      pop: true
+    - match: '((\$\{))'
+      captures:
+        1: entity.quasi.element.js punctuation.quasi.element.begin.js # ^BS
+        2: punctuation.definition.string.interpolated.element.begin.es
+      push: [ ae_STYLED_JSX_STRING_SPAN_END, expression ]
+    - match: '(?=.)'
+      embed: scope:source.css
+      escape: (?<!\\)(?=\$\{|`)
+
+  ae_STYLED_JSX_STRING_SPAN_END:
+    - match: '((\}))'
+      captures:
+        1: entity.quasi.element.js punctuation.quasi.element.end.js # ^BS
+        2: punctuation.definition.string.interpolated.element.end.es
+      pop: true
+    - include: other_illegal_pop
