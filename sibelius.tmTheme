@@ -226,6 +226,28 @@
 		</dict>
 		<dict>
 			<key>name</key>
+			<string>JSX Component 1</string>
+			<key>scope</key>
+			<string>meta.namespace.jsx entity.name.class.jsx</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#C54EA8</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>JSX Component 2</string>
+			<key>scope</key>
+			<string>entity.name.class.jsx</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#CA34A5</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
 			<string>Comments 1</string>
 			<key>scope</key>
 			<string>comment, punctuation.definition.comment</string>
@@ -270,6 +292,131 @@
 			<dict>
 				<key>background</key>
 				<string>#BFDBF7</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>CSS source</string>
+			<key>scope</key>
+			<string>source.css</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>regular</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>CSS class name</string>
+			<key>scope</key>
+			<string>entity.other.attribute-name.class</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#5E88DA</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>CSS hash-ident name</string>
+			<key>scope</key>
+			<string>entity.other.attribute-name.id</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#2C68DC</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>CSS pseudo</string>
+			<key>scope</key>
+			<string>entity.other.pseudo-class, entity.other.pseudo-element</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic</string>
+				<key>foreground</key>
+				<string>#8DAAE4</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>CSS punctuation, combinators, &amp; operators</string>
+			<key>scope</key>
+			<string>keyword.operator.attribute-selector, punctuation.section.property-list, punctuation.separator.combinator, punctuation.separator.key-value.css, punctuation.terminator.rule</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#425F98</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>CSS at-rule keywords</string>
+			<key>scope</key>
+			<string>keyword.control.at-rule</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>CSS property name</string>
+			<key>scope</key>
+			<string>meta.property-name.css</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#958f9C</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>CSS custom property / variable</string>
+			<key>scope</key>
+			<string>support.type.custom-property.name</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic</string>
+				<key>foreground</key>
+				<string>#CC85DC</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>CSS other identifiers</string>
+			<key>scope</key>
+			<string>meta.property-value.css, meta.function-call.css</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#2D90B1</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>CSS strings</string>
+			<key>scope</key>
+			<string>string.quoted.css, string.unquoted.css</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#85DCC1</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Styled JSX global</string>
+			<key>scope</key>
+			<string>meta.styled-jsx.global.jsx</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#606165</string>
 			</dict>
 		</dict>
 	</array>

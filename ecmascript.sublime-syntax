@@ -83,7 +83,9 @@ variables:
   identifierStart: '(?:[\$_{{ID_Start}}]|{{unicodeEscape}})'
   allThreeIDs: '({{identifierAllCaps}})|({{identifierInitCap}})|({{identifier}})'
   unicodeEscape: '\\u(?:\h{4}|\{\h+\})'
-  jsxIdentifer: '{{identifierName}}(?:-(?:{{identifierPart}})*)*'
+  jsxComponentIdentifier: '{{identifierInitCapStrict}}'
+  jsxElementIdentifier: '{{identifierName}}(?:-(?:{{identifierPart}})*)*'
+  jsxNamespaceIdentifier: '({{identifierInitCapStrict}})(\.)'
 
   # WELL-KNOWN IDENTIFIERS #####################################################
   # Note, Symbol is not a real constructor -- but even ECMA 262 calls it one.
@@ -100,21 +102,22 @@ variables:
 
   # NUMERIC LITERALS ###########################################################
 
-  binNum: '(0[Bb])([01]+)'
-  octNum: '(0[Oo])([0-7]+)'
+  binNum: '(0[Bb])(?:[01]+(?:_+[01]+)*)(n)?'
+  octNum: '(0[Oo])(?:[0-7]+(?:_+[0-7]+)*)(n)?'
 
-  # Decimal has 6 captures: dec, dec, dec, exp-e, exp-sign, exp-dig
+  # Decimal has 7 captures: dec, dec, dec, exp-e, exp-sign, exp-dig, big-int-suf
   decNum: >-
     (?x)
       (?:
-        0 (?: (\.) \d* )? |
-        [1-9]\d* (?: (\.) \d* )? |
-        (\.) \d*
+        0 (?: (\.) (?:\d+ (?:_+\d+)* )? )? |
+        [1-9](?:_*\d+)* (?: (\.) (?:\d+ (?:_+\d+)*)? )? |
+        (\.) \d+ (?:_+\d+)*
       )
-      (?: ([Ee]) ([\+\-])? (\d+) )?
+      (?: ([Ee]) ([\+\-])? (\d+ (?:_+\d+)*) )?
+      (n)?
       {{idEnd}}
 
-  hexNum: '(0[Xx])(\h+)'
+  hexNum: '(0[Xx])(?:\h+(?:_+\h+)*)(n)?'
 
   # LOOKAHEADS #################################################################
   idEnd: '(?=[^\$_‍‍{{ID_Continue}}]|$)'
@@ -914,15 +917,16 @@ contexts:
     # Semicolons in the class body are legal.
     - match: ';'
       scope: punctuation.terminator.statement.es
-    # Proposed ‘class fields’:
-    - match: '((static))\s+((({{identifierName}})))\s*(=)\s*(((async))\s+)?(?=\((?<parens>[^\(\)]|\(\g<parens>*\))*\)\s*=>)'
+    # Class fields
+    - match: '((static))\s+(((#{{identifierName}})|({{identifierName}})))\s*(=)\s*(?:((async))\s+)?(?=\((?<parens>[^\(\)]|\(\g<parens>*\))*\)\s*=>)'
       captures:
         1: storage.modifier.static.es
         2: storage.type.js # ^BS
         3: entity.name.function.js # ^BS
         4: meta.symbol-helper.arrow.es
-        5: variable.other.readwrite.property.class.es
-        6: punctuation.separator.key-value.es
+        5: variable.language.private.class.es
+        6: variable.other.readwrite.property.class.es
+        7: punctuation.separator.key-value.es
         8: storage.type.js
         9: storage.modifier.async.expression.es
       push:
@@ -931,12 +935,13 @@ contexts:
             pop: true
           - match: '{{PLA_anything}}'
             set: assignmentExpression
-    - match: '((static))\s+({{identifierName}})\s*(=)'
+    - match: '((static))\s+(?:(#{{identifierName}})|({{identifierName}}))\s*(=)'
       captures:
         1: storage.modifier.static.es
         2: storage.type.js # ^BS
-        3: variable.other.readwrite.property.class.es
-        4: punctuation.separator.key-value.es
+        3: variable.language.private.class.es
+        4: variable.other.readwrite.property.class.es
+        5: punctuation.separator.key-value.es
       push:
         - - match: ';'
             scope: punctuation.terminator.property.es
@@ -958,25 +963,27 @@ contexts:
         1: punctuation.definition.tag.js # ^BS
         2: punctuation.definition.decorator.es
       push: decoratorExpression
-    # Proposed ‘class fields’:
-    - match: '((({{identifierName}})))\s*(=)\s*(((async))\s+)?(?=\((?<parens>[^\(\)]|\(\g<parens>*\))*\)\s*=>)'
+    # Class fields:
+    - match: '(((?:(#{{identifierName}})|({{identifierName}}))))\s*(=)\s*(((async))\s+)?(?=\((?<parens>[^\(\)]|\(\g<parens>*\))*\)\s*=>)'
       captures:
         1: entity.name.function.js # ^BS
         2: meta.symbol-helper.arrow.es
-        3: variable.other.readwrite.property.class.es
-        4: punctuation.separator.key-value.es
-        6: storage.type.js
-        7: storage.modifier.async.expression.es
+        3: variable.language.private.class.es
+        4: variable.other.readwrite.property.class.es
+        5: punctuation.separator.key-value.es
+        7: storage.type.js
+        8: storage.modifier.async.expression.es
       push:
         - - match: ';'
             scope: punctuation.terminator.property.es
             pop: true
           - match: '{{PLA_anything}}'
             set: assignmentExpression
-    - match: '({{identifierName}})\s*(=)'
+    - match: '(?:(#{{identifierName}})|({{identifierName}}))\s*(=)'
       captures:
-        1: variable.other.readwrite.property.class.es
-        2: punctuation.separator.key-value.es
+        1: variable.language.private.class.es
+        2: variable.other.readwrite.property.class.es
+        3: punctuation.separator.key-value.es
       push:
         - - match: ';'
             scope: punctuation.terminator.property.es
@@ -1031,24 +1038,28 @@ contexts:
         5: meta.numeric.exponent.e.es
         6: meta.numeric.exponent.sign.es
         7: meta.numeric.exponent.digit.es
+        8: meta.numeric.suffix.es
       set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME ]
     - match: '({{binNum}})'
       scope: constant.numeric.binary.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME ]
     - match: '({{octNum}})'
       scope: constant.numeric.octal.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME ]
     - match: '({{hexNum}})'
       scope: constant.numeric.hexadecimal.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME ]
     - match: '((\[))'
       captures:
@@ -1813,6 +1824,14 @@ contexts:
         4: punctuation.definition.arguments.begin.es
         5: meta.brace.round.js # ^BS
       set: [ ae_AFTER_THING, arguments ]
+    - match: '(((#{{identifierName}})))\s*((\())'
+      captures:
+        1: variable.language.private.es
+        2: meta.function-call # ^BS
+        3: meta.invocation.es
+        4: punctuation.definition.arguments.begin.es
+        5: meta.brace.round.js # ^BS
+      set: [ ae_AFTER_THING, arguments ]
     - match: '(prototype){{idEnd}}'
       scope: variable.other.readwrite.property.prototype.es
       captures:
@@ -1828,9 +1847,19 @@ contexts:
         1: variable.other.readwrite.property.es
         2: entity.name.method.async.es
       set: ae_AFTER_THING
+    - match: '((#{{identifierName}}))(?=\s*=\s*async\s+function\b)'
+      captures:
+        1: variable.language.private.es
+        2: entity.name.method.async.es
+      set: ae_AFTER_THING
     - match: '(({{identifierName}}))(?=\s*=\s*function\s*\*)'
       captures:
         1: variable.other.readwrite.property.es
+        2: entity.name.method.generator.es
+      set: ae_AFTER_THING
+    - match: '((#{{identifierName}}))(?=\s*=\s*function\s*\*)'
+      captures:
+        1: variable.language.private.es
         2: entity.name.method.generator.es
       set: ae_AFTER_THING
     - match: '(({{identifierName}}))(?=\s*=\s*function\b)'
@@ -1838,9 +1867,21 @@ contexts:
         1: variable.other.readwrite.property.es
         2: entity.name.method.es
       set: ae_AFTER_THING
+    - match: '((#{{identifierName}}))(?=\s*=\s*function\b)'
+      captures:
+        1: variable.language.private.es
+        2: entity.name.method.es
+      set: ae_AFTER_THING
     - match: '(({{identifierName}}))\s*(=)\s*(\()(?=(?<parens>[^\(\)]|\(\g<parens>*\))*\)\s*=>)'
       captures:
         1: variable.other.readwrite.property.es
+        2: entity.name.method.es
+        3: keyword.operator.assignment.es
+        4: punctuation.definition.parameters.function.arrow.begin.es
+      set: [ ae_ARROW_AFTER_PARAMS, parameters ]
+    - match: '((#{{identifierName}}))\s*(=)\s*(\()(?=(?<parens>[^\(\)]|\(\g<parens>*\))*\)\s*=>)'
+      captures:
+        1: variable.language.private.es
         2: entity.name.method.es
         3: keyword.operator.assignment.es
         4: punctuation.definition.parameters.function.arrow.begin.es
@@ -1853,9 +1894,27 @@ contexts:
         4: variable.parameter.es
         5: storage.type.function.arrow.es
       set: ae_ARROW_AFTER_ARROW
+    - match: '((#{{identifierName}}))\s*(=)\s*({{identifier}})\s*(=>)'
+      captures:
+        1: variable.language.private.es
+        2: entity.name.method.es
+        3: keyword.operator.assignment.es
+        4: variable.parameter.es
+        5: storage.type.function.arrow.es
+      set: ae_ARROW_AFTER_ARROW
     - match: '(({{identifierName}}))\s*(=)\s*((async))\s+({{identifier}})\s*(=>)'
       captures:
         1: variable.other.readwrite.property.es
+        2: entity.name.method.async.es
+        3: keyword.operator.assignment.es
+        4: storage.type.js
+        5: storage.modifier.async.expression.es
+        6: variable.parameter.es
+        7: storage.type.function.arrow.es
+      set: ae_ASYNC_ARROW_AFTER_ARROW
+    - match: '((#{{identifierName}}))\s*(=)\s*((async))\s+({{identifier}})\s*(=>)'
+      captures:
+        1: variable.language.private.es
         2: entity.name.method.async.es
         3: keyword.operator.assignment.es
         4: storage.type.js
@@ -1872,8 +1931,20 @@ contexts:
         5: storage.modifier.async.expression.es
         6: punctuation.definition.parameters.function.arrow.begin.es
       set: [ ae_ASYNC_ARROW_AFTER_PARAMS, parameters ]
+    - match: '((#{{identifierName}}))\s*(=)\s*((async))\s*(\()'
+      captures:
+        1: variable.language.private.es
+        2: entity.name.method.async.es
+        3: keyword.operator.assignment.es
+        4: storage.type.js # ^BS
+        5: storage.modifier.async.expression.es
+        6: punctuation.definition.parameters.function.arrow.begin.es
+      set: [ ae_ASYNC_ARROW_AFTER_PARAMS, parameters ]
     - match: '{{identifierName}}'
       scope: variable.other.readwrite.property.es
+      set: ae_AFTER_THING
+    - match: '#{{identifierName}}'
+      scope: variable.language.private.es
       set: ae_AFTER_THING
     # Refinement for error cases that are artifacts of active typing
     - match: '(?=[\}\)\]])'
@@ -2654,21 +2725,25 @@ contexts:
         4: meta.numeric.exponent.e.es
         5: meta.numeric.exponent.sign.es
         6: meta.numeric.exponent.digit.es
+        7: meta.numeric.suffix.es
       set: ae_AFTER_VALUE
     - match: '{{binNum}}'
       scope: constant.numeric.binary.es
       captures:
         1: meta.numeric.prefix.es
+        2: meta.numeric.suffix.es
       set: ae_AFTER_VALUE
     - match: '{{octNum}}'
       scope: constant.numeric.octal.es
       captures:
         1: meta.numeric.prefix.es
+        2: meta.numeric.suffix.es
       set: ae_AFTER_VALUE
     - match: '{{hexNum}}'
       scope: constant.numeric.hexadecimal.es
       captures:
         1: meta.numeric.prefix.es
+        2: meta.numeric.suffix.es
       set: ae_AFTER_VALUE
 
   ae_OBJECT_ARRAY_BINDING:
@@ -3006,6 +3081,14 @@ contexts:
         4: punctuation.definition.arguments.begin.es
         5: meta.brace.round.js
       set: [ ae_NO_IN_AFTER_THING, arguments ]
+    - match: '(((#{{identifierName}})))\s*((\())'
+      captures:
+        1: variable.language.private.es
+        2: meta.function-call
+        3: meta.invocation.es
+        4: punctuation.definition.arguments.begin.es
+        5: meta.brace.round.js
+      set: [ ae_NO_IN_AFTER_THING, arguments ]
     - match: '(prototype){{idEnd}}'
       scope: variable.other.readwrite.property.prototype.es
       captures:
@@ -3018,6 +3101,9 @@ contexts:
       set: ae_NO_IN_AFTER_THING
     - match: '{{identifierName}}'
       scope: variable.other.readwrite.property.es
+      set: ae_NO_IN_AFTER_THING
+    - match: '#{{identifierName}}'
+      scope: variable.language.private.es
       set: ae_NO_IN_AFTER_THING
     - include: other_illegal_pop
   ae_NO_IN_ARRAY_COMPREHENSION:
@@ -3554,21 +3640,25 @@ contexts:
         4: meta.numeric.exponent.e.es
         5: meta.numeric.exponent.sign.es
         6: meta.numeric.exponent.digit.es
+        7: meta.numeric.suffix.es
       set: ae_NO_IN_AFTER_VALUE
     - match: '{{binNum}}'
       scope: constant.numeric.binary.es
       captures:
         1: meta.numeric.prefix.es
+        2: meta.numeric.suffix.es
       set: ae_NO_IN_AFTER_VALUE
     - match: '{{octNum}}'
       scope: constant.numeric.octal.es
       captures:
         1: meta.numeric.prefix.es
+        2: meta.numeric.suffix.es
       set: ae_NO_IN_AFTER_VALUE
     - match: '{{hexNum}}'
       scope: constant.numeric.hexadecimal.es
       captures:
         1: meta.numeric.prefix.es
+        2: meta.numeric.suffix.es
       set: ae_NO_IN_AFTER_VALUE
   ae_NO_IN_OBJECT_ARRAY_BINDING:
     - match: '(?x) ((\{)) (?= (?<brackets> [^\{\}] | \{ \g<brackets>* \} )* \}\s*=[^=])'
@@ -3864,24 +3954,28 @@ contexts:
         5: meta.numeric.exponent.e.es
         6: meta.numeric.exponent.sign.es
         7: meta.numeric.exponent.digit.es
+        8: meta.numeric.suffix.es
       set: literalObject_AFTER_PROP
     - match: '({{binNum}})'
       scope: constant.numeric.binary.es
       captures:
         1: variable.other.readwrite.property.object-literal.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: literalObject_AFTER_PROP
     - match: '({{octNum}})'
       scope: constant.numeric.octal.es
       captures:
         1: variable.other.readwrite.property.object-literal.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: literalObject_AFTER_PROP
     - match: '({{hexNum}})'
       scope: constant.numeric.hexadecimal.es
       captures:
         1: variable.other.readwrite.property.object-literal.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: literalObject_AFTER_PROP
     # COMPUTED PROPERTY
     - match: '((\[))'
@@ -3992,24 +4086,28 @@ contexts:
         5: meta.numeric.exponent.e.es
         6: meta.numeric.exponent.sign.es
         7: meta.numeric.exponent.digit.es
+        8: meta.numeric.suffix.es
       set: asyncMethod_AFTER_NAME
     - match: '({{binNum}})'
       scope: constant.numeric.binary.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: asyncMethod_AFTER_NAME
     - match: '({{octNum}})'
       scope: constant.numeric.octal.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: asyncMethod_AFTER_NAME
     - match: '({{hexNum}})'
       scope: constant.numeric.hexadecimal.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: asyncMethod_AFTER_NAME
     - match: '((\[))'
       captures:
@@ -4073,24 +4171,28 @@ contexts:
         5: meta.numeric.exponent.e.es
         6: meta.numeric.exponent.sign.es
         7: meta.numeric.exponent.digit.es
+        8: meta.numeric.suffix.es
       set: accessorMethod_AFTER_GET_NAME
     - match: '({{binNum}})'
       scope: constant.numeric.binary.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: accessorMethod_AFTER_GET_NAME
     - match: '({{octNum}})'
       scope: constant.numeric.octal.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: accessorMethod_AFTER_GET_NAME
     - match: '({{hexNum}})'
       scope: constant.numeric.hexadecimal.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: accessorMethod_AFTER_GET_NAME
     - match: '((\[))'
       captures:
@@ -4138,24 +4240,28 @@ contexts:
         5: meta.numeric.exponent.e.es
         6: meta.numeric.exponent.sign.es
         7: meta.numeric.exponent.digit.es
+        8: meta.numeric.suffix.es
       set: accessorMethod_AFTER_SET_NAME
     - match: '({{binNum}})'
       scope: constant.numeric.binary.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: accessorMethod_AFTER_SET_NAME
     - match: '({{octNum}})'
       scope: constant.numeric.octal.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: accessorMethod_AFTER_SET_NAME
     - match: '({{hexNum}})'
       scope: constant.numeric.hexadecimal.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: accessorMethod_AFTER_SET_NAME
     - match: '((\[))'
       captures:
@@ -4222,24 +4328,28 @@ contexts:
         5: meta.numeric.exponent.e.es
         6: meta.numeric.exponent.sign.es
         7: meta.numeric.exponent.digit.es
+        8: meta.numeric.suffix.es
       set: generatorMethod_AFTER_NAME
     - match: '({{binNum}})'
       scope: constant.numeric.binary.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: generatorMethod_AFTER_NAME
     - match: '({{octNum}})'
       scope: constant.numeric.octal.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: generatorMethod_AFTER_NAME
     - match: '({{hexNum}})'
       scope: constant.numeric.hexadecimal.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: generatorMethod_AFTER_NAME
     - match: '((\[))'
       captures:
@@ -4427,24 +4537,28 @@ contexts:
         5: meta.numeric.exponent.e.es
         6: meta.numeric.exponent.sign.es
         7: meta.numeric.exponent.digit.es
+        8: meta.numeric.suffix.es
       set: bindingObject_BEFORE_COLON
     - match: '({{binNum}})'
       scope: constant.numeric.binary.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: bindingObject_BEFORE_COLON
     - match: '({{octNum}})'
       scope: constant.numeric.octal.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: bindingObject_BEFORE_COLON
     - match: '({{hexNum}})'
       scope: constant.numeric.hexadecimal.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: bindingObject_BEFORE_COLON
 
   bindingObject_BEFORE_COLON:
@@ -4614,24 +4728,28 @@ contexts:
         5: meta.numeric.exponent.e.es
         6: meta.numeric.exponent.sign.es
         7: meta.numeric.exponent.digit.es
+        8: meta.numeric.suffix.es
       set: bindingObject_PARAM_BEFORE_COLON
     - match: '({{binNum}})'
       scope: constant.numeric.binary.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: bindingObject_PARAM_BEFORE_COLON
     - match: '({{octNum}})'
       scope: constant.numeric.octal.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: bindingObject_PARAM_BEFORE_COLON
     - match: '({{hexNum}})'
       scope: constant.numeric.hexadecimal.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
       set: bindingObject_PARAM_BEFORE_COLON
 
   bindingObject_PARAM_BEFORE_COLON:
@@ -4805,13 +4923,19 @@ contexts:
       scope: punctuation.definition.character-class.begin.regexp
       push: regexp_AFTER_BRACKET
     # ASSERTIONS
-    - match: '\(\?!'
+    - match: '\(\?<?!'
       scope: punctuation.definition.assertion.negative.begin.regexp
       push: regex_AFTER_ASSERTION_NEGATIVE_OPEN
-    - match: '\(\?='
+    - match: '\(\?<?='
       scope: punctuation.definition.assertion.positive.begin.regexp
       push: regex_AFTER_ASSERTION_POSITIVE_OPEN
     # GROUPS
+    - match: '(\(\?<)({{identifierName}})(>)' # technically slightly off
+      captures:
+        1: punctuation.definition.group.capturing.begin.regexp
+        2: variable.other.named-capture.regexp
+        3: punctuation.definition.group.capturing.begin.regexp
+      push: regex_AFTER_CAPTURE_OPEN
     - match: '\(\?:'
       scope: punctuation.definition.group.non-capturing.begin.regexp
       push: regex_AFTER_NON_CAPTURE_OPEN
@@ -4832,7 +4956,37 @@ contexts:
     # CHARACTER CLASSES
     - match: '\.|\\[DdSsWw]'
       scope: constant.other.character-class.predefined.regexp
+    # PROPERTY CLASSES
+    - match: '\\[Pp]\{'
+      scope: punctuation.definition.character-property.regexp.begin.es
+      push:
+        - - meta_scope: meta.character-property.regexp
+          - match: '([A-Za-z_]+)(=)([A-Za-z\d]+)'
+            captures:
+              1: constant.other.character-class.unicode-property-name.regexp
+              2: punctuation.separator.character-property-name-value.regexp
+              3: constant.other.character-class.unicode-property-value.regexp
+            set:
+              - - match: '\}'
+                  scope: punctuation.definition.character-property.regexp.end.es
+                  pop: true
+                - include: other_illegal_pop
+          - match: '[A-Za-z\d]+'
+            scope: constant.other.character-class.unicode-property-value.regexp
+            set:
+              - - match: '\}'
+                  scope: punctuation.definition.character-property.regexp.end.es
+                  pop: true
+                - include: other_illegal_pop
+          - match: '\}'
+            scope: invalid.illegal.token
+            pop: true
+          - include: other_illegal_pop
     # BACKREFERENCE
+    - match: '\\k<({{identifierName}})>'
+      scope: keyword.other.back-reference.regexp
+      captures:
+        1: variable.other.named-capture.regexp
     - match: '\\[1-9]\d*'
       scope: keyword.other.back-reference.regexp
     # ESCAPES
@@ -4903,15 +5057,18 @@ contexts:
     - meta_include_prototype: false
     - match: >-
         (?x) ((
-          ([gimyu])
+          ([gimsyu])
           (?:
-            (?!\3) ([gimyu])
+            (?!\3) ([gimsyu])
             (?:
-              (?!\3|\4) ([gimyu])
+              (?!\3|\4) ([gimsyu])
               (?:
-                (?!\3|\4|\5) ([gimyu])
+                (?!\3|\4|\5) ([gimsyu])
                 (?:
-                  (?!\3|\4|\5|\6) ([gimyu])
+                  (?!\3|\4|\5|\6) ([gimsyu])
+                  (
+                    (?!\3|\4|\5|\6\7) ([gimsyu])
+                  )?
                 )?
               )?
             )?
@@ -5011,6 +5168,9 @@ contexts:
 # JSX EXTENSIONS ###############################################################
 
   ae_JSX:
+    - match: '<>'
+      scope: punctuation.definition.tag.fragment.begin.jsx
+      set: [ ae_AFTER_THING, ae_JSX_FRAGMENT_END, ae_JSX_CONTENT ]
     - match: '<'
       scope: punctuation.definition.tag.begin.jsx
       set: [ ae_AFTER_THING, ae_JSX_ELEMENT ]
@@ -5018,132 +5178,55 @@ contexts:
   ae_JSX_ATTRIBUTES:
     - match: '\{'
       scope: punctuation.definition.interpolation.begin.jsx
-      set:
-        - meta_scope: meta.interpolation.jsx
-        - match: '\.{3}'
-          scope: keyword.operator.spread.jsx
-          set: [ ae_JSX_ATTRIBUTES_INTERPOLATION_END, assignmentExpression ]
-        - include: other_illegal
-    - match: '(({{jsxIdentifer}})(:){{jsxIdentifer}})'
-      captures:
-        1: variable.other.attribute.jsx
-        2: meta.namespace.jsx
-        3: punctuation.separator.namespace.jsx
-      set: ae_JSX_ATTRIBUTES_VALUE
-    - match: '{{jsxIdentifer}}'
+      push: [ ae_JSX_INTERPOLATION_END, ae_JSX_INTERPOLATION_SPREAD ]
+    - match: '{{jsxElementIdentifier}}'
       scope: variable.other.attribute.jsx
-      set: ae_JSX_ATTRIBUTES_VALUE
-    - match:  '/>'
+      push: ae_JSX_ATTRIBUTES_VALUE
+    - match: '/>'
       scope: punctuation.definition.tag.end.jsx
       pop: true
-    - match:  '>'
+    - match: '>'
       scope: punctuation.definition.tag.end.jsx
       set: [ ae_JSX_ELEMENT_CLOSE, ae_JSX_CONTENT ]
     - include: other_illegal
 
-  ae_JSX_ATTRIBUTES_DOUBLE:
-    - meta_include_prototype: false
-    - meta_scope: 'string.attribute.jsx'
-    - match: '"'
-      scope: punctuation.definition.attribute.end.jsx
-      pop: true
-
-  ae_JSX_ATTRIBUTES_INTERPOLATION_END:
-    - meta_scope: meta.interpolation.jsx
-    - match: '\}'
-      scope: punctuation.definition.interpolation.end.jsx
-      set: ae_JSX_ATTRIBUTES
-    - include: other_illegal
-
-  ae_JSX_ATTRIBUTES_INTERPOLATION_END_STYLE_JSX:
-    - meta_scope: meta.interpolation.jsx
-    - match: '\}'
-      scope: punctuation.definition.interpolation.end.jsx
-      set: ae_JSX_ATTRIBUTES_STYLE_JSX
-    - include: other_illegal
-
-  ae_JSX_ATTRIBUTES_SINGLE:
-    - meta_include_prototype: false
-    - meta_scope: 'string.attribute.jsx'
-    - match: ''''
-      scope: punctuation.definition.attribute.end.jsx
-      pop: true
-
   ae_JSX_ATTRIBUTES_STYLE:
-    - match: 'jsx{{idEnd}}(?!\s*=)'
+    - match: 'jsx{{idEnd}}'
       scope: variable.other.attribute.jsx
-      set: ae_JSX_ATTRIBUTES_STYLE_JSX
+      set: [ ae_JSX_ATTRIBUTES_STYLED_JSX, ae_JSX_ATTRIBUTES_VALUE ]
     - include: ae_JSX_ATTRIBUTES
 
-  ae_JSX_ATTRIBUTES_STYLE_JSX:
-    - match: '\{'
-      scope: punctuation.definition.interpolation.begin.jsx
-      set:
-        - meta_scope: meta.interpolation.jsx
-        - match: '\.{3}'
-          scope: keyword.operator.spread.jsx
-          set:
-            - ae_JSX_ATTRIBUTES_INTERPOLATION_END_STYLE_JSX
-            - assignmentExpression
-        - include: other_illegal
-    - match: '(({{jsxIdentifer}})(:){{jsxIdentifer}})'
-      captures:
-        1: variable.other.attribute.jsx
-        2: meta.namespace.jsx
-        3: punctuation.separator.namespace.jsx
-      set: ae_JSX_ATTRIBUTES_VALUE_STYLE_JSX
-    - match: '{{jsxIdentifer}}'
-      scope: variable.other.attribute.jsx
-      set: ae_JSX_ATTRIBUTES_VALUE_STYLE_JSX
-    - match:  '/>'
+  ae_JSX_ATTRIBUTES_STYLED_JSX:
+    - match: '>'
       scope: punctuation.definition.tag.end.jsx
-      pop: true
-    - match:  '>'
-      scope: punctuation.definition.tag.end.jsx
-      set: [ ae_JSX_ELEMENT_CLOSE, ae_JSX_CONTENT_STYLE_JSX ]
-    - include: other_illegal
+      set: [ ae_JSX_ELEMENT_CLOSE, ae_JSX_CONTENT_STYLED_JSX ]
+    - include: ae_JSX_ATTRIBUTES
 
   ae_JSX_ATTRIBUTES_VALUE:
     - match: '='
       scope: punctuation.separator.attribute-value.jsx
       set:
-        - match: '"'
-          scope: punctuation.definition.attribute.begin.jsx
-          set: [ ae_JSX_ATTRIBUTES, ae_JSX_ATTRIBUTES_DOUBLE ]
-        - match: ''''
-          scope: punctuation.definition.attribute.begin.jsx
-          set: [ ae_JSX_ATTRIBUTES, ae_JSX_ATTRIBUTES_SINGLE ]
-        - match: '\{'
-          scope: punctuation.definition.interpolation.begin.jsx
-          set: [ ae_JSX_ATTRIBUTES_INTERPOLATION_END, assignmentExpression ]
-        - match: '<'
-          scope: punctuation.definition.tag.begin.jsx
-          set: [ ae_JSX_ATTRIBUTES, ae_JSX_ELEMENT ]
-        - include: other_illegal
-    - match: '(?<=\s)|(?=[\>\{])'
-      set: ae_JSX_ATTRIBUTES
-    - include: other_illegal
-
-  ae_JSX_ATTRIBUTES_VALUE_STYLE_JSX:
-    - match: '='
-      scope: punctuation.separator.attribute-value.jsx
-      set:
-        - match: '"'
-          scope: punctuation.definition.attribute.begin.jsx
-          set: [ ae_JSX_ATTRIBUTES_STYLE_JSX, ae_JSX_ATTRIBUTES_DOUBLE ]
-        - match: ''''
-          scope: punctuation.definition.attribute.begin.jsx
-          set: [ ae_JSX_ATTRIBUTES_STYLE_JSX, ae_JSX_ATTRIBUTES_SINGLE ]
-        - match: '\{'
-          scope: punctuation.definition.interpolation.begin.jsx
-          set: [ ae_JSX_ATTRIBUTES_INTERPOLATION_END_STYLE_JSX, assignmentExpression ]
-        - match: '<'
-          scope: punctuation.definition.tag.begin.jsx
-          set: [ ae_JSX_ATTRIBUTES_STYLE_JSX, ae_JSX_ELEMENT ]
-        - include: other_illegal
-    - match: '(?<=\s)|(?=[\>\{])'
-      set: ae_JSX_ATTRIBUTES_STYLE_JSX
-    - include: other_illegal
+        - - match: '"'
+            scope: punctuation.definition.attribute.begin.jsx
+            set:
+              - - meta_include_prototype: false
+                - meta_scope: string.attribute.jsx
+                - match: '"'
+                  scope: punctuation.definition.attribute.end.jsx
+                  pop: true
+          - match: ''''
+            scope: punctuation.definition.attribute.begin.jsx
+            set:
+              - - meta_include_prototype: false
+                - meta_scope: string.attribute.jsx
+                - match: ''''
+                  scope: punctuation.definition.attribute.end.jsx
+                  pop: true
+          - match: '\{'
+            scope: punctuation.definition.interpolation.begin.jsx
+            set: [ ae_JSX_INTERPOLATION_END, ae_JSX_INTERPOLATION ]
+          - include: other_illegal
+    - include: else_pop
 
   ae_JSX_CONTENT:
     - meta_include_prototype: false
@@ -5153,98 +5236,201 @@ contexts:
       scope: string.text.jsx
     - match: '\{'
       scope: punctuation.definition.interpolation.begin.jsx
-      set: ae_JSX_CONTENT_INTERPOLATION
+      push: [ ae_JSX_INTERPOLATION_END, ae_JSX_INTERPOLATION ]
     - match: '<(?!\/)'
       scope: punctuation.definition.tag.begin.jsx
       push: ae_JSX_ELEMENT
     - include: else_pop
 
-  ae_JSX_CONTENT_INTERPOLATION:
-    - meta_scope: meta.interpolation.jsx
-    - match: '\}'
-      scope: punctuation.definition.interpolation.end.jsx
-      set: ae_JSX_CONTENT
-    - match: '{{PLA_anything}}'
-      set: [ ae_JSX_CONTENT_INTERPOLATION_END, assignmentExpression ]
-
-  ae_JSX_CONTENT_INTERPOLATION_END:
-    - meta_scope: meta.interpolation.jsx
-    - match: '\}'
-      scope: punctuation.definition.interpolation.end.jsx
-      set: ae_JSX_CONTENT
-    - include: other_illegal
-
-  ae_JSX_CONTENT_INTERPOLATION_STYLE_JSX:
-    - meta_scope: meta.interpolation.jsx
-    - match: '\}'
-      scope: punctuation.definition.interpolation.end.jsx
-      set: ae_JSX_CONTENT
-    - match: '`'
-      scope: punctuation.definition.string.interpolated.begin.es
-      set:
-        - ae_JSX_CONTENT_INTERPOLATION_END
-        - ae_AFTER_VALUE
-        - ae_STYLED_JSX_STRING
-    - match: '{{PLA_anything}}'
-      set: [ ae_JSX_CONTENT_INTERPOLATION_END, assignmentExpression ]
-
-  ae_JSX_CONTENT_STYLE_JSX:
+  ae_JSX_CONTENT_STYLED_JSX:
     - meta_include_prototype: false
     - match: '\{'
       scope: punctuation.definition.interpolation.begin.jsx
-      set: ae_JSX_CONTENT_INTERPOLATION_STYLE_JSX
+      push:
+        - - meta_scope: meta.interpolation.jsx
+          - include: ae_JSX_INTERPOLATION_END
+        - - meta_scope: meta.interpolation.jsx
+          - match: '`'
+            scope: punctuation.definition.string.interpolated.begin.es
+            set: ae_STYLED_JSX_STRING
+          - include: ae_JSX_INTERPOLATION
     - include: ae_JSX_CONTENT
 
-  ae_JSX_DOT:
-    - match: '\.'
-      scope: keyword.operator.accessor.jsx
-      push:
-        - match: '{{jsxIdentifer}}'
-          scope: entity.name.tag.jsx
-          pop: true
-        - include: other_illegal
-    - include: else_pop
-
   ae_JSX_ELEMENT:
-    - match: '(({{jsxIdentifer}})(:){{jsxIdentifer}})'
+    - match: '{{jsxNamespaceIdentifier}}'
+      scope: meta.namespace.jsx
       captures:
-        1: entity.name.tag.jsx
-        2: meta.namespace.jsx
-        3: punctuation.separator.namespace.jsx
-      set: [ ae_JSX_ATTRIBUTES, ae_JSX_DOT ]
+        1: entity.name.class.jsx
+        2: keyword.operator.accessor.jsx
+      set: [ ae_JSX_ATTRIBUTES, ae_JSX_ELEMENT_MEMBER ]
+    - match: '{{jsxComponentIdentifier}}'
+      scope: entity.name.class.jsx
+      set: [ ae_JSX_ATTRIBUTES ]
     - match: 'style{{idEnd}}'
       scope: entity.name.tag.jsx
-      set: [ ae_JSX_ATTRIBUTES_STYLE, ae_JSX_DOT ]
-    - match: '{{jsxIdentifer}}'
+      set: [ ae_JSX_ATTRIBUTES_STYLE ]
+    - match: '{{jsxElementIdentifier}}'
       scope: entity.name.tag.jsx
-      set: [ ae_JSX_ATTRIBUTES, ae_JSX_DOT ]
+      set: [ ae_JSX_ATTRIBUTES ]
     - include: other_illegal
 
   ae_JSX_ELEMENT_CLOSE:
     - match: '</'
       scope: punctuation.definition.tag.begin.jsx
       set:
-        - match: '(({{jsxIdentifer}})(:){{jsxIdentifer}})'
-          captures:
-            1: entity.name.tag.jsx
-            2: meta.namespace.jsx
-            3: punctuation.separator.namespace.jsx
-          set: [ ae_JSX_ELEMENT_CLOSE_end, ae_JSX_DOT ]
-        - match: '{{jsxIdentifer}}'
-          scope: entity.name.tag.jsx
-          set: [ ae_JSX_ELEMENT_CLOSE_end, ae_JSX_DOT ]
-        - include: other_illegal
+        - - match: '>'
+            scope: punctuation.definition.tag.end.jsx
+            pop: true
+          - include: other_illegal
+        - - match: '{{jsxNamespaceIdentifier}}'
+            scope: meta.namespace.jsx
+            captures:
+              1: entity.name.class.jsx
+              2: keyword.operator.accessor.jsx
+            set:
+              - - match: '{{jsxNamespaceIdentifier}}'
+                  scope: meta.namespace.jsx
+                  captures:
+                    1: entity.name.class.jsx
+                    2: keyword.operator.accessor.jsx
+                - match: '{{jsxComponentIdentifier}}'
+                  scope: entity.name.class.jsx
+                  pop: true
+                - include: other_illegal
+          - match: '{{jsxComponentIdentifier}}'
+            scope: entity.name.class.jsx
+            pop: true
+          - match: '{{jsxElementIdentifier}}'
+            scope: entity.name.tag.jsx
+            pop: true
+          - include: other_illegal
     - include: other_illegal
 
-  ae_JSX_ELEMENT_CLOSE_end:
-    - match: '>'
-      scope: punctuation.definition.tag.end.jsx
+  ae_JSX_ELEMENT_MEMBER:
+    - match: '{{jsxNamespaceIdentifier}}'
+      scope: meta.namespace.jsx
+      captures:
+        1: entity.name.class.jsx
+        2: keyword.operator.accessor.jsx
+    - match: '{{jsxComponentIdentifier}}'
+      scope: entity.name.class.jsx
       pop: true
     - include: other_illegal
 
+  ae_JSX_FRAGMENT_END:
+    - match: '</>'
+      scope: punctuation.definition.tag.fragment.end.jsx
+      pop: true
+    - include: other_illegal
+
+  ae_JSX_INTERPOLATION:
+    - meta_scope: meta.interpolation.jsx
+    - match: '(?=\})'
+      pop: true
+    - match: '{{PLA_anything}}'
+      set: assignmentExpression
+
+  ae_JSX_INTERPOLATION_END:
+    - meta_scope: meta.interpolation.jsx
+    - match: '\}'
+      scope: punctuation.definition.interpolation.end.jsx
+      pop: true
+    - include: other_illegal
+
+  ae_JSX_INTERPOLATION_SPREAD:
+    - meta_scope: meta.interpolation.jsx
+    - match: '\.{3}'
+      scope: keyword.operator.spread.jsx
+      set: assignmentExpression
+    - include: other_illegal
+
+# STYLED JSX EXTENSIONS ########################################################
+#
+# Styled JSX is tricky for us to provide nice highlighting for — there are
+# practical limits and we have to keep things fairly simple. I originally tried
+# delegating to the CSS syntax definition, but this doesn’t work so great
+# because in typical usage, one will be embedding expressions in Styled JSX
+# strings for style-related constants — numeric values, colors, etc. Each time
+# we exited and returned to the CSS literal portions, it’s starting from a blank
+# slate, so the CSS highlighting ends up fairly unpredictable.
+#
+# Since there’s no constraint on what might be interpolated — it could be
+# values or portions of values, rule names, selectors, or any arbitrary chunk —
+# and because the nature of what is included thusly is opaque to us, our best
+# bet is to spin off very simple CSS highlighting rules that provide a few
+# basics without having contextual awareness. In other words, we restrict the
+# matches to very fuzzy heuristics for lexical tokens. It’s enough to improve
+# the usage experience while avoiding stuff that could potentially lead to bad
+# highlighting, but it’s decidedly unsophisticated.
+
   ae_STYLED_JSX_STRING:
+    - meta_scope: source.css
     - meta_include_prototype: false
-    - meta_scope: string.interpolated.es # -BS (throughout, exceptions noted)
+    - match: '\/\*'
+      scope: punctuation.definition.comment.css
+      push:
+        - - meta_scope: comment.block.css
+          - match: '\*\/'
+            scope: punctuation.definition.comment.css
+            pop: true
+          # gonna just assume people don’t interpolate in the middle of comments
+    - match: '@[\w\-]+'
+      scope: keyword.control.at-rule.css
+    - match: '#[\w\-]+'
+      scope: entity.other.attribute-name.id.css
+    - match: '\.[\w\-]+'
+      scope: entity.other.attribute-name.class.css
+    - match: '::[\w\-]+'
+      scope: entity.other.pseudo-element.css
+    - match: ':global\('
+      scope: meta.styled-jsx.global.jsx
+      push:
+        - - match: '\)'
+            scope: meta.styled-jsx.global.jsx
+            pop: true
+          - include: ae_STYLED_JSX_STRING
+    - match: ':[\w\-]+'
+      scope: entity.other.pseudo-class.css
+    - match: '--[\w\-]+'
+      scope: support.type.custom-property.name.css
+    - match: '[\w\-]+(?=\s*:)'
+      scope: meta.property-name.css
+    - match: 'url\('
+      scope: meta.function-call.css
+      push:
+        - - match: '\)'
+            scope: meta.function-call.css
+            pop: true
+          - match: '(?:"[^"]*"|''[^'']*'')'
+            scope: string.quoted.css
+          - match: '(?!`|\$\{|\/\*).'
+            scope: string.unquoted.css
+          - include: ae_STYLED_JSX_STRING
+    - match: '(?:[\w\-]*\(|[\(\)])'
+      scope: meta.function-call.css
+    - match: '(?:cm|deg|e[mx]|g(?:ra)?d|k?Hz|in|m[ms]|p[ctx]|r(?:ad|em)|s|turn|v[hmw]|%)(?!\w)'
+      scope: keyword.other.unit.css
+    - match: '(?!-?\d)[\w\-]+'
+      scope: meta.property-value.css # will also include much more
+    - match: ':'
+      scope: punctuation.separator.key-value.css
+    - match: ';'
+      scope: punctuation.terminator.rule.css
+    - match: '[+>~,\-\/\*]'
+      scope: punctuation.separator.combinator.css
+    - match: '[{}]'
+      scope: punctuation.section.property-list.css
+    - match: '(?:[\[\]]|[~\|\^\$\*]?=|i\])'
+      scope: keyword.operator.attribute-selector.css
+    - match: '\-?[\d\.]*\d[\d\.]*'
+      scope: constant.numeric.css
+    - match: '(?:"[^"]*"|''[^'']*'')'
+      scope: string.quoted.css
+    - match: '\\[`\$\{]'
+      scope: constant.character.escape.es
+    - match: '\\\n'
+      scope: constant.character.escape.pointless.es
+    - include: string_COMMON_ESCAPES
     - match: '`'
       scope: punctuation.definition.string.interpolated.end.es
       pop: true
@@ -5252,15 +5438,11 @@ contexts:
       captures:
         1: entity.quasi.element.js punctuation.quasi.element.begin.js # ^BS
         2: punctuation.definition.string.interpolated.element.begin.es
-      push: [ ae_STYLED_JSX_STRING_SPAN_END, expression ]
-    - match: '(?=.)'
-      embed: scope:source.css
-      escape: (?<!\\)(?=\$\{|`)
-
-  ae_STYLED_JSX_STRING_SPAN_END:
-    - match: '((\}))'
-      captures:
-        1: entity.quasi.element.js punctuation.quasi.element.end.js # ^BS
-        2: punctuation.definition.string.interpolated.element.end.es
-      pop: true
-    - include: other_illegal_pop
+      push:
+        - - match: '((\}))'
+            captures:
+              1: entity.quasi.element.js punctuation.quasi.element.end.js # ^BS
+              2: punctuation.definition.string.interpolated.element.end.es
+            pop: true
+          - include: other_illegal_pop
+        - - include: expression

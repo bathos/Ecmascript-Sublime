@@ -427,6 +427,11 @@ settings:
   settings:
     foreground: '#8E5C7B'
 
+- name: JSX Component Name
+  scope: entity.name.class.jsx
+  settings:
+    foreground: '#AD3C82'
+
 - name: JSX Element Name
   scope: entity.name.tag.jsx
   settings:
@@ -577,3 +582,69 @@ settings:
   settings:
     fontStyle: italic
     foreground: '#406E40'
+
+# CSS ##########################################################################
+
+- name: CSS source
+  scope: source.css
+  settings:
+    fontStyle: regular
+
+- name: CSS class name
+  scope: entity.other.attribute-name.class
+  settings:
+    foreground: '#5E88DA'
+
+- name: CSS hash-ident name
+  scope: entity.other.attribute-name.id
+  settings:
+    foreground: '#2C68DC'
+
+- name: CSS pseudo
+  scope: >-
+    entity.other.pseudo-class,
+    entity.other.pseudo-element
+  settings:
+    fontStyle: italic
+    foreground: '#8DAAE4'
+
+- name: CSS punctuation, combinators, & operators
+  scope: >-
+    keyword.operator.attribute-selector,
+    punctuation.section.property-list,
+    punctuation.separator.combinator,
+    punctuation.separator.key-value.css,
+    punctuation.terminator.rule
+  settings:
+    foreground: '#425F98'
+
+- name: CSS at-rule keywords
+  scope: keyword.control.at-rule
+  settings:
+    fontStyle: bold
+
+- name: CSS property name
+  scope: meta.property-name.css
+  settings:
+    foreground: '#958f9C'
+
+- name: CSS custom property / variable
+  scope: support.type.custom-property.name
+  settings:
+    fontStyle: italic
+    foreground: '#CC85DC'
+
+- name: CSS other identifiers
+  scope: meta.property-value.css, meta.function-call.css
+  settings:
+    foreground: '#2D90B1'
+
+- name: CSS strings
+  scope: string.quoted.css, string.unquoted.css
+  settings:
+    foreground: '#85DCC1'
+
+- name: Styled JSX global
+  scope: meta.styled-jsx.global.jsx
+  settings:
+    foreground: '#606165'

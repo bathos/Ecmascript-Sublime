@@ -5,6 +5,62 @@ A sublime-syntax language definition for Ecmascript / Javascript / ES6 / ES2015
 
 > Sublime syntax is only available in Sublime Text 3.0.
 
+**New in 1.3**
+
+- Improvements to JSX scopes
+- JSX fragment support
+- Styled JSX support
+- Numeric separators support
+- BigInt support
+- Regexp features: dotall flag, property escapes, named captures, lookbehinds
+- Private instance fields
+
+The Styled JSX additions merit some explanation. Earlier I half-assed this by
+delegating to the CSS syntax definition when a JSX element with a template child
+met the expected conditions for styled JSX. This doesn’t work well in practice
+because of the context sensitivity of the matches in the default CSS syntax
+definition — that is, in any position after interpolation, one was apt to get
+bad highlighting of the CSS since the it no longer knew if it was in a selector
+or a value, etc.
+
+To address this, I added a deliberately forgiving and imprecise, simple ("flat")
+CSS matcher that is chiefly concerned with identifying lexical constructs for
+this context. It uses a subset of the same scope names as the pre-bundled
+sublime CSS definition, but some of the scopes needed to be conflated due to the
+lost context awareness. The end result is CSS highlighting for Styled JSX
+templates that should be consistent and helpful in the great majority of cases
+despite the lost distinctions.
+
+![Styled JSX example](https://github.com/bathos/Ecmascript-Sublime/raw/master/styled-jsx-example.png)
+
+Support for XML-style namespacing (ns colon) in JSX has been removed. It was in
+the official grammar, but afaict it is not used in practice and isn’t supported
+by Babel’s JSX transform. Instead, scoping for member expression style component
+names is improved, and html (lowercase / possible hyphens) names are scoped
+distinctly from component references (pascalcase / es identifier).
+
+JSX fragments are a new way to indicate unkeyed groups of sibling nodes without
+the need for extraneous divs: `<>stuff</>`.
+
+The numeric separators proposal, which permits underscores within numeric
+literals in most positions for improved readability of (mainly) hex and binary
+notated numbers recently advanced to stage 3.
+
+The BigInt proposal did as well. This is a new numeric type which is represented
+syntactically by the suffixing "n" to a numeric literal.
+
+The new RegExp features at stage 3 are the dotall ("s") flag, Unicode property
+character class escapes, named capture groups and named capture backreferences,
+and positive and negative lookbehind assertions.
+
+Private instance fields (prefixed with '#') are included, with the caveat that
+for practical reasons our definition can’t recognize most situations where a
+reference to such a property would be illegal.
+
+Although not very thorough, some color schemes have been updated a bit to
+take advantage of the new scopes. (Always looking to add better color schemes
+if anybody has stuff to contribute!)
+
 **New in 1.1**
 
 - Most currently-stage-3 proposals (likely ES2018) and some stage 2 now covered.
@@ -67,7 +123,7 @@ A sublime-syntax language definition for Ecmascript / Javascript / ES6 / ES2015
    is actually possible to generate as a build step. Doing so will reduce the
    chances of accidentally editing `assignmentExpression` without making the
    corresponding change in `assignmentExpression_NO_IN`. I’m not sure if this
-   is worthwhile yet but it’s rolling around in my head. 
+   is worthwhile yet but it’s rolling around in my head.
  - A lot of the redundant-looking contexts exist for good reasons -- but not all
    of them. There should be a clean-up and consolidation phase for contexts,
    but more importantly, for patterns (or more often, pattern components).
@@ -104,7 +160,7 @@ differently from loop statements for example. Generators, methods, and accessors
 are also individuated. In fact there are far more very specific scopes available
 than anyone would ever reasonably use, but the point is to allow the theme
 designer to choose exactly which elements share colors (most good themes seem to
-have relatively small palettes, really). 
+have relatively small palettes, really).
 
 However there are good reasons one might prefer one of the other choices for
 syntax highlighting. For one, maybe you like a theme that plays better with one
@@ -239,7 +295,7 @@ in ‘.regexp’ do not also have ‘.es’.
     - `constant.language.boolean.true`
     - `constant.language.null`
     - `constant.language.undefined`
-  - **Arrays**  
+  - **Arrays**
     - `punctuation.definition.array`
     - `punctuation.separator.array-element`
   - **Numbers**
@@ -253,7 +309,8 @@ in ‘.regexp’ do not also have ‘.es’.
     - `meta.numeric.exponent.digit`
     - `meta.numeric.exponent.e`
     - `meta.numeric.exponent.sign`
-    - `meta.numeric.prefix`
+    - `meta.numeric.prefix` (0x, 0b, 0o)
+    - `meta.numeric.suffix` ('n' of BigInt; may expand in the future)
     - `punctuation.decimal`
   - **Objects**
     - `punctuation.definition.object` (the braces in `let x = { a: 1 };`)
@@ -278,6 +335,8 @@ in ‘.regexp’ do not also have ‘.es’.
     - `constant.character.escape.unicode.regexp`
     - `constant.other.character-class.predefined.regexp`
     - `constant.other.character-class.set.regexp`
+    - `constant.other.character-class.unicode-property-name.regexp`
+    - `constant.other.character-class.unicode-property-value.regexp`
     - `keyword.control.anchor.regexp`
     - `keyword.operator.negation.regexp`
     - `keyword.operator.or.regexp`
@@ -287,15 +346,19 @@ in ‘.regexp’ do not also have ‘.es’.
     - `meta.group.assertion.positive.regexp`
     - `meta.group.capturing.regexp`
     - `meta.group.non-capturing.regexp`
+    - `meta.character-property.regexp`
     - `punctuation.definition.assertion.negative.regexp`
     - `punctuation.definition.assertion.positive.regexp`
     - `punctuation.definition.character-class.dash.regexp`
     - `punctuation.definition.character-class.regexp`
+    - `punctuation.definition.character-property.regexp`
     - `punctuation.definition.string.regexp`
     - `punctuation.definition.group.capturing.regexp`
     - `punctuation.definition.group.non-capturing.regexp`
+    - `punctuation.separator.character-property-name-value.regexp`
     - `string.regexp`
     - `string.regexp.flags`
+    - `variable.other.named-capture.regexp`
   - **Strings**
     - `constant.character`
     - `constant.character.escape`
@@ -602,23 +665,47 @@ in ‘.regexp’ do not also have ‘.es’.
     - `support.variable.functional-library` (e.g. `_`)
     - `support.variable.node` (e.g. `process`)
 - **JSX**
-  - `entity.name.tag.jsx` (element name)
+  - `entity.name.tag.jsx` (html element name)
   - `keyword.operator.accessor.jsx` (access dot in ‘namespaced’ element name)
   - `keyword.operator.spread.jsx` (spread operator in attribute interpolation)
   - `meta.interpolation.jsx` (covers interpolated sequences)
-  - `meta.namespace.jsx` (html/xml namespace prefixes -- not same as what jsx calls namespace)
+  - `meta.namespace.jsx` (prefix sequence in component member expression)
   - `punctuation.definition.attribute.begin.jsx` (single or double quotes)
   - `punctuation.definition.attribute.end.jsx`
   - `punctuation.definition.interpolation.begin.jsx` (curly braces)
   - `punctuation.definition.interpolation.end.jsx`
   - `punctuation.definition.tag.begin.jsx` (element tag delimiter)
   - `punctuation.definition.tag.end.jsx`
+  - `punctuation.definition.tag.fragment.begin.jsx`
+  - `punctuation.definition.tag.fragment.end.jsx`
   - `punctuation.separator.attribute-value.jsx` (equals sign)
-  - `punctuation.separator.namespace.jsx` (colon)
   - `string.attribute.jsx` (literal attribute value)
   - `string.text.jsx` (literal chardata)
   - `variable.other.entity-reference.jsx` (html/xml entity refs)
   - `variable.other.attribute.jsx` (attribute name)
+- **Styled JSX (from Sublime’s CSS syntax)**
+  - `comment.block.css`
+  - `constant.numeric.css`
+  - `entity.other.attribute-name.class.css`
+  - `entity.other.attribute-name.id.css`
+  - `entity.other.pseudo-class.css`
+  - `entity.other.pseudo-element.css`
+  - `keyword.control.at-rule.css`
+  - `keyword.operator.attribute-selector.css`
+  - `keyword.other.unit.css`
+  - `meta.function-call.css`
+  - `meta.property-name.css`
+  - `meta.property-value.css` (actually inclusive of many other items)
+  - `meta.styled-jsx.global.jsx`
+  - `punctuation.definition.comment.css`
+  - `punctuation.section.property-list.css`
+  - `punctuation.separator.combinator.css` (inclusive of calc operators, etc)
+  - `punctuation.separator.key-value.css`
+  - `punctuation.terminator.rule.css`
+  - `source.css`
+  - `string.quoted.css`
+  - `string.unquoted.css`
+  - `support.type.custom-property.name.css`
 - **Other**
   - `invalid`
   - `invalid.deprecated` (e.g. `with`)
@@ -832,11 +919,11 @@ can cause mismatching, where the pipe represents a problematic linebreak:
  - identifier | `(` (identifier will not be recognized as an invocation)
  - identifier | ``` (identifier will not be recognized as a tag)
  - There are various other situations similar to the last two, mainly concerning
-   ‘secondary’ scopes like invocation rather than core scopes. 
+   ‘secondary’ scopes like invocation rather than core scopes.
 
 One more is a sore spot for me:
 
  - binding pattern | assignment operator
 
 Unlike the others, this one could reasonably show up in code written by a sane
-person. But even so, it’s probably quite rare in practice. 
+person. But even so, it’s probably quite rare in practice.
