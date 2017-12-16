@@ -3878,7 +3878,7 @@ contexts:
         1: storage.type.accessor.js # ^BS
         2: storage.modifier.accessor.set.es
       set: [ literalObject_AFTER_AE, accessorMethod_AFTER_SET ]
-    - match: '((async)){{idEnd}}'
+    - match: '((async)){{idEnd}}(?!\s*:)'
       captures:
         1: storage.type.js # ^BS
         2: storage.modifier.async.es
