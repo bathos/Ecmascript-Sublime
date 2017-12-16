@@ -372,7 +372,7 @@ contexts:
     - include: statements
 
   breakOrContinue_AFTER_WORD:
-    - match: '$'
+    - match: '$|(?=\})'
       pop: true
     - match: ';'
       scope: punctuation.terminator.statement.es
@@ -629,7 +629,7 @@ contexts:
     - include: else_pop
 
   returnStatement:
-    - match: '$'
+    - match: '$|(?=\})'
       pop: true
     - match: ';'
       scope: punctuation.terminator.statement.es
@@ -703,7 +703,7 @@ contexts:
     - include: statements
 
   throwStatement:
-    - match: '$'
+    - match: '$|(?=\})'
       pop: true
     - match: '{{PLA_anything}}'
       set: [ optional_semicolon_pop, expression ]
@@ -2976,7 +2976,7 @@ contexts:
     - match: '\*'
       scope: keyword.control.flow.yield.iterate.es # -BS
       set: assignmentExpression
-    - match: '$'
+    - match: '$|(?=\})'
       pop: true
     - include: assignmentExpression_CORE
     - include: else_pop
@@ -3795,7 +3795,7 @@ contexts:
     - match: '\*'
       scope: keyword.control.flow.yield.iterate.es
       set: assignmentExpression_NO_IN
-    - match: '$'
+    - match: '$|(?=\})'
       pop: true
     - include: assignmentExpression_NO_IN_CORE
     - include: else_pop
@@ -3906,11 +3906,7 @@ contexts:
     # ACTUALLY DESTRUCTURING POSSIBLY!
     # We could be inside an ambiguous destructing sequence. This could be in
     # parameters or it might be an assignment. We simply cannot know. :(
-    - match: '(?={{allThreeIDs}}\s*=)'
-      captures:
-        1: variable.other.readwrite.property.shorthand.allCap.es # -BS
-        2: variable.other.readwrite.property.shorthand.initCap.es
-        3: variable.other.readwrite.property.shorthand.es
+    - match: '(?={{identifier}}\s*=)'
       set: bindingObject
     # IDENTIFIER REFERENCE (probably)
     # We match references (shorthand properties) last because we must rely on
