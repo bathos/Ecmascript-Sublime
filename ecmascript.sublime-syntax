@@ -252,6 +252,9 @@ contexts:
       push: statement # note push
 
   statement:
+    - match: ';'
+      scope: punctuation.terminator.statement.es
+      pop: true
     # BLOCK STATEMENT
     - match: '((\{))'
       captures:
