@@ -25,7 +25,7 @@
 			{
 				"key": "preceding_text",
 				"operator": "regex_contains",
-				"operand": "[([]$"
+				"operand": "(\\([^(]*|\\[[^[]*)$"
 			},
 			{
 				"key": "selector",
