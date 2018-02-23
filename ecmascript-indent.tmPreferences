@@ -17,17 +17,46 @@
 		<key>decreaseIndentPattern</key>
 		<string>(?x)
   (
-    \} [^\{]* |
-    \) [^\(]* |
-    \] [^\[]*
+    ^ (
+      # consume double-quoted string or single-quoted string
+      "(?:[^"\\]|\\.)*" | '(?:[^'\\]|\\.)*'
+      # or any char that doesn't start string, comment or opening indentation char on line
+      | [^"'`/\{\(\[\n]
+    )* 
+    # followed by any one of the indentation chars
+    (
+      \} [^\{]* |
+      \) [^\(]* |
+      \] [^\[]*
+    )
   )$</string>
 		<key>increaseIndentPattern</key>
 		<string>(?x)
-  (
-    \{ [^\}]* |
-    \( [^\)]* |
-    \[ [^\]]*
-  )$</string>
+  ^.* (
+    # braces
+    \{ (
+      # consume double-quoted string or single-quoted string
+      (?&lt;string&gt;"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')
+      # or any char that doesn't start string, comment or ending brace
+      | [^"'`/\}]
+    )*
+    # parens
+    | \( (
+      # consume double-quoted string or single-quoted string
+      \k&lt;string&gt;
+      # or any char that doesn't start string, comment or ending brace
+      | [^"'`/\)]
+    )*
+    # brackets
+    | \[ (
+      # consume double-quoted string or single-quoted string
+      \k&lt;string&gt;
+      # or any char that doesn't start string, comment or ending brace
+      | [^"'`/\]]
+    )*
+  )
+  # stop matching at EOL or comment
+  ($|/[/*])</string>
 	</dict>
 	<key>uuid</key>
 	<string>54754702-a030-4b65-af1b-45759e122b28</string>

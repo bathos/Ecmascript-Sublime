@@ -6,18 +6,47 @@ settings:
 
   increaseIndentPattern: >-
     (?x)
-      (
-        \{ [^\}]* |
-        \( [^\)]* |
-        \[ [^\]]*
-      )$
+      ^.* (
+        # braces
+        \{ (
+          # consume double-quoted string or single-quoted string
+          (?<string>"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')
+          # or any char that doesn't start string, comment or ending brace
+          | [^"'`/\}]
+        )*
+        # parens
+        | \( (
+          # consume double-quoted string or single-quoted string
+          \k<string>
+          # or any char that doesn't start string, comment or ending brace
+          | [^"'`/\)]
+        )*
+        # brackets
+        | \[ (
+          # consume double-quoted string or single-quoted string
+          \k<string>
+          # or any char that doesn't start string, comment or ending brace
+          | [^"'`/\]]
+        )*
+      )
+      # stop matching at EOL or comment
+      ($|/[/*])
 
   decreaseIndentPattern: >-
     (?x)
       (
-        \} [^\{]* |
-        \) [^\(]* |
-        \] [^\[]*
+        ^ (
+          # consume double-quoted string or single-quoted string
+          "(?:[^"\\]|\\.)*" | '(?:[^'\\]|\\.)*'
+          # or any char that doesn't start string, comment or opening indentation char on line
+          | [^"'`/\{\(\[\n]
+        )* 
+        # followed by any one of the indentation chars
+        (
+          \} [^\{]* |
+          \) [^\(]* |
+          \] [^\[]*
+        )
       )$
 
   bracketIndentNextLinePattern: >-

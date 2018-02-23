@@ -1,0 +1,38 @@
+[
+	{
+		"keys": ["enter"],
+		"command": "insert_snippet",
+		"args": {
+			"contents": "\n\t$1\n"
+		},
+		"context": [
+			{
+				"key": "setting.auto_indent",
+				"operator": "equal",
+				"operand": true
+			},
+			{
+				"key": "auto_complete_visible",
+				"operator": "equal",
+				"operand": false
+			},
+			{
+				"key": "selection_empty",
+				"operator": "equal",
+				"operand": true,
+				"match_all": true,
+			},
+			{
+				"key": "preceding_text",
+				"operator": "regex_contains",
+				"operand": "[([]$"
+			},
+			{
+				"key": "selector",
+				"operator": "equal",
+				"operand": "source.es meta.brace.square.js, source.es meta.brace.round.js",
+				"match_all": true,
+			}
+		]
+	}
+]
