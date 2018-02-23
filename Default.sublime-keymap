@@ -12,10 +12,20 @@
 				"operand": true
 			},
 			{
+				"key": "auto_complete_visible",
+				"operator": "equal",
+				"operand": false
+			},
+			{
 				"key": "selection_empty",
 				"operator": "equal",
 				"operand": true,
 				"match_all": true,
+			},
+			{
+				"key": "preceding_text",
+				"operator": "regex_contains",
+				"operand": "[([]$"
 			},
 			{
 				"key": "selector",
