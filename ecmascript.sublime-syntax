@@ -920,37 +920,6 @@ contexts:
     # Semicolons in the class body are legal.
     - match: ';'
       scope: punctuation.terminator.statement.es
-    # Class fields
-    - match: '((static))\s+(((#{{identifierName}})|({{identifierName}})))\s*(=)\s*(?:((async))\s+)?(?=\((?<parens>[^\(\)]|\(\g<parens>*\))*\)\s*=>)'
-      captures:
-        1: storage.modifier.static.es
-        2: storage.type.js # ^BS
-        3: entity.name.function.js # ^BS
-        4: meta.symbol-helper.arrow.es
-        5: variable.language.private.class.es
-        6: variable.other.readwrite.property.class.es
-        7: punctuation.separator.key-value.es
-        8: storage.type.js
-        9: storage.modifier.async.expression.es
-      push:
-        - - match: ';'
-            scope: punctuation.terminator.property.es
-            pop: true
-          - match: '{{PLA_anything}}'
-            set: assignmentExpression
-    - match: '((static))\s+(?:(#{{identifierName}})|({{identifierName}}))\s*(=)'
-      captures:
-        1: storage.modifier.static.es
-        2: storage.type.js # ^BS
-        3: variable.language.private.class.es
-        4: variable.other.readwrite.property.class.es
-        5: punctuation.separator.key-value.es
-      push:
-        - - match: ';'
-            scope: punctuation.terminator.property.es
-            pop: true
-          - match: '{{PLA_anything}}'
-            set: assignmentExpression
     - match: '((static)){{idEnd}}'
       captures:
         1: storage.modifier.static.es
@@ -966,7 +935,47 @@ contexts:
         1: punctuation.definition.tag.js # ^BS
         2: punctuation.definition.decorator.es
       push: decoratorExpression
-    # Class fields:
+    - include: classDeclaration_METHOD_COMMON
+
+  classDeclaration_AFTER_METHOD_OR_FIELD_NAME:
+    - match: ';'
+      scope: punctuation.terminator.property.es
+      pop: true
+    - match: '='
+      scope: punctuation.separator.key-value.es
+      set:
+        - - match: ';'
+            scope: punctuation.terminator.property.es
+            pop: true
+          - include: else_pop
+        - - include: assignmentExpression
+    - match: '(?!\()'
+      pop: true
+    - include: method_AFTER_NAME
+
+  classDeclaration_METHOD_COMMON:
+    - match: '((\*))'
+      captures:
+        1: keyword.generator.asterisk.js # ^BS
+        2: storage.modifier.generator.asterisk.method.es
+      set: [ classDeclaration_AFTER_BRACE, generatorMethod_AFTER_ASTERISK ]
+    - match: '((get)){{idEnd}}(?!\s*[\(=;])'
+      captures:
+        1: storage.type.accessor.js # ^BS
+        2: storage.modifier.accessor.get.es
+      set: [ classDeclaration_AFTER_BRACE, accessorMethod_AFTER_GET ]
+    - match: '((set)){{idEnd}}(?!\s*[\(=;])'
+      captures:
+        1: storage.type.accessor.js # ^BS
+        2: storage.modifier.accessor.set.es
+      set: [ classDeclaration_AFTER_BRACE, accessorMethod_AFTER_SET ]
+    - match: '((async)){{idEnd}}((\s*\*))?'
+      captures:
+        1: storage.type.js # ^BS
+        2: storage.modifier.async.method.es
+        3: keyword.generator.asterisk.js # ^BS
+        4: storage.modifier.generator.asterisk.method.es
+      set: [ classDeclaration_AFTER_BRACE, asyncMethod_AFTER_ASYNC ]
     - match: '(((?:(#{{identifierName}})|({{identifierName}}))))\s*(=)\s*(((async))\s+)?(?=\((?<parens>[^\(\)]|\(\g<parens>*\))*\)\s*=>)'
       captures:
         1: entity.name.function.js # ^BS
@@ -982,53 +991,31 @@ contexts:
             pop: true
           - match: '{{PLA_anything}}'
             set: assignmentExpression
-    - match: '(?:(#{{identifierName}})|({{identifierName}}))\s*(=)'
+    - match: '(?:(#{{identifierName}})|({{identifierName}})){{idEnd}}(?!\s*\()'
       captures:
         1: variable.language.private.class.es
         2: variable.other.readwrite.property.class.es
-        3: punctuation.separator.key-value.es
       push:
         - - match: ';'
             scope: punctuation.terminator.property.es
             pop: true
-          - match: '{{PLA_anything}}'
+          - include: else_pop
+        - - match: '='
+            scope: punctuation.separator.key-value.es
             set: assignmentExpression
-    - include: classDeclaration_METHOD_COMMON
-
-  classDeclaration_METHOD_COMMON:
-    - match: '((\*))'
-      captures:
-        1: keyword.generator.asterisk.js # ^BS
-        2: storage.modifier.generator.asterisk.method.es
-      set: [ classDeclaration_AFTER_BRACE, generatorMethod_AFTER_ASTERISK ]
-    - match: '((get))(?!\s*\(){{idEnd}}'
-      captures:
-        1: storage.type.accessor.js # ^BS
-        2: storage.modifier.accessor.get.es
-      set: [ classDeclaration_AFTER_BRACE, accessorMethod_AFTER_GET ]
-    - match: '((set))(?!\s*\(){{idEnd}}'
-      captures:
-        1: storage.type.accessor.js # ^BS
-        2: storage.modifier.accessor.set.es
-      set: [ classDeclaration_AFTER_BRACE, accessorMethod_AFTER_SET ]
-    - match: '((async)){{idEnd}}((\s*\*))?'
-      captures:
-        1: storage.type.js # ^BS
-        2: storage.modifier.async.method.es
-        3: keyword.generator.asterisk.js # ^BS
-        4: storage.modifier.generator.asterisk.method.es
-      set: [ classDeclaration_AFTER_BRACE, asyncMethod_AFTER_ASYNC ]
-    - match: '(({{identifierName}}))'
+          - match: '{{PLA_anything}}'
+            pop: true
+    - match: '(({{identifierName}})){{idEnd}}'
       captures:
         1: entity.name.method.js # ^BS -- monokai
         2: entity.name.method.es
       set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME ]
     - match: "'"
       scope: punctuation.definition.string.quoted.single.begin.es
-      set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME, stringSingle_AFTER_OPEN ]
+      set: [ classDeclaration_AFTER_BRACE, classDeclaration_AFTER_METHOD_OR_FIELD_NAME, stringSingle_AFTER_OPEN ]
     - match: '"'
       scope: punctuation.definition.string.quoted.double.begin.es
-      set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME, stringDouble_AFTER_OPEN ]
+      set: [ classDeclaration_AFTER_BRACE, classDeclaration_AFTER_METHOD_OR_FIELD_NAME, stringDouble_AFTER_OPEN ]
     # None of the remainder are handled correctly in BS or JSN, so they are all
     # technically "-BS" cases
     - match: '({{decNum}})'
@@ -1042,33 +1029,33 @@ contexts:
         6: meta.numeric.exponent.sign.es
         7: meta.numeric.exponent.digit.es
         8: meta.numeric.suffix.es
-      set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME ]
+      set: [ classDeclaration_AFTER_BRACE, classDeclaration_AFTER_METHOD_OR_FIELD_NAME ]
     - match: '({{binNum}})'
       scope: constant.numeric.binary.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
         3: meta.numeric.suffix.es
-      set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME ]
+      set: [ classDeclaration_AFTER_BRACE, classDeclaration_AFTER_METHOD_OR_FIELD_NAME ]
     - match: '({{octNum}})'
       scope: constant.numeric.octal.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
         3: meta.numeric.suffix.es
-      set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME ]
+      set: [ classDeclaration_AFTER_BRACE, classDeclaration_AFTER_METHOD_OR_FIELD_NAME ]
     - match: '({{hexNum}})'
       scope: constant.numeric.hexadecimal.es
       captures:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
         3: meta.numeric.suffix.es
-      set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME ]
+      set: [ classDeclaration_AFTER_BRACE, classDeclaration_AFTER_METHOD_OR_FIELD_NAME ]
     - match: '((\[))'
       captures:
         1: punctuation.definition.accessor.begin.es
         2: meta.brace.square.js # ^BS
-      set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME, computedProp_AFTER_AE, assignmentExpression ]
+      set: [ classDeclaration_AFTER_BRACE, classDeclaration_AFTER_METHOD_OR_FIELD_NAME, computedProp_AFTER_AE, assignmentExpression ]
     - include: other_illegal_pop
 
   classDeclaration_AFTER_DECORATOR:
@@ -2560,19 +2547,7 @@ contexts:
     - match: '\*\*(?!=)'
       scope: keyword.operator.arithmetic.exponentiation.es
       set: assignmentExpression
-    # The lookaheads here (aside from the first) are an awkward way to prevent
-    # bad matching when a decorator is followed by a generator. It’s imperfect,
-    # but exceptional cases should be rare. I think the final decorator syntax
-    # will need to be far more restrictive because these problems, while worse
-    # for us, are also going to affect real parsers.
-    - match: >-
-        (?x)
-          \*
-          (?! [=\*])
-          (?! \s* " [^"]+ " \s* \( )
-          (?! \s* '' [^'']+ '' \s* \( )
-          (?! \s* \[ [\]]+ \] \s* \( )
-          (?! \s* {{identifier}} \s* \([^)]*\) \s* \{)
+    - match: '\*'
       scope: keyword.operator.arithmetic.multiplication.es
       set: assignmentExpression
     - match: '\/(?!=)'
