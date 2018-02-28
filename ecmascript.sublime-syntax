@@ -988,7 +988,6 @@ contexts:
       push:
         - - match: ';'
             scope: punctuation.terminator.property.es
-            pop: true
           - match: '{{PLA_anything}}'
             set: assignmentExpression
     - match: '(?:(#{{identifierName}})|({{identifierName}})){{idEnd}}(?!\s*\()'
