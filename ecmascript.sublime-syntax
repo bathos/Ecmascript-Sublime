@@ -1523,7 +1523,7 @@ contexts:
     - include: other_illegal
 
   moduleDeclaration_EXPORT_BINDING_AFTER_AS:
-    - match: '{{identifier}}'
+    - match: '{{identifierName}}'
       scope: entity.name.module.export.es
       set: moduleDeclaration_AFTER_EXPORT_BINDING_SPECIFIER
     - include: other_illegal_pop
@@ -1621,7 +1621,7 @@ contexts:
         1: punctuation.definition.module-binding.end.es
         2: meta.brace.curly.js # ^BS
       set: moduleDeclaration_BEFORE_FROM
-    - match: '({{identifier}})\s+((as)){{idEnd}}'
+    - match: '({{identifierName}})\s+((as)){{idEnd}}'
       captures:
         1: entity.name.module.import.es
         2: keyword.operator.module.js # ^BS
