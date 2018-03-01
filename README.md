@@ -5,7 +5,7 @@ A sublime-syntax language definition for Ecmascript / Javascript / ES6 / ES2015
 
 > Sublime syntax is only available in Sublime Text 3.0.
 
-**New in 1.4**
+**New in 1.6**
 
 - Nested syntax highlighting
 
@@ -139,6 +139,7 @@ if anybody has stuff to contribute!)
   - [‘Official’ Scopes](#%E2%80%98official%E2%80%99-scopes)
   - [Symbol Helper Scopes](#symbol-helper-scopes)
   - [Interoperability Scopes](#interoperability-scopes)
+  - [Nested Syntax Scopes](#nested-syntax-scopes)
 - [About the Scope Conventions](#about-the-scope-conventions)
 - [More Infobarf for Someone Hypothetically Curious About the Definition Itself](#more-infobarf-for-someone-hypothetically-curious-about-the-definition-itself)
   - [Why Is It Huge?](#why-is-it-huge)
