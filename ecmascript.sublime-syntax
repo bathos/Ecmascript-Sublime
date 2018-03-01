@@ -5652,7 +5652,7 @@ contexts:
 # CSS SYNTAX ####################################################################
 
   syntax_meta_CSS:
-    - meta_content_scope: meta.interpolation.syntax.html
+    - meta_content_scope: meta.interpolation.syntax.css
     - meta_include_prototype: false
     - match: '{{PLA_anything}}'
       pop: true
