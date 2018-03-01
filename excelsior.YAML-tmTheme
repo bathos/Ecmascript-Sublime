@@ -454,6 +454,12 @@ settings:
     background: '#212121'
     fontStyle: italic
 
+- name: Syntax Template Literal Content
+  scope: meta.interpolation.syntax
+  settings:
+    background: '#212121'
+    fontStyle: italic
+
 # REGEX ########################################################################
 
 - name: Regex Char Classes & Punctuation

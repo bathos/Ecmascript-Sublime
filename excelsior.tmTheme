@@ -785,6 +785,19 @@
 		</dict>
 		<dict>
 			<key>name</key>
+			<string>Syntax Template Literal Content</string>
+			<key>scope</key>
+			<string>meta.interpolation.syntax</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#212121</string>
+				<key>fontStyle</key>
+				<string>italic</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
 			<string>Regex Char Classes &amp; Punctuation</string>
 			<key>scope</key>
 			<string>string.regexp constant.other.character-class.predefined, string.regexp constant.other.character-class punctuation, string.regexp constant.other.character-class.set</string>
