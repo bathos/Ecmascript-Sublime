@@ -5533,7 +5533,7 @@ contexts:
         4: variable.other.readwrite.tag.es
         5: punctuation.definition.string.interpolated.begin.es
       set: [ ae_AFTER_VALUE, syntax_EXIT, syntax_meta_SQL, syntax_SQL_OPEN ]
-    - match: '([Hh](?:tml|THML)\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
+    - match: '([Hh](?:tml|TML)\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
       captures:
         1: comment.block.es
         2: punctuation.definition.comment.end.es
@@ -5580,7 +5580,7 @@ contexts:
         4: variable.other.readwrite.tag.es
         5: punctuation.definition.string.interpolated.begin.es
       set: [ ae_NO_IN_AFTER_VALUE, syntax_EXIT, syntax_meta_SQL, syntax_SQL_OPEN ]
-    - match: '([Hh](?:tml|THML)\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
+    - match: '([Hh](?:tml|TML)\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
       captures:
         1: comment.block.es
         2: punctuation.definition.comment.end.es
