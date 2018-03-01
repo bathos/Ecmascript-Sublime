@@ -17,7 +17,7 @@ A common use of mutli-line template literals is to embed snippets of code. For i
 
 Where the `tag` identifier may appear before or after the syntax block comment directive.
 
-One of the perks to using this directive is that nested syntax blocks will inherit their usualy functionality from that syntax definition, such as keybindings, snippets, autocompletions, and commenting:
+One of the perks to using this directive is that nested syntax blocks will inherit their usual functionality from their syntax definition, such as keybindings, snippets, autocompletions, and commenting:
 
 ![Nested Syntaxes](https://github.com/bathos/Ecmascript-Sublime/raw/master/examples/nested-syntax-commenting.gif)
 
