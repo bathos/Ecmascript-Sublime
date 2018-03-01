@@ -5,6 +5,41 @@ A sublime-syntax language definition for Ecmascript / Javascript / ES6 / ES2015
 
 > Sublime syntax is only available in Sublime Text 3.0.
 
+**New in 1.4**
+
+- Nested syntax highlighting
+
+A common use of mutli-line template literals is to embed snippets of code. For instance, it could be snippets of HTML/CSS in the browser or SQL queries in node.js. For those longer template literals, it may be useful to enable nested syntax highlighting and make snippets of code easier to read. You can enable this by adding a block comment directive before a template literal. The complete syntax for the directive is as follows:
+
+```
+/* syntax: {SYNTAX_NAME} */ tag? `contents`
+```
+
+Where the `tag` identifier may appear before or after the syntax block comment directive.
+
+One of the perks to using this directive is that nested syntax blocks will inherit their usualy functionality from that syntax definition, such as keybindings, snippets, autocompletions, and commenting:
+
+![Nested Syntaxes](https://github.com/bathos/Ecmascript-Sublime/raw/master/examples/nested-syntax-commenting.gif)
+
+**Supported Syntaxes:**
+Here's the list of currently supported syntaxes. I just went with all the ones that I assume are reasonable to use in the browser / node.js. Feel free to open an issue if you think another syntax would be useful.
+
+ - `bash` | `shell`
+ - `css`
+ - `html`
+ - `javascript` | `js`
+ - `json`
+ - `dot` (Graphviz)
+ - `glsl` (GLslang for WebGL)
+ - `sql`
+ - `xml`
+ - `yaml`
+
+And here is a demonstration of all the currently supported syntaxes:
+
+![Nested Syntaxes](https://github.com/bathos/Ecmascript-Sublime/raw/master/examples/nested-syntax-highlighting.png)
+
+
 **New in 1.3**
 
 - Improvements to JSX scopes
@@ -31,7 +66,7 @@ lost context awareness. The end result is CSS highlighting for Styled JSX
 templates that should be consistent and helpful in the great majority of cases
 despite the lost distinctions.
 
-![Styled JSX example](https://github.com/bathos/Ecmascript-Sublime/raw/master/styled-jsx-example.png)
+![Styled JSX example](https://github.com/bathos/Ecmascript-Sublime/raw/master/examples/styled-jsx-example.png)
 
 Support for XML-style namespacing (ns colon) in JSX has been removed. It was in
 the official grammar, but afaict it is not used in practice and isn’t supported
@@ -66,7 +101,7 @@ if anybody has stuff to contribute!)
 - Most currently-stage-3 proposals (likely ES2018) and some stage 2 now covered.
 - Added new theme, Haydn
 
-![Haydn example](https://github.com/bathos/Ecmascript-Sublime/raw/master/haydn-example.png)
+![Haydn example](https://github.com/bathos/Ecmascript-Sublime/raw/master/examples/haydn-example.png)
 
 **New in 1.0**
 
@@ -76,14 +111,14 @@ if anybody has stuff to contribute!)
    and the fact that this has been around for a year, bugs seem under control,
    and a fair number of people are using this, I figured I should do '1.0'.
 
-![Sibelius example](https://github.com/bathos/Ecmascript-Sublime/raw/master/sibelius.png)
+![Sibelius example](https://github.com/bathos/Ecmascript-Sublime/raw/master/examples/sibelius.png)
 
 **New in 0.3**
 
  - JSX support
  - Adds source.js at root to increase compatibility with other packages
 
-![JSX example](https://github.com/bathos/Ecmascript-Sublime/raw/master/example-jsx.png)
+![JSX example](https://github.com/bathos/Ecmascript-Sublime/raw/master/examples/example-jsx.png)
 
 **New in 0.2**
 
@@ -171,12 +206,12 @@ find this useful, or you may find it bothersome.
 
 Here’s an early shot of Excelsior. I should add an updated one soon:
 
-![Early Excelsior example](https://github.com/bathos/Ecmascript-Sublime/raw/master/example-okay.png)
+![Early Excelsior example](https://github.com/bathos/Ecmascript-Sublime/raw/master/examples/example-okay.png)
 
 And here’s an example I’m fond of, using background colors to indicate the depth
 of matching groups in a regular expression:
 
-![Excelsior regex example](https://github.com/bathos/Ecmascript-Sublime/raw/master/example-regex.png)
+![Excelsior regex example](https://github.com/bathos/Ecmascript-Sublime/raw/master/examples/example-regex.png)
 
 ## Feature Coverage
 
@@ -268,6 +303,7 @@ in ‘.regexp’ do not also have ‘.es’.
   - `comment.block`
   - `comment.line`
   - `comment.line.shebang` (e.g. `#!/usr/bin/env node`)
+  - `comment.line.todo` (matches the words 'todo' and 'hack' within comments)
   - `meta.comment.body` (content that is not part of the delimiter(s) or border)
   - `meta.comment.border` (includes anything that seems like a border, and `//`)
   - `meta.comment.box-drawing` (box drawing characters can be targeted)
@@ -415,13 +451,17 @@ in ‘.regexp’ do not also have ‘.es’.
       - `storage.modifier.accessor.set` (keyword `set`)
     - **Async Functions**
       - `entity.name.method.async` (name of async function)
+      - `entity.name.function.async`
+      - `entity.name.function.async.arrow`
       - `keyword.control.flow.await` (keyword `await`)
       - `punctuation.definition.function.async`
       - `punctuation.definition.function.async.arrow`
       - `punctuation.definition.function.async.arrow.body`
       - `punctuation.definition.function.async.body`
+      - `punctuation.definition.method.async.body`
       - `punctuation.definition.parameters.function.async`
       - `punctuation.definition.parameters.function.async.arrow`
+      - `punctuation.definition.parameters.method.async`
       - `storage.modifier.async` (keyword `async`, general)
       - `storage.modifier.async.expression` (keyword `async`, in expression)
       - `storage.modifier.async.method` (keyword `async`, in method declaration)
@@ -439,8 +479,11 @@ in ‘.regexp’ do not also have ‘.es’.
       - `storage.type.class`
       - `storage.type.class.expression`
       - `variable.other.readwrite.property.class.es` (es7? class property key)
+      - `variable.language.private`
+      - `variable.language.private.class`
     - **Functions**
       - `entity.name.function`
+      - `entity.name.function.arrow`
       - `entity.name.function.allCap`
       - `entity.name.function.initCap`
       - `entity.name.method`
@@ -455,6 +498,9 @@ in ‘.regexp’ do not also have ‘.es’.
       - `punctuation.definition.parameters.function.arrow`
       - `punctuation.definition.parameters.method`
       - `storage.type.function.arrow`
+      - `storage.type.function.async`
+      - `storage.type.function.async.arrow`
+      - `storage.type.function.async.expression`
       - `storage.type.function`
       - `storage.type.function.expression`
     - **Generators**
@@ -470,6 +516,7 @@ in ‘.regexp’ do not also have ‘.es’.
       - `punctuation.definition.parameters.method.generator`
       - `storage.modifier.generator.asterisk`
       - `storage.modifier.generator.asterisk.expression`
+      - `storage.modifier.generator.asterisk.method`
       - `storage.type.function.generator`
       - `storage.type.function.generator.expression`
 - **Operators**
@@ -581,6 +628,7 @@ in ‘.regexp’ do not also have ‘.es’.
     - `punctuation.separator.case-statements` (colon after `case` or `default`)
   - **Loop Statements**
     - `keyword.control.flow.continue`
+    - `keyword.control.flow.loop`
     - `keyword.control.loop.do`
     - `keyword.control.loop.each` (deprecated)
     - `keyword.control.loop.for`
@@ -764,6 +812,21 @@ existing themes, especially those targetting JSNext and Babel Sublime.
  - `variable.language.proto`
  - `variable.language.prototype`
 
+
+### Nested Syntax Scopes
+
+These scopes are for the contents of template strings that have a syntax directive, and are suffixed by the short name of their syntax.
+
+ - `meta.interpolation.syntax.css`
+ - `meta.interpolation.syntax.html`
+ - `meta.interpolation.syntax.js`
+ - `meta.interpolation.syntax.json`
+ - `meta.interpolation.syntax.dot`
+ - `meta.interpolation.syntax.glsl`
+ - `meta.interpolation.syntax.shell`
+ - `meta.interpolation.syntax.sql`
+ - `meta.interpolation.syntax.xml`
+ - `meta.interpolation.syntax.yaml`
 
 ## About the Scope Conventions
 
