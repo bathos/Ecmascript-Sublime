@@ -122,6 +122,36 @@ variables:
   # LOOKAHEADS #################################################################
   idEnd: '(?=[^\$_‍‍{{ID_Continue}}]|$)'
 
+  # SYNTAX DIRECTIVES ##########################################################
+  syntaxDirectiveHead: '(\s*syntax\s*:\s*)'
+  syntaxDirectiveTail: '\s*(\*\/)\s*((({{identifier}})))?(?=\s*`)'
+
+  syntaxDirective_SQL:   '[Ss](?:ql|QL){{syntaxDirectiveTail}}'
+  syntaxDirective_HTML:  '[Hh](?:tml|TML){{syntaxDirectiveTail}}'
+  syntaxDirective_CSS:   '[Cc](?:ss|SS){{syntaxDirectiveTail}}'
+  syntaxDirective_JS:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?{{syntaxDirectiveTail}}'
+  syntaxDirective_JSON:  '[Jj](?:son|SON){{syntaxDirectiveTail}}'
+  syntaxDirective_GLSL:  '[Gg](?:lsl|LSL){{syntaxDirectiveTail}}'
+  syntaxDirective_DOT:   '[Dd](?:ot|OT){{syntaxDirectiveTail}}'
+  syntaxDirective_SHELL: '(?:[Bb](?:ash|ASH)|[Ss](?:hell|HELL)){{syntaxDirectiveTail}}'
+  syntaxDirective_XML:   '[Xx](?:ml|ML){{syntaxDirectiveTail}}'
+  syntaxDirective_YAML:  '[Yy](?:aml|AML){{syntaxDirectiveTail}}'
+
+  syntaxDirective: >-
+    (?x)
+      ((\/\*)){{syntaxDirectiveHead}}
+      (?= {{syntaxDirective_SQL}}
+        | {{syntaxDirective_HTML}}
+        | {{syntaxDirective_CSS}}
+        | {{syntaxDirective_JS}}
+        | {{syntaxDirective_JSON}}
+        | {{syntaxDirective_GLSL}}
+        | {{syntaxDirective_DOT}}
+        | {{syntaxDirective_SHELL}}
+        | {{syntaxDirective_XML}}
+        | {{syntaxDirective_YAML}}
+      )
+
 contexts:
 
 # MAIN, META & PROTOTYPE #######################################################
@@ -184,23 +214,32 @@ contexts:
           scope: comment.line.todo.es
 
   non_syntax_block_comment:
-    - match: '((\/\*))(?!\s*syntax\s*:\s*)'
+    - match: '((\/\*))(?!{{syntaxDirectiveHead}})'
       captures:
         1: meta.comment.border.es
         2: punctuation.definition.comment.begin.es
-      push:
-        - meta_scope: comment.block.es
-        - match: '((?:\*+)?(\*\/))'
-          captures:
-            1: meta.comment.border.es
-            2: punctuation.definition.comment.end.es
-          pop: true
-        - match: '(^\/)?((?!\*\/)\*)+'
-          scope: meta.comment.border.es
-        - match: '{{boxchars}}'
-          scope: meta.comment.box-drawing.es
-        - match: '\b(?i:todo|hack)\b'
-          scope: comment.line.todo.es
+      push: inside_block_comment
+
+  block_comment:
+    - match: '((\/\*))'
+      captures:
+        1: meta.comment.border.es
+        2: punctuation.definition.comment.begin.es
+      push: inside_block_comment
+
+  inside_block_comment:
+    - meta_scope: comment.block.es
+    - match: '((?:\*+)?(\*\/))'
+      captures:
+        1: meta.comment.border.es
+        2: punctuation.definition.comment.end.es
+      pop: true
+    - match: '(^\/)?((?!\*\/)\*)+'
+      scope: meta.comment.border.es
+    - match: '{{boxchars}}'
+      scope: meta.comment.box-drawing.es
+    - match: '\b(?i:todo|hack)\b'
+      scope: comment.line.todo.es
 
   merge_conflict_our_changes:
     - meta_scope: invalid.merge-conflict.our-changes
@@ -5450,22 +5489,22 @@ contexts:
 # specific contexts:
 
   syntax_OPEN:
-    - match: '((\/\*))(\s*syntax\s*:\s*)'
+    - match: '{{syntaxDirective}}'
       captures:
         1: meta.comment.border.es
         2: punctuation.definition.comment.begin.es
         3: comment.block.es
-      set: syntax_DIRECTIVE
-    - include: non_syntax_block_comment
+      set: [ ae_AFTER_VALUE, syntax_EXIT, syntax_DIRECTIVE ]
+    - include: block_comment
 
   syntax_NO_IN_OPEN:
-    - match: '((\/\*))(\s*syntax\s*:\s*)'
+    - match: '{{syntaxDirective}}'
       captures:
         1: meta.comment.border.es
         2: punctuation.definition.comment.begin.es
         3: comment.block.es
-      set: syntax_NO_IN_DIRECTIVE
-    - include: non_syntax_block_comment
+      set: [ ae_NO_IN_AFTER_VALUE, syntax_EXIT, syntax_DIRECTIVE ]
+    - include: block_comment
 
   syntax_AFTER_OPEN:
     - meta_include_prototype: false
@@ -5499,185 +5538,76 @@ contexts:
   syntax_DIRECTIVE:
     - meta_scope: comment.block.es
     - meta_include_prototype: false
-    - match: '([Ss](?:ql|QL)\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
+    - match: '{{syntaxDirective_SQL}}'
       captures:
-        1: comment.block.es
-        2: punctuation.definition.comment.end.es
-        3: entity.quasi.tag.name.js # ^BS
-        4: variable.other.readwrite.tag.es
-        5: punctuation.definition.string.interpolated.begin.es
-      set: [ ae_AFTER_VALUE, syntax_EXIT, syntax_meta_SQL, syntax_SQL_OPEN ]
-    - match: '([Hh](?:tml|TML)\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+        4: punctuation.definition.string.interpolated.begin.es
+      set: [ syntax_meta_SQL, syntax_SQL_OPEN ]
+    - match: '{{syntaxDirective_HTML}}'
       captures:
-        1: comment.block.es
-        2: punctuation.definition.comment.end.es
-        3: entity.quasi.tag.name.js # ^BS
-        4: variable.other.readwrite.tag.es
-        5: punctuation.definition.string.interpolated.begin.es
-      set: [ ae_AFTER_VALUE, syntax_EXIT, syntax_meta_HTML, syntax_HTML_OPEN ]
-    - match: '([Cc](?:ss|SS)\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+        4: punctuation.definition.string.interpolated.begin.es
+      set: [ syntax_meta_HTML, syntax_HTML_OPEN ]
+    - match: '{{syntaxDirective_CSS}}'
       captures:
-        1: comment.block.es
-        2: punctuation.definition.comment.end.es
-        3: entity.quasi.tag.name.js # ^BS
-        4: variable.other.readwrite.tag.es
-        5: punctuation.definition.string.interpolated.begin.es
-      set: [ ae_AFTER_VALUE, syntax_EXIT, syntax_meta_CSS, syntax_CSS_OPEN ]
-    - match: '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+        4: punctuation.definition.string.interpolated.begin.es
+      set: [ syntax_meta_CSS, syntax_CSS_OPEN ]
+    - match: '{{syntaxDirective_JS}}'
       captures:
-        1: comment.block.es
-        2: punctuation.definition.comment.end.es
-        3: entity.quasi.tag.name.js # ^BS
-        4: variable.other.readwrite.tag.es
-        5: punctuation.definition.string.interpolated.begin.es
-      set: [ ae_AFTER_VALUE, syntax_EXIT, syntax_meta_JS, syntax_JS_OPEN ]
-    - match: '([Jj](?:son|SON)\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+        4: punctuation.definition.string.interpolated.begin.es
+      set: [ syntax_meta_JS, syntax_JS_OPEN ]
+    - match: '{{syntaxDirective_JSON}}'
       captures:
-        1: comment.block.es
-        2: punctuation.definition.comment.end.es
-        3: entity.quasi.tag.name.js # ^BS
-        4: variable.other.readwrite.tag.es
-        5: punctuation.definition.string.interpolated.begin.es
-      set: [ ae_AFTER_VALUE, syntax_EXIT, syntax_meta_JSON, syntax_JSON_OPEN ]
-    - match: '([Gg](?:lsl|LSL)\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+        4: punctuation.definition.string.interpolated.begin.es
+      set: [ syntax_meta_JSON, syntax_JSON_OPEN ]
+    - match: '{{syntaxDirective_GLSL}}'
       captures:
-        1: comment.block.es
-        2: punctuation.definition.comment.end.es
-        3: entity.quasi.tag.name.js # ^BS
-        4: variable.other.readwrite.tag.es
-        5: punctuation.definition.string.interpolated.begin.es
-      set: [ ae_AFTER_VALUE, syntax_EXIT, syntax_meta_GLSL, syntax_GLSL_OPEN ]
-    - match: '([Dd](?:ot|OT)\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+        4: punctuation.definition.string.interpolated.begin.es
+      set: [ syntax_meta_GLSL, syntax_GLSL_OPEN ]
+    - match: '{{syntaxDirective_DOT}}'
       captures:
-        1: comment.block.es
-        2: punctuation.definition.comment.end.es
-        3: entity.quasi.tag.name.js # ^BS
-        4: variable.other.readwrite.tag.es
-        5: punctuation.definition.string.interpolated.begin.es
-      set: [ ae_AFTER_VALUE, syntax_EXIT, syntax_meta_DOT, syntax_DOT_OPEN ]
-    - match: '((?:[Bb](?:ash|ASH)|[Ss](?:hell|HELL))\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+        4: punctuation.definition.string.interpolated.begin.es
+      set: [ syntax_meta_DOT, syntax_DOT_OPEN ]
+    - match: '{{syntaxDirective_SHELL}}'
       captures:
-        1: comment.block.es
-        2: punctuation.definition.comment.end.es
-        3: entity.quasi.tag.name.js # ^BS
-        4: variable.other.readwrite.tag.es
-        5: punctuation.definition.string.interpolated.begin.es
-      set: [ ae_AFTER_VALUE, syntax_EXIT, syntax_meta_SHELL, syntax_SHELL_OPEN ]
-    - match: '([Xx](?:ml|ML)\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+        4: punctuation.definition.string.interpolated.begin.es
+      set: [ syntax_meta_SHELL, syntax_SHELL_OPEN ]
+    - match: '{{syntaxDirective_XML}}'
       captures:
-        1: comment.block.es
-        2: punctuation.definition.comment.end.es
-        3: entity.quasi.tag.name.js # ^BS
-        4: variable.other.readwrite.tag.es
-        5: punctuation.definition.string.interpolated.begin.es
-      set: [ ae_AFTER_VALUE, syntax_EXIT, syntax_meta_XML, syntax_XML_OPEN ]
-    - match: '([Yy](?:aml|AML)\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+        4: punctuation.definition.string.interpolated.begin.es
+      set: [ syntax_meta_XML, syntax_XML_OPEN ]
+    - match: '{{syntaxDirective_YAML}}'
       captures:
-        1: comment.block.es
-        2: punctuation.definition.comment.end.es
-        3: entity.quasi.tag.name.js # ^BS
-        4: variable.other.readwrite.tag.es
-        5: punctuation.definition.string.interpolated.begin.es
-      set: [ ae_AFTER_VALUE, syntax_EXIT, syntax_meta_YAML, syntax_YAML_OPEN ]
-    - match: '((?:\*+)?(\*\/))'
-      captures:
-        1: meta.comment.border.es
-        2: punctuation.definition.comment.end.es
-      pop: true
-    - match: '(^\/)?((?!\*\/)\*)+'
-      scope: meta.comment.border.es
-    - match: '{{boxchars}}'
-      scope: meta.comment.box-drawing.es
-    - match: '\b(?i:todo|hack)\b'
-      scope: comment.line.todo.es
-
-  syntax_NO_IN_DIRECTIVE:
-    - meta_scope: comment.block.es
-    - meta_include_prototype: false
-    - match: '([Ss](?:ql|QL)\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
-      captures:
-        1: comment.block.es
-        2: punctuation.definition.comment.end.es
-        3: entity.quasi.tag.name.js # ^BS
-        4: variable.other.readwrite.tag.es
-        5: punctuation.definition.string.interpolated.begin.es
-      set: [ ae_NO_IN_AFTER_VALUE, syntax_EXIT, syntax_meta_SQL, syntax_SQL_OPEN ]
-    - match: '([Hh](?:tml|TML)\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
-      captures:
-        1: comment.block.es
-        2: punctuation.definition.comment.end.es
-        3: entity.quasi.tag.name.js # ^BS
-        4: variable.other.readwrite.tag.es
-        5: punctuation.definition.string.interpolated.begin.es
-      set: [ ae_NO_IN_AFTER_VALUE, syntax_EXIT, syntax_meta_HTML, syntax_HTML_OPEN ]
-    - match: '([Cc](?:ss|SS)\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
-      captures:
-        1: comment.block.es
-        2: punctuation.definition.comment.end.es
-        3: entity.quasi.tag.name.js # ^BS
-        4: variable.other.readwrite.tag.es
-        5: punctuation.definition.string.interpolated.begin.es
-      set: [ ae_NO_IN_AFTER_VALUE, syntax_EXIT, syntax_meta_CSS, syntax_CSS_OPEN ]
-    - match: '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
-      captures:
-        1: comment.block.es
-        2: punctuation.definition.comment.end.es
-        3: entity.quasi.tag.name.js # ^BS
-        4: variable.other.readwrite.tag.es
-        5: punctuation.definition.string.interpolated.begin.es
-      set: [ ae_NO_IN_AFTER_VALUE, syntax_EXIT, syntax_meta_JS, syntax_JS_OPEN ]
-    - match: '([Jj](?:son|SON)\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
-      captures:
-        1: comment.block.es
-        2: punctuation.definition.comment.end.es
-        3: entity.quasi.tag.name.js # ^BS
-        4: variable.other.readwrite.tag.es
-        5: punctuation.definition.string.interpolated.begin.es
-      set: [ ae_NO_IN_AFTER_VALUE, syntax_EXIT, syntax_meta_JSON, syntax_JSON_OPEN ]
-    - match: '([Dd](?:ot|OT)\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
-      captures:
-        1: comment.block.es
-        2: punctuation.definition.comment.end.es
-        3: entity.quasi.tag.name.js # ^BS
-        4: variable.other.readwrite.tag.es
-        5: punctuation.definition.string.interpolated.begin.es
-      set: [ ae_NO_IN_AFTER_VALUE, syntax_EXIT, syntax_meta_DOT, syntax_DOT_OPEN ]
-    - match: '((?:[Bb](?:ash|ASH)|[Ss](?:hell|HELL))\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
-      captures:
-        1: comment.block.es
-        2: punctuation.definition.comment.end.es
-        3: entity.quasi.tag.name.js # ^BS
-        4: variable.other.readwrite.tag.es
-        5: punctuation.definition.string.interpolated.begin.es
-      set: [ ae_NO_IN_AFTER_VALUE, syntax_EXIT, syntax_meta_SHELL, syntax_SHELL_OPEN ]
-    - match: '([Xx](?:ml|ML)\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
-      captures:
-        1: comment.block.es
-        2: punctuation.definition.comment.end.es
-        3: entity.quasi.tag.name.js # ^BS
-        4: variable.other.readwrite.tag.es
-        5: punctuation.definition.string.interpolated.begin.es
-      set: [ ae_NO_IN_AFTER_VALUE, syntax_EXIT, syntax_meta_XML, syntax_XML_OPEN ]
-    - match: '([Yy](?:aml|AML)\s*(\*\/))\s*((({{identifier}})))?\s*(?=`)'
-      captures:
-        1: comment.block.es
-        2: punctuation.definition.comment.end.es
-        3: entity.quasi.tag.name.js # ^BS
-        4: variable.other.readwrite.tag.es
-        5: punctuation.definition.string.interpolated.begin.es
-      set: [ ae_NO_IN_AFTER_VALUE, syntax_EXIT, syntax_meta_YAML, syntax_YAML_OPEN ]
-    - match: '((?:\*+)?(\*\/))'
-      captures:
-        1: meta.comment.border.es
-        2: punctuation.definition.comment.end.es
-      pop: true
-    - match: '(^\/)?((?!\*\/)\*)+'
-      scope: meta.comment.border.es
-    - match: '{{boxchars}}'
-      scope: meta.comment.box-drawing.es
-    - match: '\b(?i:todo|hack)\b'
-      scope: comment.line.todo.es
-
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+        4: punctuation.definition.string.interpolated.begin.es
+      set: [  syntax_meta_YAML, syntax_YAML_OPEN ]
 
 # SQL SYNTAX ###################################################################
 
