@@ -521,8 +521,8 @@ contexts:
     - match: '\)'
       scope: invalid.illegal.token.es
       set: whileOrForStatement_STMT
-    # The line contains a non-terminal semicolon, but not after 'in'.
-    - match: '(?=(?![^;]+\bin\b).*;.)'
+    # The line contains a non-terminal semicolon, but not after 'in' or 'of'.
+    - match: '(?=(?![^;]+\b(in|of)\b).*;.)'
       set: forStatement_EXP_LEGACY_INIT
     # At this point we believe we are in a for-in or for-of loop. Though the
     # circumstances that would lead to this being false would be unusual in
