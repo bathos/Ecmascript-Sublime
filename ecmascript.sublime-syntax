@@ -969,7 +969,7 @@ contexts:
       captures:
         1: storage.modifier.static.es
         2: storage.type.js # ^BS
-      set: classDeclaration_METHOD_COMMON
+      set: classDeclaration_AFTER_STATIC
     - match: '((constructor)){{idEnd}}'
       captures:
         1: entity.name.method.js # ^BS
@@ -981,6 +981,7 @@ contexts:
         2: punctuation.definition.decorator.es
       push: decoratorExpression
     - include: classDeclaration_METHOD_COMMON
+    - include: other_illegal_pop
 
   classDeclaration_AFTER_METHOD_OR_FIELD_NAME:
     - match: ';'
@@ -997,6 +998,11 @@ contexts:
     - match: '(?!\()'
       pop: true
     - include: method_AFTER_NAME
+
+  classDeclaration_AFTER_STATIC:
+    - include: classDeclaration_METHOD_COMMON
+    - match: '{{PLA_anything}}'
+      set: classDeclaration_AFTER_BRACE
 
   classDeclaration_METHOD_COMMON:
     - match: '((\*))'
@@ -1100,7 +1106,6 @@ contexts:
         1: punctuation.definition.accessor.begin.es
         2: meta.brace.square.js # ^BS
       set: [ classDeclaration_AFTER_BRACE, classDeclaration_AFTER_METHOD_OR_FIELD_NAME, computedProp_AFTER_AE, assignmentExpression ]
-    - include: other_illegal_pop
 
   classDeclaration_AFTER_DECORATOR:
     - match: '((@))'
