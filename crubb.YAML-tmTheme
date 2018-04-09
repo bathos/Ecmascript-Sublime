@@ -1,0 +1,304 @@
+# [PackageDev] target_format: plist, ext: tmTheme
+name: Crubb
+uuid: 9f97cbb8-85c9-4641-b893-157dd58622b0
+
+settings:
+- settings:
+    foreground: '#F8FFE5'
+    background: '#000000'
+    gutter: '#0C0C0C'
+    caret: '#DDDDDD'
+
+    bracketContentsOptions: 'stippled_underline'
+    bracketsOptions: 'stippled_underline'
+
+    guide: '#2C2C2C'
+    stackGuide: '#333333'
+    activeGuide: '#444444'
+
+    lineHighlight: '#663322'
+    multiEditHighlight: '#44990040'
+    searchHighlight: '#999966A0'
+    selection: '#998066A0'
+
+# COMMENTS & DIRECTIVES ########################################################
+
+- scope: >-
+    comment
+  settings:
+    foreground: '#9EA392'
+    fontStyle: 'italic'
+- scope: >-
+    comment.line.shebang
+  settings:
+    background: '#9EA392'
+    foreground: '#000000'
+- scope: >-
+    meta.directive.use-strict
+  settings:
+    background: '#2E2F2A'
+    fontStyle: 'italic'
+    foreground: '#CBD1BC'
+
+# CONSTANTS & PRIMITIVE LITERALS ###############################################
+
+- scope: >-
+    constant,
+    constant.character
+  settings:
+    foreground: '#EF476F'
+- scope: >-
+    keyword.other,
+    meta.numeric.prefix,
+    meta.numeric.suffix
+  settings:
+    foreground: '#C43B5B'
+- scope: >-
+    string
+  settings:
+    foreground: '#F37996'
+- scope: >-
+    punctuation.definition.string
+  settings:
+    foreground: '#F69AB0'
+
+# BINDINGS #####################################################################
+
+- scope: >-
+    entity.other.property-binding,
+    keyword.other.rest,
+    punctuation.definition.binding,
+    punctuation.separator.array-element.binding,
+    punctuation.separator.object-member.binding,
+    punctuation.separator.property-binding
+  settings:
+    foreground: '#4E8E47'
+- scope: >-
+    keyword.operator.assignment
+  settings:
+    foreground: '#FFD983'
+- scope: >-
+    keyword.operator.module,
+    storage.modifier.module,
+    storage.type
+  settings:
+    fontStyle: italic
+    foreground: '#5FAD56'
+- scope: >-
+    support,
+    variable
+  settings:
+    foreground: '#7DDF64'
+- scope: >-
+    punctuation.definition.module-binding,
+    punctuation.separator.binding-binding,
+    punctuation.separator.module-binding,
+    variable.other.readwrite.property
+  settings:
+    foreground: '#A0E78E'
+
+# OBJECTS & CLASSES ############################################################
+
+- scope: >-
+    entity.name.accessor.get,
+    entity.name.accessor.set,
+    punctuation.definition.accessor,
+    punctuation.definition.class.body,
+    punctuation.definition.object,
+    punctuation.definition.parameters.accessor,
+    punctuation.separator.key-value,
+    punctuation.separator.object-member,
+    punctuation.terminator.property,
+    variable.other.readwrite.property.object-literal
+  settings:
+    foreground: '#1B9AAA'
+- scope: >-
+    variable.other.readwrite.property.class
+  settings:
+    fontStyle: italic
+    foreground: '#44ACB9'
+- scope: >-
+    keyword.operator.accessor,
+    storage.modifier.accessor.get,
+    storage.modifier.accessor.set,
+    variable.language.arguments,
+    variable.language.private,
+    variable.language.this
+  settings:
+    fontStyle: italic
+    foreground: '#82C7D0'
+- scope: >-
+    entity.name.method,
+    entity.name.method variable.other.readwrite.property,
+    punctuation.definition.constructor.body,
+    punctuation.definition.method,
+    punctuation.definition.parameters.constructor,
+    punctuation.definition.parameters.method
+  settings:
+    foreground: '#177F8C'
+- scope: >-
+    keyword.operator.new,
+    storage.modifier.async.method,
+    storage.modifier.generator.asterisk.method
+  settings:
+    fontStyle: italic
+    foreground: '#0F545D'
+- scope: >-
+    entity.name.constructor,
+    meta.super-expression support.class.builtin,
+    meta.super-expression variable.other.readwrite,
+    meta.super-expression variable.other.readwrite.initCap,
+    storage.modifier.extends,
+    storage.type.class,
+    variable.language.super,
+    variable.language.super meta.invocation
+  settings:
+    fontStyle: italic
+    foreground: '#1B9AAA'
+- scope: >-
+    entity.name.class,
+    storage.modifier.static storage.type
+  settings:
+    fontStyle: bold
+    foreground: '#1B9AAA'
+- scope: >-
+    meta.instantiation,
+    support.class,
+    variable.other.readwrite.initCap
+  settings:
+    foreground: '#1B9AAA'
+
+# FUNCTIONS ####################################################################
+
+- scope: >-
+    punctuation.definition.function,
+    punctuation.definition.parameters,
+    storage.type.function.arrow
+  settings:
+    foreground: '#06D6A0'
+- scope: >-
+    storage.type.function
+  settings:
+    fontStyle: italic
+    foreground: '#06D6A0'
+- scope: >-
+    entity.name.function,
+    variable entity.name.function
+  settings:
+    fontStyle: bold
+    foreground: '#06D6A0'
+- scope: >-
+    keyword.control.flow.await,
+    keyword.control.flow.return
+  settings:
+    fontStyle: italic
+    foreground: '#A4F0DC'
+- scope: >-
+    storage.modifier.async
+  settings:
+    fontStyle: italic strong
+    foreground: '#059C75'
+
+# ARRAYS & ITERATION / INVOCATION ##############################################
+
+- scope: >-
+    keyword.operator.spread,
+    meta.invocation,
+    meta.invocation support.function,
+    punctuation.definition.arguments,
+    punctuation.definition.array,
+    punctuation.definition.block.loop,
+    punctuation.definition.expression.loop,
+    punctuation.definition.generator,
+    punctuation.definition.parameters.generator,
+    punctuation.separator.argument,
+    punctuation.separator.array-element
+  settings:
+    foreground: '#1CB2A1'
+- scope: >-
+    entity.name.function.generator
+  settings:
+    fontStyle: bold
+    foreground: '#1CB2A1'
+- scope: >-
+    keyword.control.flow.yield,
+    keyword.control.loop,
+    storage.modifier.generator,
+    storage.type.function.generator
+  settings:
+    fontStyle: italic
+    foreground: '#1CB2A1'
+
+# CONDITIONALS / BLOCK / OTHER #################################################
+
+- scope: >-
+    keyword.control
+  settings:
+    fontStyle: italic
+    foreground: '#FFC43D'
+- scope: >-
+    keyword.operator.comparison,
+    keyword.operator.logical,
+    keyword.operator.relational,
+    keyword.operator.ternary,
+    punctuation.definition.block,
+    punctuation.definition.expression,
+    punctuation.definition.parameters.catch
+  settings:
+    foreground: '#FFC43D'
+- scope: >-
+    entity.name.statement,
+    punctuation.separator.label-statement
+  settings:
+    fontStyle: bold
+    foreground: '#E8B338'
+
+# JSX ##########################################################################
+
+- scope: >-
+    entity.name.tag,
+    punctuation.definition.tag
+  settings:
+    foreground: '#198C9B'
+- scope: >-
+    entity.name.class.jsx
+  settings:
+    fontStyle: bold italic
+    foreground: '#198C9B'
+- scope: >-
+    keyword.operator.spread.jsx,
+    meta.interpolation.jsx,
+    punctuation.separator.attribute-value
+  settings:
+    foreground: '#FFC43D'
+- scope: >-
+    variable.other.attribute
+  settings:
+    foreground: '#52B763'
+
+# OTHER ########################################################################
+
+- scope: >-
+    keyword,
+    punctuation.definition.decorator,
+    variable.other.readwrite.decorator
+  settings:
+    foreground: '#CFF3C6'
+- scope: >-
+    keyword.control.do-expression,
+    keyword.control.flow.break,
+    keyword.control.flow.continue,
+    keyword.control.flow.throw
+  settings:
+    fontStyle: italic
+    foreground: '#CFF3C6'
+
+# REGEXP #######################################################################
+
+# punctuation.definition.decorator
+
+# variable.other.readwrite.property
+
+
+
+
