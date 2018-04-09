@@ -1036,16 +1036,19 @@ contexts:
         5: punctuation.separator.key-value.es
         7: storage.type.js
         8: storage.modifier.async.expression.es
-      push:
+      set:
+        - - include: classDeclaration_AFTER_BRACE
         - - match: ';'
             scope: punctuation.terminator.property.es
-          - match: '{{PLA_anything}}'
+          - include: else_pop
+        - - match: '{{PLA_anything}}'
             set: assignmentExpression
     - match: '(?:(#{{identifierName}})|({{identifierName}})){{idEnd}}(?!\s*\()'
       captures:
         1: variable.language.private.class.es
         2: variable.other.readwrite.property.class.es
-      push:
+      set:
+        - - include: classDeclaration_AFTER_BRACE
         - - match: ';'
             scope: punctuation.terminator.property.es
             pop: true
@@ -2549,12 +2552,12 @@ contexts:
 
   ae_IDENTIFIERS_INTRINSIC:
     # CONSTRUCTORS
-    - match: '(((({{intrinsicConstructors}})))\s*)((\())'
+    - match: '(?x) (((({{intrinsicConstructors}})))\s*)((\())'
       captures:
-        1: variable.other.readwrite.es
+        1: variable.other.readwrite.initCap.es
         2: meta.instance.constructor # ^BS
-        3: meta.instantiation.es
-        4: support.class.builtin.es
+        3: support.class.builtin.es
+        4: meta.invocation.es
         5: punctuation.definition.arguments.begin.es
         6: meta.brace.round.js # ^BS
       set: [ ae_AFTER_THING, arguments ]
