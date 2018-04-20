@@ -5675,6 +5675,8 @@ contexts:
 
   syntax_JS_OPEN:
     - meta_include_prototype: false
+    - match: '`([^\n]*\w`)'
+      scope: string.interpolated.es
     - match: '`'
       scope: string.interpolated.es
       set: Packages/JavaScript/JavaScript.sublime-syntax
