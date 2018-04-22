@@ -25,7 +25,12 @@
 			{
 				"key": "preceding_text",
 				"operator": "regex_contains",
-				"operand": "(\\([^(]*|\\[[^[]*)$"
+				"operand": "[([]$"
+			},
+			{
+				"key": "following_text",
+				"operator": "regex_contains",
+				"operand": "^[)\\]]",
 			},
 			{
 				"key": "selector",
