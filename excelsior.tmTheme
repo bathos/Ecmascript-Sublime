@@ -323,6 +323,24 @@
 			</dict>
 		</dict>
 		<dict>
+			<key>scope</key>
+			<string>markup.warning.sublime_linter</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#F2B705</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>scope</key>
+			<string>markup.error.sublime_linter</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#CD0A00</string>
+			</dict>
+		</dict>
+		<dict>
 			<key>name</key>
 			<string>Block, Switch &amp; Conditional Statement</string>
 			<key>scope</key>
