@@ -136,6 +136,7 @@ variables:
   syntaxDirective_SHELL: '(?:[Bb](?:ash|ASH)|[Ss](?:hell|HELL)){{syntaxDirectiveTail}}'
   syntaxDirective_XML:   '[Xx](?:ml|ML){{syntaxDirectiveTail}}'
   syntaxDirective_YAML:  '[Yy](?:aml|AML){{syntaxDirectiveTail}}'
+  syntaxDirective_MARKDOWN:  '[Mm](?:[Dd]|ark[Dd]own|ARKDOWN){{syntaxDirectiveTail}}'
 
   syntaxDirective: >-
     (?x)
@@ -150,6 +151,7 @@ variables:
         | {{syntaxDirective_SHELL}}
         | {{syntaxDirective_XML}}
         | {{syntaxDirective_YAML}}
+        | {{syntaxDirective_MARKDOWN}}
       )
 
 contexts:
@@ -5540,7 +5542,7 @@ contexts:
   syntax_EXIT:
     - meta_include_prototype: false
     - match: '`'
-      scope: string.interpolated.es punctuation.definition.string.interpolated.end.es 
+      scope: string.interpolated.es punctuation.definition.string.interpolated.end.es
       pop: true
 
   syntax_DIRECTIVE:
@@ -5616,6 +5618,13 @@ contexts:
         3: variable.other.readwrite.tag.es
         4: punctuation.definition.string.interpolated.begin.es
       set: [  syntax_meta_YAML, syntax_YAML_OPEN ]
+    - match: '{{syntaxDirective_MARKDOWN}}'
+      captures:
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+        4: punctuation.definition.string.interpolated.begin.es
+      set: [  syntax_meta_MARKDOWN, syntax_MARKDOWN_OPEN ]
 
 # SQL SYNTAX ###################################################################
 
@@ -5628,7 +5637,7 @@ contexts:
   syntax_SQL_OPEN:
     - meta_include_prototype: false
     - match: '`'
-      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es 
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: Packages/SQL/SQL.sublime-syntax
       with_prototype:
         - include: syntax_AFTER_OPEN
@@ -5644,7 +5653,7 @@ contexts:
   syntax_HTML_OPEN:
     - meta_include_prototype: false
     - match: '`'
-      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es 
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: Packages/HTML/HTML.sublime-syntax
       with_prototype:
         - include: syntax_AFTER_OPEN
@@ -5660,7 +5669,7 @@ contexts:
   syntax_CSS_OPEN:
     - meta_include_prototype: false
     - match: '`'
-      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es 
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: Packages/CSS/CSS.sublime-syntax
       with_prototype:
         - include: syntax_AFTER_OPEN
@@ -5676,7 +5685,7 @@ contexts:
   syntax_JS_OPEN:
     - meta_include_prototype: false
     - match: '`'
-      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es 
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: Packages/JavaScript/JavaScript.sublime-syntax
       with_prototype:
         # We must also compete with the 'tagged-template' rule in the default
@@ -5684,7 +5693,7 @@ contexts:
         - match: '([_$\p{L}\p{Nl}][_$\p{L}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\x{200C}\x{200D}]*)(?=\s*`)'
           captures:
             1: variable.other.readwrite.es
-            2: string.interpolated.es punctuation.definition.string.interpolated.end.es 
+            2: string.interpolated.es punctuation.definition.string.interpolated.end.es
           pop: true
         - include: syntax_AFTER_OPEN
 
@@ -5699,7 +5708,7 @@ contexts:
   syntax_JSON_OPEN:
     - meta_include_prototype: false
     - match: '`'
-      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es 
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: Packages/JavaScript/JSON.sublime-syntax
       with_prototype:
         - include: syntax_AFTER_OPEN
@@ -5715,7 +5724,7 @@ contexts:
   syntax_GLSL_OPEN:
     - meta_include_prototype: false
     - match: '`'
-      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es 
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: "Packages/OpenGL Shading Language (GLSL)/GLSL.sublime-syntax"
       with_prototype:
         - include: syntax_AFTER_OPEN
@@ -5731,7 +5740,7 @@ contexts:
   syntax_DOT_OPEN:
     - meta_include_prototype: false
     - match: '`'
-      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es 
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: Packages/Graphviz/DOT.sublime-syntax
       with_prototype:
         - include: syntax_AFTER_OPEN
@@ -5747,7 +5756,7 @@ contexts:
   syntax_SHELL_OPEN:
     - meta_include_prototype: false
     - match: '`'
-      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es 
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: Packages/ShellScript/Shell-Unix-Generic.sublime-syntax
       with_prototype:
         - include: syntax_AFTER_OPEN
@@ -5763,7 +5772,7 @@ contexts:
   syntax_XML_OPEN:
     - meta_include_prototype: false
     - match: '`'
-      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es 
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: Packages/XML/XML.sublime-syntax
       with_prototype:
         - include: syntax_AFTER_OPEN
@@ -5779,7 +5788,23 @@ contexts:
   syntax_YAML_OPEN:
     - meta_include_prototype: false
     - match: '`'
-      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es 
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: Packages/YAML/YAML.sublime-syntax
+      with_prototype:
+        - include: syntax_AFTER_OPEN
+
+# MARKDOWN SYNTAX ##############################################################
+
+  syntax_meta_MARKDOWN:
+    - meta_content_scope: meta.interpolation.syntax.markdown
+    - meta_include_prototype: false
+    - match: '{{PLA_anything}}'
+      pop: true
+
+  syntax_MARKDOWN_OPEN:
+    - meta_include_prototype: false
+    - match: '`'
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+      set: Packages/Markdown/Markdown.sublime-syntax
       with_prototype:
         - include: syntax_AFTER_OPEN
