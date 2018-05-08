@@ -5617,14 +5617,14 @@ contexts:
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
         4: punctuation.definition.string.interpolated.begin.es
-      set: [  syntax_meta_YAML, syntax_YAML_OPEN ]
-    - match: '{{syntaxDirective_MARKDOWN}}'
-      captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
-        4: punctuation.definition.string.interpolated.begin.es
-      set: [  syntax_meta_MARKDOWN, syntax_MARKDOWN_OPEN ]
+      set: [ syntax_meta_YAML, syntax_YAML_OPEN ]
+    # - match: '{{syntaxDirective_MARKDOWN}}'
+    #   captures:
+    #     1: punctuation.definition.comment.end.es
+    #     2: entity.quasi.tag.name.js # ^BS
+    #     3: variable.other.readwrite.tag.es
+    #     4: punctuation.definition.string.interpolated.begin.es
+    #   set: [ syntax_meta_MARKDOWN, syntax_MARKDOWN_OPEN ]
 
 # SQL SYNTAX ###################################################################
 
@@ -5795,16 +5795,19 @@ contexts:
 
 # MARKDOWN SYNTAX ##############################################################
 
-  syntax_meta_MARKDOWN:
-    - meta_content_scope: meta.interpolation.syntax.markdown
-    - meta_include_prototype: false
-    - match: '{{PLA_anything}}'
-      pop: true
+# Disabled for now: for reasons I’m unsure of, nesting markdown leads to errors
+# being thrown.
 
-  syntax_MARKDOWN_OPEN:
-    - meta_include_prototype: false
-    - match: '`'
-      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
-      set: Packages/Markdown/Markdown.sublime-syntax
-      with_prototype:
-        - include: syntax_AFTER_OPEN
+#   syntax_meta_MARKDOWN:
+#     - meta_content_scope: meta.interpolation.syntax.markdown
+#     - meta_include_prototype: false
+#     - match: '{{PLA_anything}}'
+#       pop: true
+
+#   syntax_MARKDOWN_OPEN:
+#     - meta_include_prototype: false
+#     - match: '`'
+#       scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+#       set: Packages/Markdown/Markdown.sublime-syntax
+#       with_prototype:
+#         - include: syntax_AFTER_OPEN
