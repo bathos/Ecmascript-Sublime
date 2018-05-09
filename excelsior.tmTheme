@@ -803,6 +803,19 @@
 		</dict>
 		<dict>
 			<key>name</key>
+			<string>Syntax Template Literal Interpolated</string>
+			<key>scope</key>
+			<string>meta.interpolation.interpolated</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#18182c</string>
+				<key>fontStyle</key>
+				<string>normal</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
 			<string>Syntax Template Literal Content</string>
 			<key>scope</key>
 			<string>meta.interpolation.syntax</string>

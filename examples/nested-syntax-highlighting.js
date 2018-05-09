@@ -1,6 +1,7 @@
+/* eslint-disable */
 
 /* syntax: bash */ `
-	node $SCRIPT | grep '${find}' > out.txt 2>&1 \
+	node $SCRIPT | grep '${find? find: '.'}' > out.txt 2>&1 \
 		&& cat out.txt
 `;
 
@@ -19,12 +20,11 @@
 `;
 
 /* syntax: js */ `
-	console.assert('hello' === '${world}');
-`;
-
-/* syntax: sql */ `
-	select * from ${table}
-	where ${conditions.join(' and ')}
+	for(let say in words) {
+		if(say !== 'world') {
+			console.${level}('hello, ${world}');
+		}
+	}
 `;
 
 /* syntax: json */ `
@@ -35,10 +35,23 @@
 	}
 `;
 
+// Requires a GLSL language, such as the "OpenGL Shading Language (GLSL)" plugin
+/* syntax: glsl */ `
+	uniform float time;
+	void main() {
+		gl_FragColor = vec4((time % ${span}) / ${span});
+	}
+`;
+
 /* syntax: html */ `
 	<div className="${class_name}">
 		<span>content</span>
 	</div>
+`;
+
+/* syntax: sql */ `
+	select * from ${table}
+	where ${conditions.join(' and ')}
 `;
 
 /* syntax: xml */ `
@@ -49,12 +62,6 @@
 
 /* syntax: yaml */ `
 	env: development
-`;
-
-// Requires the "OpenGL Shading Language (GLSL)" plugin
-/* syntax: glsl */ `
-	uniform float time;
-	void main() {
-		gl_FragColor = vec4((time % ${span}) / ${span});
-	}
+	  - label: ${this.label}
+	  - debug: true
 `;

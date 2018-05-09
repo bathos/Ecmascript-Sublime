@@ -465,11 +465,18 @@ settings:
     background: '#212121'
     fontStyle: italic
 
+- name: Syntax Template Literal Interpolated
+  scope: meta.interpolation.interpolated
+  settings:
+    background: '#18182c'
+    fontStyle: normal
+
 - name: Syntax Template Literal Content
   scope: meta.interpolation.syntax
   settings:
     background: '#212121'
     fontStyle: italic
+
 
 # REGEX ########################################################################
 
