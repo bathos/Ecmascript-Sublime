@@ -3895,7 +3895,7 @@ contexts:
         3: constant.other.object.key.js # ^BS
         4: punctuation.separator.key-value.es
       set: [ literalObject_AFTER_AE, assignmentExpression ]
-    - match: '((get))(?!\s*\(){{idEnd}}'
+    - match: '((get)){{idEnd}}(?=\s+{{identifierStart}})'
       captures:
         1: storage.type.accessor.js # ^BS
         2: storage.modifier.accessor.get.es
@@ -3907,7 +3907,7 @@ contexts:
         3: constant.other.object.key.js # ^BS
         4: punctuation.separator.key-value.es
       set: [ literalObject_AFTER_AE, assignmentExpression ]
-    - match: '((set))(?!\s*\(){{idEnd}}'
+    - match: '((set)){{idEnd}}(?=\s+{{identifierStart}})'
       captures:
         1: storage.type.accessor.js # ^BS
         2: storage.modifier.accessor.set.es
