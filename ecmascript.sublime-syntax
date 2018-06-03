@@ -4746,12 +4746,11 @@ contexts:
     - match: '\.{3}'
       scope: keyword.other.rest.parameter.es # -BS
       set: bindingObject_PARAM_AFTER_ELLIPSIS
-    - include: other_illegal
     # NUMERIC PROPERTY
     - match: '({{decNum}})'
       scope: constant.numeric.decimal.es
       captures:
-        1: entity.name.method.es
+        1: entity.other.property-binding.parameter.es
         2: punctuation.decimal.es
         3: punctuation.decimal.es
         4: punctuation.decimal.es
@@ -4763,24 +4762,25 @@ contexts:
     - match: '({{binNum}})'
       scope: constant.numeric.binary.es
       captures:
-        1: entity.name.method.es
+        1: entity.other.property-binding.parameter.es
         2: meta.numeric.prefix.es
         3: meta.numeric.suffix.es
       set: bindingObject_PARAM_BEFORE_COLON
     - match: '({{octNum}})'
       scope: constant.numeric.octal.es
       captures:
-        1: entity.name.method.es
+        1: entity.other.property-binding.parameter.es
         2: meta.numeric.prefix.es
         3: meta.numeric.suffix.es
       set: bindingObject_PARAM_BEFORE_COLON
     - match: '({{hexNum}})'
       scope: constant.numeric.hexadecimal.es
       captures:
-        1: entity.name.method.es
+        1: entity.other.property-binding.parameter.es
         2: meta.numeric.prefix.es
         3: meta.numeric.suffix.es
       set: bindingObject_PARAM_BEFORE_COLON
+    - include: other_illegal
 
   bindingObject_PARAM_BEFORE_COLON:
     - match: '((:))'
@@ -5655,7 +5655,7 @@ contexts:
       set: scope:source.dot
       with_prototype:
         - include: syntax_AFTER_OPEN
-        
+
 # GLSL SYNTAX ###################################################################
 
   syntax_meta_GLSL:
