@@ -875,13 +875,24 @@
 			<key>name</key>
 			<string>Regex Char Classes (Character Property)</string>
 			<key>scope</key>
-			<string>meta.character-property</string>
+			<string>meta.character-property constant, meta.character-property punctuation</string>
 			<key>settings</key>
 			<dict>
 				<key>fontStyle</key>
 				<string>italic</string>
 				<key>foreground</key>
 				<string>#75CEA4</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Regex Char Classes (Character Property, Delimiters)</string>
+			<key>scope</key>
+			<string>meta.character-property punctuation</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#9AD8BB</string>
 			</dict>
 		</dict>
 		<dict>

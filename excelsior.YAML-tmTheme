@@ -507,10 +507,18 @@ settings:
     fontStyle: 'bold'
 
 - name: Regex Char Classes (Character Property)
-  scope: meta.character-property
+  scope: >-
+    meta.character-property constant,
+    meta.character-property punctuation
   settings:
     fontStyle: 'italic'
     foreground: '#75CEA4'
+
+- name: Regex Char Classes (Character Property, Delimiters)
+  scope: >-
+    meta.character-property punctuation
+  settings:
+    foreground: '#9AD8BB'
 
 - name: Regex Char Escapes
   scope: string.regexp constant.character.escape
