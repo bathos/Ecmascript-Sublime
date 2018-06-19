@@ -873,6 +873,19 @@
 		</dict>
 		<dict>
 			<key>name</key>
+			<string>Regex Char Classes (Character Property)</string>
+			<key>scope</key>
+			<string>meta.character-property</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic</string>
+				<key>foreground</key>
+				<string>#75CEA4</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
 			<string>Regex Char Escapes</string>
 			<key>scope</key>
 			<string>string.regexp constant.character.escape</string>

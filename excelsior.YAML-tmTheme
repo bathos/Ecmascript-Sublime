@@ -506,6 +506,12 @@ settings:
   settings:
     fontStyle: 'bold'
 
+- name: Regex Char Classes (Character Property)
+  scope: meta.character-property
+  settings:
+    fontStyle: 'italic'
+    foreground: '#75CEA4'
+
 - name: Regex Char Escapes
   scope: string.regexp constant.character.escape
   settings:

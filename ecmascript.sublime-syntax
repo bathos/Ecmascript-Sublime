@@ -4997,14 +4997,16 @@ contexts:
               2: punctuation.separator.character-property-name-value.regexp
               3: constant.other.character-class.unicode-property-value.regexp
             set:
-              - - match: '\}'
+              - - meta_scope: meta.character-property.regexp
+                - match: '\}'
                   scope: punctuation.definition.character-property.regexp.end.es
                   pop: true
                 - include: other_illegal_pop
-          - match: '[A-Za-z\d]+'
+          - match: '[A-Za-z_\d]+'
             scope: constant.other.character-class.unicode-property-value.regexp
             set:
-              - - match: '\}'
+              - - meta_scope: meta.character-property.regexp
+                - match: '\}'
                   scope: punctuation.definition.character-property.regexp.end.es
                   pop: true
                 - include: other_illegal_pop
@@ -5038,12 +5040,12 @@ contexts:
     - meta_include_prototype: false
     - match: '(?<=\[)\^'
       scope: keyword.operator.negation.regexp
-    - match: '-'
+    - match: '(?<!\[\^|\[)-(?!\])'
       scope: punctuation.definition.character-class.dash.regexp
     - match: '\]'
       scope: punctuation.definition.character-class.end.regexp
       pop: true
-    - match: '\/'
+    - match: '[/$.^]'
     - include: regex_ANY_CHILD_CONTEXT
     - include: regex_COMMON
 
