@@ -5704,7 +5704,7 @@ contexts:
     - meta_include_prototype: false
     - match: '`'
       scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
-      set: scope:source.js
+      set: Packages/JavaScript/JavaScript.sublime-syntax
       with_prototype:
         # We must also compete with the 'tagged-template' rule in the default
         # JavaScript.sublime-syntax so that we can pop out
