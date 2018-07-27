@@ -5562,13 +5562,13 @@ contexts:
         3: variable.other.readwrite.tag.es
         4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_CSS, syntax_CSS_OPEN ]
-    - match: '{{syntaxDirective_DOT}}'
-      captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
-        4: punctuation.definition.string.interpolated.begin.es
-      set: [ syntax_meta_DOT, syntax_DOT_OPEN ]
+#    - match: '{{syntaxDirective_DOT}}'
+#      captures:
+#        1: punctuation.definition.comment.end.es
+#        2: entity.quasi.tag.name.js # ^BS
+#        3: variable.other.readwrite.tag.es
+#        4: punctuation.definition.string.interpolated.begin.es
+#      set: [ syntax_meta_DOT, syntax_DOT_OPEN ]
     - match: '{{syntaxDirective_GLSL}}'
       captures:
         1: punctuation.definition.comment.end.es
@@ -5576,13 +5576,13 @@ contexts:
         3: variable.other.readwrite.tag.es
         4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_GLSL, syntax_GLSL_OPEN ]
-    - match: '{{syntaxDirective_HTML}}'
-      captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
-        4: punctuation.definition.string.interpolated.begin.es
-      set: [ syntax_meta_HTML, syntax_HTML_OPEN ]
+#    - match: '{{syntaxDirective_HTML}}'
+#      captures:
+#        1: punctuation.definition.comment.end.es
+#        2: entity.quasi.tag.name.js # ^BS
+#        3: variable.other.readwrite.tag.es
+#        4: punctuation.definition.string.interpolated.begin.es
+#      set: [ syntax_meta_HTML, syntax_HTML_OPEN ]
     - match: '{{syntaxDirective_JS}}'
       captures:
         1: punctuation.definition.comment.end.es
@@ -5642,21 +5642,21 @@ contexts:
       with_prototype:
         - include: syntax_AFTER_OPEN
 
-# DOT (GRAPHVIZ) SYNTAX ########################################################
-
-  syntax_meta_DOT:
-    - meta_content_scope: meta.interpolation.syntax.dot
-    - meta_include_prototype: false
-    - match: '{{PLA_anything}}'
-      pop: true
-
-  syntax_DOT_OPEN:
-    - meta_include_prototype: false
-    - match: '`'
-      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
-      set: scope:source.dot
-      with_prototype:
-        - include: syntax_AFTER_OPEN
+## DOT (GRAPHVIZ) SYNTAX ########################################################
+#
+#  syntax_meta_DOT:
+#    - meta_content_scope: meta.interpolation.syntax.dot
+#    - meta_include_prototype: false
+#    - match: '{{PLA_anything}}'
+#      pop: true
+#
+#  syntax_DOT_OPEN:
+#    - meta_include_prototype: false
+#    - match: '`'
+#      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+#      set: scope:source.dot
+#      with_prototype:
+#        - include: syntax_AFTER_OPEN
 
 # GLSL SYNTAX ###################################################################
 
@@ -5674,23 +5674,23 @@ contexts:
       with_prototype:
         - include: syntax_AFTER_OPEN
 
-# HTML SYNTAX ##################################################################
-
-  syntax_meta_HTML:
-    - meta_content_scope: meta.interpolation.syntax.html
-    - meta_include_prototype: false
-    - match: '{{PLA_anything}}'
-      pop: true
-
-  syntax_HTML_OPEN:
-    - meta_include_prototype: false
-    - match: '`'
-      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
-      # We don't want to risk loading an HTML syntax that uses
-      # `embed: scope:source.js` since that would cause recursion
-      set: Packages/HTML/HTML.sublime-syntax
-      with_prototype:
-        - include: syntax_AFTER_OPEN
+## HTML SYNTAX ##################################################################
+#
+#  syntax_meta_HTML:
+#    - meta_content_scope: meta.interpolation.syntax.html
+#    - meta_include_prototype: false
+#    - match: '{{PLA_anything}}'
+#      pop: true
+#
+#  syntax_HTML_OPEN:
+#    - meta_include_prototype: false
+#    - match: '`'
+#      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+#      # We don't want to risk loading an HTML syntax that uses
+#      # `embed: scope:source.js` since that would cause recursion
+#      set: Packages/HTML/HTML.sublime-syntax
+#      with_prototype:
+#        - include: syntax_AFTER_OPEN
 
 # JS (JAVASCRIPT) SYNTAX #######################################################
 
