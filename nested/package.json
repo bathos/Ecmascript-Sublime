@@ -1,0 +1,18 @@
+{
+  "name": "ecmascript-nested-syntaxes",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Generates safe versions of Sublime's base syntaxes for nesting within the Ecmascript syntax",
+  "scripts": {
+    "install": "npx emk init.*"
+  },
+  "author": "Blake Regalia <blake.regalia@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "emk": "^1.2.0"
+  },
+  "dependencies": {
+    "js-yaml": "^3.12.0",
+    "jsonpath": "^1.0.0"
+  }
+}
