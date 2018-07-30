@@ -1,0 +1,14 @@
+%YAML 1.2
+---
+# This file creates a menu item to select the "Ecmascript: Safe Mode" syntax, which is a clone of the original
+#   but without nested syntax support.
+name: 'Ecmascript: Safe Mode'
+file_extensions: [ js, jsx, es, es6, mjs ]
+scope: source.js
+
+contexts:
+  prototype:
+    - include: scope:source.safe.es.#prototype
+  main:
+    - meta_scope: source.es
+    - include: scope:source.safe.es
