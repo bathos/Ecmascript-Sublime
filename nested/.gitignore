@@ -1,2 +1,3 @@
 node_modules
 syntax_modules
+build/ecmascript/ecmascript-nest-manual.sublime-syntax
