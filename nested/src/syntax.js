@@ -18,6 +18,12 @@ const h_syntax_transforms = {
 			}
 		},
 	},
+
+	'source.yaml.sublime.syntax': {
+		'$.contexts.context_definition': (a_rules) => {
+			a_rules[0].match = a_rules[0].match.replace(/ \{1,2\}/, '[ \t]+');
+		},
+	},
 };
 
 module.exports = class syntax {
@@ -158,6 +164,10 @@ module.exports = class syntax {
 
 		// privatize scope
 		g_syntax.scope = `${g_syntax.scope}.nested.es`;
+
+		// remove file extensions / first line match
+		if(g_syntax.file_extensions) delete g_syntax.file_extensions;
+		if(g_syntax.first_line_match) delete g_syntax.first_line_match;
 
 		// dump changes
 		return `%YAML 1.2\n---\n${yaml.safeDump(g_syntax)}`;

@@ -15,8 +15,14 @@ const h_syntax_modules = {
 		repository: 'https://github.com/euler0/sublime-glsl',
 		tag: 'v1.0.1',
 	},
+	'package-dev': {
+		repository: 'https://github.com/SublimeText/PackageDev',
+		tag: 'v3.1.6',
+	},
 };
 
+// synchronous scope fetch
+const scope_of = p_file => (new syntax({source:p_file})).scope();
 
 // search for syntax files under a given directory
 const find_syntaxes = (p_scan, h_syntaxes) => {
@@ -34,15 +40,9 @@ const find_syntaxes = (p_scan, h_syntaxes) => {
 		if(dk_stats.isDirectory()) {
 			find_syntaxes(p_file, h_syntaxes);
 		}
-		// syntax file
+		// syntax file; save association to scope
 		else if(p_file.endsWith('.sublime-syntax-source')) {
-			// parse syntax def as yaml
-			let k_syntax = new syntax({
-				source: p_file,
-			});
-
-			// make scope association
-			h_syntaxes[k_syntax.scope()] = p_file;
+			h_syntaxes[scope_of(p_file)] = p_file;
 		}
 	}
 };
@@ -145,8 +145,6 @@ GRAPH: {
 
 // only generate syntaxes that are directly or indirectly nested by Ecmascript
 let a_nested_scopes = (() => {
-	let as_nested_scopes = new Set();
-
 	// reflection
 	let k_ecmascript = new syntax({
 		source: '../ecmascript.sublime-syntax',
@@ -166,12 +164,12 @@ let a_nested_scopes = (() => {
 			// each of its dependency
 			for(let si_out of h_outs[si_scope]) {
 				// already in output
-				if(as_nested_scopes.has(si_out)) continue;
+				if(as_nested.has(si_out)) continue;
 
 				// dirty dependency
 				if(si_out in h_dirty) {
 					// add to outputs
-					as_nested_scopes.add(si_out);
+					as_nested.add(si_out);
 
 					// check all of its dependencies
 					add_dependencies(si_out);
@@ -185,16 +183,15 @@ let a_nested_scopes = (() => {
 		// direct dependent
 		if(as_nested.has(si_scope)) {
 			// add to outputs
-			as_nested_scopes.add(si_scope);
+			as_nested.add(si_scope);
 
 			// check all of its dependencies
 			add_dependencies(si_scope);
 		}
 	}
 
-	return [...as_nested_scopes];
+	return [...as_nested];
 })();
-
 
 // export emk build descriptor
 module.exports = {
@@ -252,7 +249,7 @@ module.exports = {
 				}),
 			},
 
-			':syntax': h => ({
+			':syntax': h => (si_scope => ({
 				deps: [
 					'src/stack-filter.js',
 					`${pd_syntaxes}/${h.syntax}-source`,
@@ -264,8 +261,21 @@ module.exports = {
 							a_nested_scopes
 						)).toString('base64')
 					/* eslint-enable */} "$2" > $@
+
+					# copy auxiliary files over
+					IFS=$'\n'
+					dest=$(dirname $@)
+					for file in $(find "./$(dirname $2)" \\( ${/* eslint-disable indent */
+						['py', 'tmPreferences', 'sublime-keymap']
+							.map(s => /* syntax: bash */ `-name "*.${s}"`)
+							.join(' -or ')
+					/* eslint-enable */} \\) ); do
+						output="$dest/$(basename $file)"
+						echo "[$file] => [$output]"
+						sed 's/${si_scope}/${si_scope}.nested.es/' $file > $output
+					done
 				`,
-			}),
+			}))(scope_of(`${pd_syntaxes}/${h.syntax}-source`)),
 		},
 
 		[pd_syntaxes]: {
@@ -285,7 +295,7 @@ module.exports = {
 					# rename all sublime-syntax files to avoid loading them in development
 					IFS=$'\n'
 					for file in $(find . -name "*.sublime-syntax"); do
-						mv "$file" "\${file%.sublime-syntax}.sublime-syntax-source"
+						mv -v "$file" "\${file%.sublime-syntax}.sublime-syntax-source"
 					done
 				`,
 			}))(h_syntax_modules[h.syntax_module]),

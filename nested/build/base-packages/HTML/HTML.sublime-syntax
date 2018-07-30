@@ -1,12 +1,6 @@
 %YAML 1.2
 ---
 name: Ecmascript nested syntax - HTML
-file_extensions:
-  - html
-  - htm
-  - shtml
-  - xhtml
-first_line_match: (?i)<(!DOCTYPE\s*)?html
 scope: text.html.basic.nested.es
 variables:
   attribute_char: '(?:[^ "''>/=\x00-\x1f\x7f-\x9f])'

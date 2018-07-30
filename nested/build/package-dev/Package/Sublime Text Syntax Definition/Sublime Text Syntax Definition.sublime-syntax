@@ -1,0 +1,502 @@
+%YAML 1.2
+---
+name: Ecmascript nested syntax - Sublime Text Syntax Definition (YAML)
+scope: source.yaml.sublime.syntax.nested.es
+variables:
+  c_indicator: '[-?:,\[\]{}#&*!|>''"%@`]'
+  c_flow_indicator: '[\[\]{},]'
+  ns_plain_first_plain_out: |-
+    (?x:
+        [^\s{{c_indicator}}]
+      | [?:-] \S
+    )
+  _flow_scalar_end_plain_out: |-
+    (?x:
+      (?=
+          \s* $
+        | \s+ \#
+        | \s* : (\s|$)
+      )
+    )
+  _flow_scalar_end_plain_in: |-
+    (?x:
+      (?=
+          \s* $
+        | \s+ \#
+        | \s* : (\s|$)
+        | \s* : {{c_flow_indicator}}
+        | \s* {{c_flow_indicator}}
+      )
+    )
+  block_key_lookahead: |-
+    (?x:
+      (?=
+        {{ns_plain_first_plain_out}}
+        (
+            [^\s:]
+          | : \S
+          | \s+ (?![#\s])
+        )*
+        \s*
+        :
+        (\s|$)
+      )
+    )
+  block_key_lookahead_bol: |-
+    (?x:
+      (?=
+        ^ [ ]*
+        {{ns_plain_first_plain_out}}
+        (
+            [^\s:]
+          | : \S
+          | \s+ (?![#\s])
+        )*
+        \s*
+        :
+        (\s|$)
+      )
+    )
+  non_numeric_block_key_lookahead_bol: |-
+    (?x:
+      (?=
+        ^ [ ]*
+        (?!\d) # exclude number matches
+        {{ns_plain_first_plain_out}}
+        (
+            [^\s:]
+          | : \S
+          | \s+ (?![#\s])
+        )*
+        \s*
+        :
+        (\s|$)
+      )
+    )
+  plain_scalar_but_not_block_key: '(?={{ns_plain_first_plain_out}})(?!{{block_key_lookahead}})'
+contexts:
+  comment:
+    - include: 'Packages/YAML/YAML.sublime-syntax#comment'
+  main:
+    - match: '(first_line_match)\s*(:)(?=\s|$)'
+      captures:
+        '1': >-
+          string.unquoted.plain.out.yaml
+          keyword.other.first_line_match.sublime-syntax
+        '2': punctuation.separator.key-value.yaml
+      push: expect_regexp
+    - match: '(contexts)\s*(:)(?=\s|$)'
+      captures:
+        '1': >-
+          string.unquoted.plain.out.yaml
+          keyword.control.flow.contexts.sublime-syntax
+        '2': punctuation.separator.key-value.yaml
+      push: contexts_block
+    - match: '(variables)\s*(:)(?=\s|$)'
+      captures:
+        '1': >-
+          string.unquoted.plain.out.yaml
+          keyword.control.flow.variables.sublime-syntax
+        '2': punctuation.separator.key-value.yaml
+      push: variables_block
+    - match: '(scope)\s*(:)(?=\s|$)'
+      captures:
+        '1': string.unquoted.plain.out.yaml storage.type.scope-name.sublime-syntax
+        '2': punctuation.separator.key-value.yaml
+      push: expect_scope
+    - match: '(file_extensions)\s*(:)(?=\s|$)'
+      captures:
+        '1': string.unquoted.plain.out.yaml entity.name.tag.yaml
+        '2': punctuation.separator.key-value.yaml
+    - match: '(hidden)\s*(:)(?=\s|$)'
+      captures:
+        '1': string.unquoted.plain.out.yaml storage.modifier.hidden.sublime-syntax
+        '2': punctuation.separator.key-value.yaml
+      push: expect_bool
+    - include: comment
+    - include: yaml-tags-anchors
+    - include: 'scope:source.yaml'
+  variables_block:
+    - meta_scope: meta.block.variables.sublime-syntax
+    - include: comment
+    - include: yaml-tags-anchors
+    - match: '^ +{{block_key_lookahead}}'
+      push:
+        - include: >-
+            Packages/YAML/YAML.sublime-syntax#flow-scalar-plain-out-implicit-type
+        - match: ':(?=\s|$)'
+          scope: punctuation.separator.mapping.key-value.yaml
+          set: expect_regexp
+        - match: ''
+          push:
+            - meta_scope: >-
+                string.unquoted.plain.out.yaml
+                entity.name.constant.sublime-syntax
+            - match: '{{_flow_scalar_end_plain_out}}'
+              pop: true
+    - match: ^(?=\S)
+      pop: true
+  contexts_block:
+    - meta_scope: meta.block.contexts.sublime-syntax
+    - include: comment
+    - include: yaml-tags-anchors
+    - include: context_definition
+    - include: context_content
+    - match: ^(?=\S)
+      pop: true
+    - include: 'scope:source.yaml'
+  context_definition:
+    - match: "^[ \t]+{{block_key_lookahead}}"
+      push:
+        - include: >-
+            Packages/YAML/YAML.sublime-syntax#flow-scalar-plain-out-implicit-type
+        - match: ':(?=\s|$)'
+          scope: punctuation.separator.mapping.key-value.yaml
+          pop: true
+        - match: ''
+          set:
+            - meta_scope: >-
+                string.unquoted.plain.out.yaml
+                entity.name.context.sublime-syntax
+            - match: '{{_flow_scalar_end_plain_out}}'
+              pop: true
+  context_content:
+    - match: '(match)\s*(:)(?=\s|$)'
+      captures:
+        '1': string.unquoted.plain.out.yaml keyword.other.match.sublime-syntax
+        '2': punctuation.separator.key-value.yaml
+      push: expect_regexp
+    - match: '(escape)\s*(:)(?=\s|$)'
+      captures:
+        '1': string.unquoted.plain.out.yaml keyword.other.escape.sublime-syntax
+        '2': punctuation.separator.key-value.yaml
+      push: expect_regexp
+    - match: '((?:escape_)?captures)\s*(:)(?=\s|$)'
+      captures:
+        '1': string.unquoted.plain.out.yaml storage.type.captures.sublime-syntax
+        '2': punctuation.separator.key-value.yaml
+      push: expect_captures
+    - match: '((?:embed_)?scope)\s*(:)(?=\s|$)'
+      captures:
+        '1': string.unquoted.plain.out.yaml storage.type.scope-name.sublime-syntax
+        '2': punctuation.separator.key-value.yaml
+      push: expect_scope
+    - match: '(include|embed)\s*(:)(?=\s|$)'
+      captures:
+        '1': string.unquoted.plain.out.yaml keyword.operator.include.sublime-syntax
+        '2': punctuation.separator.key-value.yaml
+      push: expect_include
+    - match: '(push|set)\s*(:)(?=\s|$)'
+      captures:
+        '1': >-
+          string.unquoted.plain.out.yaml
+          keyword.control.flow.push.sublime-syntax
+        '2': punctuation.separator.key-value.yaml
+      push: expect_include_list
+    - match: '(with_prototype)\s*(:)(?=\s|$)'
+      captures:
+        '1': >-
+          string.unquoted.plain.out.yaml
+          keyword.control.flow.push.sublime-syntax
+        '2': punctuation.separator.key-value.yaml
+    - match: '(pop)\s*(:)(?=\s|$)'
+      captures:
+        '1': string.unquoted.plain.out.yaml keyword.control.flow.pop.sublime-syntax
+        '2': punctuation.separator.key-value.yaml
+      push: expect_bool
+    - match: '(meta_(?:content_)?scope)\s*(:)(?=\s|$)'
+      captures:
+        '1': >-
+          string.unquoted.plain.out.yaml
+          storage.type.scope-name.meta.sublime-syntax
+        '2': punctuation.separator.key-value.yaml
+      push: expect_scope
+    - match: '(meta_include_prototype)\s*(:)(?=\s|$)'
+      captures:
+        '1': >-
+          string.unquoted.plain.out.yaml
+          keyword.control.flow.include-prototype.sublime-syntax
+        '2': punctuation.separator.key-value.yaml
+      push: expect_bool
+    - match: '(comment)\s*(:)(?=\s|$)'
+      captures:
+        '1': string.unquoted.plain.out.yaml entity.name.tag.yaml
+        '3': punctuation.separator.key-value.yaml
+      push: expect_comment
+    - match: '(clear_scopes)\s*(:)(?=\s|$)'
+      captures:
+        '1': >-
+          string.unquoted.plain.out.yaml
+          storage.modifier.clear-scopes.sublime-syntax
+        '2': punctuation.separator.key-value.yaml
+  expect_captures:
+    - meta_content_scope: meta.expect-captures.yaml
+    - include: comment
+    - include: yaml-tags-anchors
+    - match: '(\d+)\s*(:)(?=\s|$)'
+      captures:
+        '1': constant.numeric.integer.yaml
+        '2': punctuation.separator.key-value.yaml
+      push: expect_scope
+    - match: '{{non_numeric_block_key_lookahead_bol}}'
+      pop: true
+    - match: (?=\S)
+      pop: true
+  expect_scope:
+    - meta_content_scope: meta.expect-scope
+    - include: comment
+    - include: yaml-tags-anchors
+    - match: '(?={{ns_plain_first_plain_out}})'
+      set:
+        - meta_scope: meta.scope.sublime-syntax string.unquoted.plain.out.yaml
+        - match: '{{_flow_scalar_end_plain_in}}'
+          set:
+            - match: \n?
+              scope: meta.scope.sublime-syntax
+              pop: true
+        - match: \.
+          scope: punctuation.separator.scope-segments.sublime-syntax
+    - match: $
+      pop: true
+    - match: '(?:(\|)|(>))([1-9])?([-+])?'
+      captures:
+        '1': keyword.control.flow.block-scalar.literal.yaml
+        '2': keyword.control.flow.block-scalar.folded.yaml
+        '3': constant.numeric.indentation-indicator.yaml
+        '4': storage.modifier.chomping-indicator.yaml
+      set:
+        - match: '^([ ]+)(?!$)'
+          set:
+            - meta_scope: meta.scope.sublime-syntax string.unquoted.block.yaml
+            - match: ^(?!\1|\s*$)
+              pop: true
+            - match: \.
+              scope: punctuation.separator.scope-segments.sublime-syntax
+            - include: regexp
+        - match: ^(?=\S)
+          pop: true
+        - include: comment
+        - include: yaml-tags-anchors
+        - match: .+
+          scope: invalid.illegal.expected-comment-or-newline.yaml
+  expect_include:
+    - meta_content_scope: meta.expect-include
+    - include: comment
+    - include: yaml-tags-anchors
+    - include: include
+    - match: '{{block_key_lookahead_bol}}'
+      pop: true
+    - match: (?=\S)
+      pop: true
+  expect_include_list:
+    - meta_content_scope: meta.expect-include-list
+    - match: '\['
+      scope: punctuation.definition.array.begin.sublime-syntax
+      set:
+        - meta_scope: meta.include-list.sublime-syntax meta.flow-sequence.yaml
+        - match: '\]'
+          scope: punctuation.definition.array.end.sublime-syntax
+          pop: true
+        - match: ','
+          scope: punctuation.separator.array-element.sublime-syntax
+        - include: comment
+        - include: yaml-tags-anchors
+        - include: include
+    - include: expect_include
+  include:
+    - match: '{{plain_scalar_but_not_block_key}}'
+      push:
+        - meta_scope: meta.include.sublime-syntax string.unquoted.plain.out.yaml
+        - match: '{{_flow_scalar_end_plain_in}}'
+          pop: true
+        - match: 'scope(:)(?=\w)'
+          scope: support.type.include.sublime-syntax
+          captures:
+            '1': punctuation.definition.scope-include.sublime-syntax
+          set:
+            - meta_content_scope: meta.include.sublime-syntax string.unquoted.plain.out.yaml
+            - match: '{{_flow_scalar_end_plain_in}}'
+              pop: true
+            - match: '#'
+              scope: punctuation.separator.context-name.sublime-syntax
+              set: expect_include
+        - match: '\w((?!\s#|:\s).)+\.sublime-syntax(?=\s*(#|$))'
+          scope: support.module.file-path.sublime-syntax
+          set:
+            - match: '{{_flow_scalar_end_plain_in}}'
+              pop: true
+            - match: '#'
+              scope: >-
+                meta.include.sublime-syntax string.unquoted.plain.out.yaml
+                punctuation.separator.context-name.sublime-syntax
+              pop: true
+        - match: '[\w-]+{{_flow_scalar_end_plain_in}}'
+          scope: variable.other.sublime-syntax
+        - match: ''
+          set:
+            - meta_scope: string.unquoted.plain.out.yaml
+            - match: '{{_flow_scalar_end_plain_in}}'
+              pop: true
+  expect_bool:
+    - meta_content_scope: meta.expect-bool
+    - include: comment
+    - include: yaml-tags-anchors
+    - match: '\b(true|false){{_flow_scalar_end_plain_out}}'
+      scope: constant.language.boolean.yaml
+    - match: $
+      pop: true
+  expect_comment:
+    - meta_content_scope: meta.expect-comment
+    - include: comment
+    - include: yaml-tags-anchors
+    - match: '"'
+      scope: punctuation.definition.string.begin.yaml
+      push:
+        - meta_scope: comment.other.quoted.double.sublime-syntax
+        - match: \\.
+          scope: constant.character.escape.yaml
+        - match: '"'
+          scope: punctuation.definition.string.end.yaml
+          pop: true
+    - match: ''''
+      scope: punctuation.definition.string.begin.yaml
+      set:
+        - meta_scope: comment.other.quoted.single.sublime-syntax
+        - match: ''''''
+          scope: constant.character.escape.yaml
+        - match: ''''
+          scope: punctuation.definition.string.end.yaml
+          pop: true
+    - match: '{{plain_scalar_but_not_block_key}}'
+      set:
+        - meta_scope: comment.other.plain.sublime-syntax
+        - match: '{{_flow_scalar_end_plain_out}}'
+          pop: true
+    - match: '(?:(\|)|(>))([1-9])?([-+])?'
+      captures:
+        '1': punctuation.definition.block.scalar.literal.yaml
+        '2': punctuation.definition.block.scalar.folded.yaml
+        '3': constant.numeric.indentation-indicator.yaml
+        '4': storage.modifier.chomping-indicator.yaml
+      set:
+        - match: '^([ ]+)(?!$)'
+          set:
+            - meta_scope: comment.other.unquoted.block.sublime-syntax
+            - match: ^(?!\1|\s*$)
+              pop: true
+        - match: ^(?=\S)
+          pop: true
+        - include: comment
+        - match: .+
+          scope: invalid.illegal.expected-comment-or-newline.yaml
+    - match: '{{block_key_lookahead_bol}}'
+      pop: true
+    - match: (?=\S)
+      pop: true
+  expect_regexp:
+    - meta_content_scope: meta.expect-regexp
+    - include: comment
+    - include: yaml-tags-anchors
+    - match: '"'
+      scope: punctuation.definition.string.begin.yaml
+      push:
+        - meta_scope: string.quoted.double.yaml
+        - meta_content_scope: source.regexp.oniguruma
+        - include: regexp_variable
+        - match: \\.
+          scope: constant.character.escape.yaml
+        - match: '"'
+          scope: punctuation.definition.string.end.yaml
+          pop: true
+    - match: ''''
+      scope: punctuation.definition.string.begin.yaml
+      push:
+        - meta_content_scope: source.regexp.oniguruma
+        - match: '''(?!'')'
+          scope: punctuation.definition.string.end.yaml
+          pop: true
+        - match: ''
+          push: regexp
+          with_prototype:
+            - include: regexp_variable
+            - match: ''''''
+              scope: constant.character.escape.yaml
+              push: regexp_quantifier_pop
+            - match: \\''
+              scope: constant.character.escape.regexp.yaml
+              push: regexp_quantifier_pop
+            - match: (?=')
+              pop: true
+    - match: '{{plain_scalar_but_not_block_key}}'
+      push:
+        - meta_scope: source.regexp.oniguruma
+        - match: '{{_flow_scalar_end_plain_out}}'
+          pop: true
+        - include: regexp
+      with_prototype:
+        - match: |-
+            (?x:
+              (?=
+                  \s* $
+                | \s+ \#
+                | \s* : (\s|$)
+              )
+            )
+          pop: true
+        - include: regexp_variable
+    - match: '(?:(\|)|(>))([1-9])?([-+])?'
+      captures:
+        '1': keyword.control.flow.block-scalar.literal.yaml
+        '2': keyword.control.flow.block-scalar.folded.yaml
+        '3': constant.numeric.indentation-indicator.yaml
+        '4': storage.modifier.chomping-indicator.yaml
+      set:
+        - match: '^([ ]+)(?=.*\(\?[ims]*x[ixms]*(?:-[ims]+)?\))'
+          set:
+            - meta_scope: source.regexp.oniguruma
+            - match: ^(?!\1|\s*$)
+              pop: true
+            - include: regexp_extended
+          with_prototype:
+            - include: regexp_variable
+        - match: '^([ ]+)(?!$)'
+          set:
+            - meta_scope: source.regexp.oniguruma
+            - match: ^(?!\1|\s*$)
+              pop: true
+            - include: regexp
+          with_prototype:
+            - include: regexp_variable
+        - match: ^(?=\S)
+          pop: true
+        - include: comment
+        - include: yaml-tags-anchors
+        - match: .+
+          scope: invalid.illegal.expected-comment-or-newline.yaml
+    - match: '{{block_key_lookahead_bol}}'
+      pop: true
+    - match: '(?!{{ns_plain_first_plain_out}})[^''"\s-].*'
+      scope: invalid.illegal.expected-string.sublime-syntax
+      pop: true
+    - match: (?=\S)
+      pop: true
+  regexp:
+    - include: Oniguruma RegExp.sublime-syntax
+  regexp_extended:
+    - meta_content_scope: source.regexp.oniguruma
+    - include: 'Oniguruma RegExp.sublime-syntax#base-group-extended'
+  regexp_variable:
+    - match: '(\{\{)([a-zA-Z_0-9]+)(\}\})'
+      scope: meta.variable.sublime-syntax keyword.other.variable.sublime-syntax
+      captures:
+        '1': punctuation.definition.variable.begin.sublime-syntax
+        '2': variable.other.sublime-syntax
+        '3': punctuation.definition.variable.end.sublime-syntax
+      push: regexp_quantifier_pop
+  regexp_quantifier_pop:
+    - include: 'Oniguruma RegExp.sublime-syntax#quantifiers'
+    - match: ''
+      pop: true
+  yaml-tags-anchors:
+    - include: 'YAML.sublime-syntax#property'
+hidden: true

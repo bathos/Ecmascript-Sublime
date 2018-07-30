@@ -1,10 +1,6 @@
 %YAML 1.2
 ---
 name: Ecmascript nested syntax - Graphviz (DOT)
-file_extensions:
-  - dot
-  - DOT
-  - gv
 scope: source.dot.nested.es
 contexts:
   main:

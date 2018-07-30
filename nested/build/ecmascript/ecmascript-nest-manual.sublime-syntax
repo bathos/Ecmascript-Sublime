@@ -1,8 +1,13 @@
 %YAML 1.2
 ---
-name: 'Ecmascript: Safe Mode'
-hidden: true
-scope: source.safe.es
+name: Ecmascript nested syntax - Ecmascript
+file_extensions:
+  - js
+  - jsx
+  - es
+  - es6
+  - mjs
+scope: source.js.nested.manual.es
 variables:
   MAT_word_or_any_one_char: \w+|\S
   PLA_anything: '(?=[\S\s])'
@@ -46,8 +51,8 @@ variables:
       (?<![{{ID_Continue}}])
       {{identifierAllCaps}}
   identifierName: '{{identifierStart}}{{identifierPart}}'
-  identifierPart: '(?:[\$_‍‍{{ID_Continue}}]|{{unicodeEscape}})*'
-  identifierStart: '(?:[\$_{{ID_Start}}]|{{unicodeEscape}})'
+  identifierPart: '(?:\$(?!\{)|[_‍‍{{ID_Continue}}]|{{unicodeEscape}})*'
+  identifierStart: '(?:\$(?!\{)|[_{{ID_Start}}]|{{unicodeEscape}})'
   allThreeIDs: '({{identifierAllCaps}})|({{identifierInitCap}})|({{identifier}})'
   unicodeEscape: '\\u(?:\h{4}|\{\h+\})'
   jsxComponentIdentifier: '{{identifierInitCapStrict}}'
@@ -75,7 +80,7 @@ variables:
       (n)?
       {{idEnd}}
   hexNum: '(0[Xx])(?:\h+(?:_+\h+)*)(n)?'
-  idEnd: '(?=[^\$_‍‍{{ID_Continue}}]|$)'
+  idEnd: '(?=\$[^\{]|[^_‍‍{{ID_Continue}}]|$)'
   syntaxDirectiveHead: '(\s*syntax\s*:\s*)'
   syntaxDirectiveTail: '\s*(\*\/)\s*((({{identifier}})))?(?=\s*`)'
   syntaxDirective_CSS: '[Cc](?:ss|SS){{syntaxDirectiveTail}}'
@@ -83,14 +88,10 @@ variables:
   syntaxDirective_GLSL: '[Gg](?:lsl|LSL){{syntaxDirectiveTail}}'
   syntaxDirective_HTML: '[Hh](?:tml|TML){{syntaxDirectiveTail}}'
   syntaxDirective_JS: '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?{{syntaxDirectiveTail}}'
-  syntaxDirective_JS_SIMPLE: >-
-    [Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?-[Ss](?:imple|IMPLE){{syntaxDirectiveTail}}
   syntaxDirective_JSON: '[Jj](?:son|SON){{syntaxDirectiveTail}}'
   syntaxDirective_MARKDOWN: '[Mm](?:ark[Dd](?:own|OWN)|ARKDOWN|[Dd]){{syntaxDirectiveTail}}'
   syntaxDirective_SHELL: '(?:[Bb](?:ash|ASH)|[Ss](?:hell|HELL)){{syntaxDirectiveTail}}'
   syntaxDirective_SQL: '[Ss](?:ql|QL){{syntaxDirectiveTail}}'
-  syntaxDirective_SUBLIME_SYNTAX: '[Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX){{syntaxDirectiveTail}}'
-  syntaxDirective_SUBLIME_SYNTAX_CONTEXT: '[Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX)\#contexts?{{syntaxDirectiveTail}}'
   syntaxDirective_XML: '[Xx](?:ml|ML){{syntaxDirectiveTail}}'
   syntaxDirective_YAML: '[Yy](?:aml|AML){{syntaxDirectiveTail}}'
   syntaxDirective: |-
@@ -101,13 +102,10 @@ variables:
         | {{syntaxDirective_GLSL}}
         | {{syntaxDirective_HTML}}
         | {{syntaxDirective_JS}}
-        | {{syntaxDirective_JS_SIMPLE}}
         | {{syntaxDirective_JSON}}
         | {{syntaxDirective_MARKDOWN}}
         | {{syntaxDirective_SHELL}}
         | {{syntaxDirective_SQL}}
-        | {{syntaxDirective_SUBLIME_SYNTAX}}
-        | {{syntaxDirective_SUBLIME_SYNTAX_CONTEXT}}
         | {{syntaxDirective_XML}}
         | {{syntaxDirective_YAML}}
       )
@@ -800,7 +798,7 @@ contexts:
       pop: true
     - include: statements
   classDeclaration_AFTER_CLASS:
-    - match: '(({{identifier}}))'
+    - match: '(({{identifier}}|(?=\s*(?:\{|extends))))'
       captures:
         '1': entity.name.class.js
         '2': entity.name.class.es
@@ -812,6 +810,12 @@ contexts:
         '1': punctuation.definition.class.body.begin.es
         '2': meta.brace.curly.js
       set: classDeclaration_AFTER_BRACE
+    - match: '((extends))\s*(?=\$\{)'
+      captures:
+        '1': storage.type.extends.js
+        '2': storage.modifier.extends.es
+      set:
+        - classDeclaration_AFTER_HERITAGE
     - match: '((extends)){{idEnd}}'
       captures:
         '1': storage.type.extends.js
@@ -880,6 +884,29 @@ contexts:
       set:
         - classDeclaration_AFTER_BRACE
         - generatorMethod_AFTER_ASTERISK
+    - match: '((get))(?=\s*\$\{)(?!\s*[\(=;])'
+      captures:
+        '1': storage.type.accessor.js
+        '2': storage.modifier.accessor.get.interp.es
+      set:
+        - classDeclaration_AFTER_BRACE
+        - accessorMethod_AFTER_GET_NAME_INTERP
+    - match: '((set))(?=\s*\$\{)(?!\s*[\(=;])'
+      captures:
+        '1': storage.type.accessor.js
+        '2': storage.modifier.accessor.get.interp.es
+      set:
+        - classDeclaration_AFTER_BRACE
+        - accessorMethod_AFTER_SET_NAME_INTERP
+    - match: '((async))((\s*\*))?(?=\s*\$\{)'
+      captures:
+        '1': storage.type.js
+        '2': storage.modifier.async.method.es
+        '3': keyword.generator.asterisk.js
+        '4': storage.modifier.generator.asterisk.method.es
+      set:
+        - classDeclaration_AFTER_BRACE
+        - asyncMethod_AFTER_NAME_INTERP
     - match: '((get)){{idEnd}}(?!\s*[\(=;])'
       captures:
         '1': storage.type.accessor.js
@@ -903,6 +930,13 @@ contexts:
       set:
         - classDeclaration_AFTER_BRACE
         - asyncMethod_AFTER_ASYNC
+    - match: '(({{identifierName}}))(?=\$\{)'
+      captures:
+        '1': entity.name.method.js
+        '2': entity.name.method.es
+      set:
+        - classDeclaration_AFTER_BRACE
+        - method_AFTER_NAME_INTERP
     - match: >-
         (((?:(#{{identifierName}})|({{identifierName}}))))\s*(=)\s*(((async))\s+)?(?=\((?<parens>[^\(\)]|\(\g<parens>*\))*\)\s*=>)
       captures:
@@ -935,6 +969,10 @@ contexts:
             set: assignmentExpression
           - match: '{{PLA_anything}}'
             pop: true
+    - match: '(?=\()'
+      set:
+        - classDeclaration_AFTER_BRACE
+        - method_AFTER_NAME
     - match: '(({{identifierName}})){{idEnd}}'
       captures:
         '1': entity.name.method.js
@@ -1600,7 +1638,7 @@ contexts:
         '1': punctuation.definition.arguments.begin.es
         '2': meta.brace.round.js
       push: arguments
-    - match: '`'
+    - match: \\`
       scope: punctuation.definition.string.interpolated.begin.es
       set:
         - ae_AFTER_VALUE
@@ -2653,7 +2691,7 @@ contexts:
       set:
         - ae_AFTER_VALUE
         - stringDouble_AFTER_OPEN
-    - match: '`'
+    - match: \\`
       scope: punctuation.definition.string.interpolated.begin.es
       set:
         - ae_AFTER_VALUE
@@ -2663,7 +2701,7 @@ contexts:
       set:
         - ae_AFTER_VALUE
         - regex_AFTER_OPEN
-    - match: '((({{identifier}})))\s*(`)'
+    - match: '((({{identifier}})))\s*(\\`)'
       captures:
         '1': entity.quasi.tag.name.js
         '2': variable.other.readwrite.tag.es
@@ -2787,7 +2825,7 @@ contexts:
         '1': punctuation.definition.arguments.begin.es
         '2': meta.brace.round.js
       push: arguments
-    - match: '`'
+    - match: \\`
       scope: punctuation.definition.string.interpolated.begin.es
       set:
         - ae_NO_IN_AFTER_VALUE
@@ -3560,7 +3598,7 @@ contexts:
       set:
         - ae_NO_IN_AFTER_VALUE
         - stringDouble_AFTER_OPEN
-    - match: '`'
+    - match: \\`
       scope: punctuation.definition.string.interpolated.begin.es
       set:
         - ae_NO_IN_AFTER_VALUE
@@ -3570,7 +3608,7 @@ contexts:
       set:
         - ae_NO_IN_AFTER_VALUE
         - regex_AFTER_OPEN
-    - match: '((({{identifier}})))\s*(`)'
+    - match: '((({{identifier}})))\s*(\\`)'
       captures:
         '1': entity.quasi.tag.name.js
         '2': variable.other.readwrite.tag.es
@@ -3884,6 +3922,17 @@ contexts:
         '2': meta.brace.square.js
       pop: true
     - include: other_illegal
+  method_AFTER_NAME_INTERP:
+    - match: '(({{identifierPart}}))(?=\s*\$\{)'
+      captures:
+        '1': entity.name.method.js
+        '2': entity.name.method.es
+    - match: '(({{identifierPart}})){{idEnd}}'
+      captures:
+        '1': entity.name.method.js
+        '2': entity.name.method.es
+      set: method_AFTER_NAME
+    - include: method_AFTER_NAME
   method_AFTER_NAME:
     - match: ((\())
       captures:
@@ -3973,6 +4022,18 @@ contexts:
         - computedProp_AFTER_AE
         - assignmentExpression
     - include: other_illegal_pop
+  asyncMethod_AFTER_NAME_INTERP:
+    - match: '(({{identifierPart}}))(?=\s*\$\{)'
+      captures:
+        '1': entity.name.method.js
+        '2': entity.name.method.async.es
+      set: asyncMethod_AFTER_NAME_INTERP
+    - match: '(({{identifierName}}))'
+      captures:
+        '1': entity.name.method.js
+        '2': entity.name.method.async.es
+      set: asyncMethod_AFTER_NAME
+    - include: asyncMethod_AFTER_NAME
   asyncMethod_AFTER_NAME:
     - match: ((\())
       captures:
@@ -4005,6 +4066,11 @@ contexts:
     - include: useStrict
     - include: statements
   accessorMethod_AFTER_GET:
+    - match: '(({{identifierName}}?(?=\s*\$\{)))'
+      captures:
+        '1': entity.name.method.js
+        '2': entity.name.accessor.get.es
+      set: accessorMethod_AFTER_GET_NAME_INTERP
     - match: '(({{identifierName}}))'
       captures:
         '1': entity.name.method.js
@@ -4062,6 +4128,30 @@ contexts:
         - computedProp_AFTER_AE
         - assignmentExpression
     - include: other_illegal_pop
+  accessorMethod_AFTER_SET_NAME_INTERP:
+    - match: '(({{identifierPart}}))(?=\s*\$\{)'
+      captures:
+        '1': storage.type.accessor.js
+        '2': storage.modifier.accessor.set.es
+      set: accessorMethod_AFTER_SET_NAME_INTERP
+    - match: '(({{identifierPart}})){{idEnd}}'
+      captures:
+        '1': storage.type.accessor.js
+        '2': storage.modifier.accessor.set.es
+      set: accessorMethod_AFTER_SET_NAME
+    - include: accessorMethod_AFTER_SET_NAME
+  accessorMethod_AFTER_GET_NAME_INTERP:
+    - match: '(({{identifierPart}}))(?=\s*\$\{)'
+      captures:
+        '1': storage.type.accessor.js
+        '2': storage.modifier.accessor.get.es
+      set: accessorMethod_AFTER_GET_NAME_INTERP
+    - match: '(({{identifierPart}})){{idEnd}}'
+      captures:
+        '1': storage.type.accessor.js
+        '2': storage.modifier.accessor.get.interp.es
+      set: accessorMethod_AFTER_GET_NAME
+    - include: accessorMethod_AFTER_GET_NAME
   accessorMethod_AFTER_GET_NAME:
     - match: ((\())
       captures:
@@ -4077,6 +4167,11 @@ contexts:
       set: accessorMethod_BEFORE_BRACE
     - include: other_illegal
   accessorMethod_AFTER_SET:
+    - match: '(({{identifierName}}?(?=\$\{)))'
+      captures:
+        '1': entity.name.method.js
+        '2': entity.name.accessor.set.es
+      set: accessorMethod_AFTER_SET_NAME_INTERP
     - match: '(({{identifierName}}))'
       captures:
         '1': entity.name.method.js
@@ -4947,15 +5042,15 @@ contexts:
   templateString_AFTER_OPEN:
     - meta_scope: string.interpolated.es
     - meta_include_prototype: false
-    - match: '\\[`\$\{]'
+    - match: '\\\\\\[`\$\{]'
       scope: constant.character.escape.es
     - match: \\\n
       scope: constant.character.escape.pointless.es
     - include: string_COMMON_ESCAPES
-    - match: '`'
+    - match: \\`
       scope: punctuation.definition.string.interpolated.end.es
       pop: true
-    - match: '((\$\{))'
+    - match: '((\\\$\{))'
       captures:
         '1': entity.quasi.element.js punctuation.quasi.element.begin.js
         '2': punctuation.definition.string.interpolated.element.begin.es
@@ -4971,23 +5066,23 @@ contexts:
     - include: other_illegal_pop
   string_COMMON_QUOTED:
     - include: string_COMMON_ESCAPES
-    - match: \\\n
+    - match: \\\\\n
       scope: constant.character.escape.newline.es
-    - match: \n
+    - match: \\\n
       scope: invalid.illegal.newline.es
       pop: true
   string_COMMON_ESCAPES:
-    - match: '\\[\\bfnrtv]'
+    - match: '\\\\[\\bfnrtv]'
       scope: constant.character.escape.es
-    - match: '{{unicodeEscape}}'
+    - match: '\\{{unicodeEscape}}'
       scope: constant.character.escape.unicode.es
-    - match: \\x\h\h
+    - match: \\\\x\h\h
       scope: constant.character.escape.hexadecimal.es
-    - match: '\\(?:[1-7][0-7]{0,2}|[0-7]{2,3})'
+    - match: '\\\\(?:[1-7][0-7]{0,2}|[0-7]{2,3})'
       scope: invalid.illegal.octal-escape.es
-    - match: \\0
+    - match: \\\\0
       scope: constant.character.escape.null.es
-    - match: \\.
+    - match: \\\\.
       scope: constant.character.escape.pointless.es
   useStrict:
     - match: ((')use strict('))
@@ -5096,7 +5191,7 @@ contexts:
         - - meta_scope: meta.interpolation.jsx
           - include: ae_JSX_INTERPOLATION_END
         - - meta_scope: meta.interpolation.jsx
-          - match: '`'
+          - match: \\`
             scope: punctuation.definition.string.interpolated.begin.es
             set: ae_STYLED_JSX_STRING
           - include: ae_JSX_INTERPOLATION
@@ -5255,10 +5350,10 @@ contexts:
     - match: \\\n
       scope: constant.character.escape.pointless.es
     - include: string_COMMON_ESCAPES
-    - match: '`'
+    - match: \\`
       scope: punctuation.definition.string.interpolated.end.es
       pop: true
-    - match: '((\$\{))'
+    - match: '((\\\$\{))'
       captures:
         '1': entity.quasi.element.js punctuation.quasi.element.begin.js
         '2': punctuation.definition.string.interpolated.element.begin.es
@@ -5274,3 +5369,4 @@ contexts:
     - include: block_comment
   syntax_NO_IN_OPEN:
     - include: block_comment
+hidden: true
