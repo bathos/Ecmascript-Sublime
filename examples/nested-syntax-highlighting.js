@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 /* syntax: bash */ `
-	node $SCRIPT | grep '${find? find: '.'}' > out.txt 2>&1 \
+	node $SCRIPT | grep '${find? find: '.'}' > out.txt 2>&1 \\
 		&& cat out.txt
 `;
 
@@ -14,15 +14,19 @@
 /* syntax: dot */ `
 	digraph graph_name {
 		a [label="apple"];
-		b [label="${label}"]
-		a -> b [color="${color}"];
+		b [label="${fruit.label}"]
+		a -> b [color="${edge.color}"];
 	}
 `;
 
 /* syntax: js */ `
-	for(let say in words) {
-		if(say !== 'world') {
-			console.${level}('hello, ${world}');
+	class example extends ${super_class} {
+		constructor(input) {
+			super(input+'\n');
+		}
+
+		get ${property}() {
+			return this._${property}.toString();
 		}
 	}
 `;
@@ -47,6 +51,23 @@
 	<div className="${class_name}">
 		<span>content</span>
 	</div>
+	<script type="text/javascript">
+		// look, nested Ecmascript!
+		if(nested_javascript) {
+			for(let i=0; i<set.size(); i++) {
+
+			}
+		}
+	</script>
+`;
+
+/* syntax: md */ `
+# README
+
+List of **${category} items** to buy:
+${items.map(s => ` - ${s}`).join('\n')}
+
+> Notice: ${notice_message}
 `;
 
 /* syntax: sql */ `

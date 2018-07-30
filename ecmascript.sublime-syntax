@@ -1,8 +1,8 @@
 %YAML 1.2
 ---
 name: Ecmascript
-file_extensions: [ js, jsx, es, es6, mjs ]
-scope: source.js source.es
+hidden: true
+scope: source.es
 
 # es 20:15
 # though I walk through the valley of the shadow
@@ -131,9 +131,13 @@ variables:
   syntaxDirective_GLSL:  '[Gg](?:lsl|LSL){{syntaxDirectiveTail}}'
   syntaxDirective_HTML:  '[Hh](?:tml|TML){{syntaxDirectiveTail}}'
   syntaxDirective_JS:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?{{syntaxDirectiveTail}}'
+  syntaxDirective_JS_SIMPLE:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?-[Ss](?:imple|IMPLE){{syntaxDirectiveTail}}'
   syntaxDirective_JSON:  '[Jj](?:son|SON){{syntaxDirectiveTail}}'
+  syntaxDirective_MARKDOWN:  '[Mm](?:ark[Dd](?:own|OWN)|ARKDOWN|[Dd]){{syntaxDirectiveTail}}'
   syntaxDirective_SHELL: '(?:[Bb](?:ash|ASH)|[Ss](?:hell|HELL)){{syntaxDirectiveTail}}'
   syntaxDirective_SQL:   '[Ss](?:ql|QL){{syntaxDirectiveTail}}'
+  syntaxDirective_SUBLIME_SYNTAX:   '[Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX){{syntaxDirectiveTail}}'
+  syntaxDirective_SUBLIME_SYNTAX_CONTEXT:   '[Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX)\#contexts?{{syntaxDirectiveTail}}'
   syntaxDirective_XML:   '[Xx](?:ml|ML){{syntaxDirectiveTail}}'
   syntaxDirective_YAML:  '[Yy](?:aml|AML){{syntaxDirectiveTail}}'
 
@@ -145,9 +149,13 @@ variables:
         | {{syntaxDirective_GLSL}}
         | {{syntaxDirective_HTML}}
         | {{syntaxDirective_JS}}
+        | {{syntaxDirective_JS_SIMPLE}}
         | {{syntaxDirective_JSON}}
+        | {{syntaxDirective_MARKDOWN}}
         | {{syntaxDirective_SHELL}}
         | {{syntaxDirective_SQL}}
+        | {{syntaxDirective_SUBLIME_SYNTAX}}
+        | {{syntaxDirective_SUBLIME_SYNTAX_CONTEXT}}
         | {{syntaxDirective_XML}}
         | {{syntaxDirective_YAML}}
       )
@@ -5538,6 +5546,39 @@ contexts:
         - - include: syntax_ELEMENT
         - - include: expression
 
+  syntax_AFTER_OPEN_JS:
+    - meta_include_prototype: false
+    - match: '(?=`)'
+      pop: true
+    - match: '\\\n'
+      scope: constant.character.escape.es
+    - match: '\\[bfnrtv]'
+      scope: constant.character.escape.es meta.interpolation.interpolated.es
+    - match: '\\\\(?=[^\\]|\\[^`\$])'
+      scope: constant.character.escape.es meta.interpolation.interpolated.es
+    - match: '{{unicodeEscape}}'
+      scope: constant.character.escape.unicode.es
+    - match: '\\x\h\h'
+      scope: constant.character.escape.hexadecimal.es
+    - match: '\\(?:[1-7][0-7]{0,2}|[0-7]{2,3})'
+      scope: invalid.illegal.octal-escape.es
+    - match: '\\0'
+      scope: constant.character.escape.null.es
+    # - match: '\\.'
+    #   scope: constant.character.escape.pointless.es
+    - match: '((\$\{))'
+      scope: meta.interpolation.interpolated.es
+      captures:
+        1: entity.quasi.element.js punctuation.quasi.element.begin.js # ^BS
+        2: punctuation.definition.string.interpolated.element.begin.es
+      push:
+        - - meta_include_prototype: false
+          - meta_content_scope: meta.interpolation.interpolated.es
+          - match: '{{PLA_anything}}'
+            pop: true
+        - - include: syntax_ELEMENT
+        - - include: expression
+
   syntax_ELEMENT:
     - match: '((\}))'
       captures:
@@ -5562,13 +5603,13 @@ contexts:
         3: variable.other.readwrite.tag.es
         4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_CSS, syntax_CSS_OPEN ]
-#    - match: '{{syntaxDirective_DOT}}'
-#      captures:
-#        1: punctuation.definition.comment.end.es
-#        2: entity.quasi.tag.name.js # ^BS
-#        3: variable.other.readwrite.tag.es
-#        4: punctuation.definition.string.interpolated.begin.es
-#      set: [ syntax_meta_DOT, syntax_DOT_OPEN ]
+    - match: '{{syntaxDirective_DOT}}'
+      captures:
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+        4: punctuation.definition.string.interpolated.begin.es
+      set: [ syntax_meta_DOT, syntax_DOT_OPEN ]
     - match: '{{syntaxDirective_GLSL}}'
       captures:
         1: punctuation.definition.comment.end.es
@@ -5576,13 +5617,13 @@ contexts:
         3: variable.other.readwrite.tag.es
         4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_GLSL, syntax_GLSL_OPEN ]
-#    - match: '{{syntaxDirective_HTML}}'
-#      captures:
-#        1: punctuation.definition.comment.end.es
-#        2: entity.quasi.tag.name.js # ^BS
-#        3: variable.other.readwrite.tag.es
-#        4: punctuation.definition.string.interpolated.begin.es
-#      set: [ syntax_meta_HTML, syntax_HTML_OPEN ]
+    - match: '{{syntaxDirective_HTML}}'
+      captures:
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+        4: punctuation.definition.string.interpolated.begin.es
+      set: [ syntax_meta_HTML, syntax_HTML_OPEN ]
     - match: '{{syntaxDirective_JS}}'
       captures:
         1: punctuation.definition.comment.end.es
@@ -5590,6 +5631,13 @@ contexts:
         3: variable.other.readwrite.tag.es
         4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_JS, syntax_JS_OPEN ]
+    - match: '{{syntaxDirective_JS_SIMPLE}}'
+      captures:
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+        4: punctuation.definition.string.interpolated.begin.es
+      set: [ syntax_meta_JS, syntax_JS_SIMPLE_OPEN ]
     - match: '{{syntaxDirective_JSON}}'
       captures:
         1: punctuation.definition.comment.end.es
@@ -5597,6 +5645,13 @@ contexts:
         3: variable.other.readwrite.tag.es
         4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_JSON, syntax_JSON_OPEN ]
+    - match: '{{syntaxDirective_MARKDOWN}}'
+      captures:
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+        4: punctuation.definition.string.interpolated.begin.es
+      set: [ syntax_meta_MARKDOWN, syntax_MARKDOWN_OPEN ]
     - match: '{{syntaxDirective_SHELL}}'
       captures:
         1: punctuation.definition.comment.end.es
@@ -5611,6 +5666,20 @@ contexts:
         3: variable.other.readwrite.tag.es
         4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_SQL, syntax_SQL_OPEN ]
+    - match: '{{syntaxDirective_SUBLIME_SYNTAX}}'
+      captures:
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+        4: punctuation.definition.string.interpolated.begin.es
+      set: [ syntax_meta_SUBLIME_SYNTAX, syntax_SUBLIME_SYNTAX_OPEN ]
+    - match: '{{syntaxDirective_SUBLIME_SYNTAX_CONTEXT}}'
+      captures:
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+        4: punctuation.definition.string.interpolated.begin.es
+      set: [ syntax_meta_SUBLIME_SYNTAX, syntax_SUBLIME_SYNTAX_CONTEXT_OPEN ]
     - match: '{{syntaxDirective_XML}}'
       captures:
         1: punctuation.definition.comment.end.es
@@ -5642,21 +5711,21 @@ contexts:
       with_prototype:
         - include: syntax_AFTER_OPEN
 
-## DOT (GRAPHVIZ) SYNTAX ########################################################
-#
-#  syntax_meta_DOT:
-#    - meta_content_scope: meta.interpolation.syntax.dot
-#    - meta_include_prototype: false
-#    - match: '{{PLA_anything}}'
-#      pop: true
-#
-#  syntax_DOT_OPEN:
-#    - meta_include_prototype: false
-#    - match: '`'
-#      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
-#      set: scope:source.dot
-#      with_prototype:
-#        - include: syntax_AFTER_OPEN
+# DOT (GRAPHVIZ) SYNTAX ########################################################
+
+  syntax_meta_DOT:
+    - meta_content_scope: meta.interpolation.syntax.dot
+    - meta_include_prototype: false
+    - match: '{{PLA_anything}}'
+      pop: true
+
+  syntax_DOT_OPEN:
+    - meta_include_prototype: false
+    - match: '`'
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+      set: scope:source.dot.nested.es
+      with_prototype:
+        - include: syntax_AFTER_OPEN
 
 # GLSL SYNTAX ###################################################################
 
@@ -5674,23 +5743,21 @@ contexts:
       with_prototype:
         - include: syntax_AFTER_OPEN
 
-## HTML SYNTAX ##################################################################
-#
-#  syntax_meta_HTML:
-#    - meta_content_scope: meta.interpolation.syntax.html
-#    - meta_include_prototype: false
-#    - match: '{{PLA_anything}}'
-#      pop: true
-#
-#  syntax_HTML_OPEN:
-#    - meta_include_prototype: false
-#    - match: '`'
-#      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
-#      # We don't want to risk loading an HTML syntax that uses
-#      # `embed: scope:source.js` since that would cause recursion
-#      set: Packages/HTML/HTML.sublime-syntax
-#      with_prototype:
-#        - include: syntax_AFTER_OPEN
+# HTML SYNTAX ##################################################################
+
+  syntax_meta_HTML:
+    - meta_content_scope: meta.interpolation.syntax.html
+    - meta_include_prototype: false
+    - match: '{{PLA_anything}}'
+      pop: true
+
+  syntax_HTML_OPEN:
+    - meta_include_prototype: false
+    - match: '`'
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+      set: scope:text.html.basic.nested.es
+      with_prototype:
+        - include: syntax_AFTER_OPEN
 
 # JS (JAVASCRIPT) SYNTAX #######################################################
 
@@ -5704,6 +5771,14 @@ contexts:
     - meta_include_prototype: false
     - match: '`'
       scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+      set: scope:source.js.nested.es
+      with_prototype:
+        - include: syntax_AFTER_OPEN_JS
+
+  syntax_JS_SIMPLE_OPEN:
+    - meta_include_prototype: false
+    - match: '`'
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: Packages/JavaScript/JavaScript.sublime-syntax
       with_prototype:
         # We must also compete with the 'tagged-template' rule in the default
@@ -5713,7 +5788,7 @@ contexts:
             1: variable.other.readwrite.es
             2: string.interpolated.es punctuation.definition.string.interpolated.end.es
           pop: true
-        - include: syntax_AFTER_OPEN
+        - include: syntax_AFTER_OPEN_JS
 
 # JSON SYNTAX ##################################################################
 
@@ -5728,6 +5803,22 @@ contexts:
     - match: '`'
       scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: scope:source.json
+      with_prototype:
+        - include: syntax_AFTER_OPEN
+
+# MARKDOWN SYNTAX ##############################################################
+
+  syntax_meta_MARKDOWN:
+    - meta_content_scope: meta.interpolation.syntax.md
+    - meta_include_prototype: false
+    - match: '{{PLA_anything}}'
+      pop: true
+
+  syntax_MARKDOWN_OPEN:
+    - meta_include_prototype: false
+    - match: '`'
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+      set: scope:text.html.markdown.nested.es
       with_prototype:
         - include: syntax_AFTER_OPEN
 
@@ -5760,6 +5851,30 @@ contexts:
     - match: '`'
       scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: scope:source.sql
+      with_prototype:
+        - include: syntax_AFTER_OPEN
+
+# SUBLIME-SYNTAX SYNTAX ########################################################
+
+  syntax_meta_SUBLIME_SYNTAX:
+    - meta_content_scope: meta.interpolation.syntax.sublime-syntax
+    - meta_include_prototype: false
+    - match: '{{PLA_anything}}'
+      pop: true
+
+  syntax_SUBLIME_SYNTAX_OPEN:
+    - meta_include_prototype: false
+    - match: '`'
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+      set: scope:source.yaml.sublime.syntax.nested.es
+      with_prototype:
+        - include: syntax_AFTER_OPEN
+
+  syntax_SUBLIME_SYNTAX_CONTEXT_OPEN:
+    - meta_include_prototype: false
+    - match: '`'
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+      set: scope:source.yaml.sublime.syntax.nested.es#contexts_block
       with_prototype:
         - include: syntax_AFTER_OPEN
 

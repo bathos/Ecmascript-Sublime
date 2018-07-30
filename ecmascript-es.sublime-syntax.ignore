@@ -1,0 +1,10 @@
+%YAML 1.2
+---
+name: Ecmascript
+file_extensions: [ js, jsx, es, es6, mjs ]
+scope: source.js
+contexts:
+  prototype:
+    - include: scope:source.es#safe_prototype
+  main:
+    - include: scope:source.es
