@@ -10,5 +10,4 @@ contexts:
   prototype:
     - include: scope:source.safe.es.#prototype
   main:
-    - meta_scope: source.es
     - include: scope:source.safe.es

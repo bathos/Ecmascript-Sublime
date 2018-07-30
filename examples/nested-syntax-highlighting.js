@@ -55,7 +55,7 @@
 		// look, nested Ecmascript!
 		if(nested_javascript) {
 			for(let i=0; i<set.size(); i++) {
-				console.log('${channel}: '+set[i]);
+				console.log(\`${channel}: \${set[i]}\`);
 			}
 		}
 	</script>
@@ -68,6 +68,10 @@ List of **${category} items** to buy:
 ${items.map(s => ` - ${s}`).join('\n')}
 
 > Notice: ${notice_message}
+
+~~~js
+All code-fenced blocks in nested markdown are neutered
+~~~
 `;
 
 /* syntax: sql */ `

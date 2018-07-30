@@ -19,6 +19,7 @@ const h_syntax_transforms = {
 		},
 	},
 
+	// makes it nice and easy to code custom syntax injections
 	'source.yaml.sublime.syntax': {
 		'$.contexts.context_definition': (a_rules) => {
 			a_rules[0].match = a_rules[0].match.replace(/ \{1,2\}/, '[ \t]+');

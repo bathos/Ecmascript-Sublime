@@ -1,7 +1,7 @@
 %YAML 1.2
 ---
 name: Ecmascript
-hidden: true
+file_extensions: [ js, jsx, es, es6, mjs ]
 scope: source.es
 
 # es 20:15
@@ -5546,7 +5546,10 @@ contexts:
         - - include: syntax_ELEMENT
         - - include: expression
 
-  syntax_AFTER_OPEN_JS:
+  # this context is used when the nested syntax either is, or is capable of nesting, `source.js`.
+  #   it handles proper escaping within the nested string so that "backslash backtick" can be
+  #   consumed by the `source.js.nested.es` syntax
+  syntax_AFTER_OPEN_NESTS_JS:
     - meta_include_prototype: false
     - match: '(?=`)'
       pop: true
@@ -5757,7 +5760,7 @@ contexts:
       scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: scope:text.html.basic.nested.es
       with_prototype:
-        - include: syntax_AFTER_OPEN
+        - include: syntax_AFTER_OPEN_NESTS_JS
 
 # JS (JAVASCRIPT) SYNTAX #######################################################
 
@@ -5773,7 +5776,7 @@ contexts:
       scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: scope:source.js.nested.es
       with_prototype:
-        - include: syntax_AFTER_OPEN_JS
+        - include: syntax_AFTER_OPEN_NESTS_JS
 
   syntax_JS_SIMPLE_OPEN:
     - meta_include_prototype: false
@@ -5788,7 +5791,7 @@ contexts:
             1: variable.other.readwrite.es
             2: string.interpolated.es punctuation.definition.string.interpolated.end.es
           pop: true
-        - include: syntax_AFTER_OPEN_JS
+        - include: syntax_AFTER_OPEN_NESTS_JS
 
 # JSON SYNTAX ##################################################################
 

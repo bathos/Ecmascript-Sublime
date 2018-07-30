@@ -54,6 +54,30 @@
 	thing += pre_${value}_mid_${mod}_post;
 
 
+	thing.normal();
+
+	thing.${method}();
+
+	thing.pre_${method}();
+
+	thing.pre_${method}_post();
+
+	thing.pre_${method}_mid_${mod}_post();
+
+
+	normal.call();
+
+	${value}.call();
+
+	pre_${value}.call();
+
+	${value}_post.call();
+
+	pre_${value}_post.call();
+
+	pre_${value}_mid_${mod}_post.call();
+
+
 	function normal() {}
 
 	function ${decl}() {}
@@ -65,6 +89,19 @@
 	function pre_${decl}_post() {}
 
 	function pre_${decl}_mid${mod}_post() {}
+
+
+	function* normal() {}
+
+	function* ${decl}() {}
+
+	function* pre_${decl}() {}
+
+	function* ${decl}_post() {}
+
+	function* pre_${decl}_post() {}
+
+	function* pre_${decl}_mid${mod}_post() {}
 
 
 	class ${s_super} {

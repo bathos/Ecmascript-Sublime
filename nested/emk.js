@@ -62,6 +62,9 @@ let h_syntaxes = {};
 // graph
 let h_outs = {};
 
+// nested scopes
+let a_nested_scopes = [];
+
 GRAPH: {
 	let b_modules_absent = false;
 
@@ -140,58 +143,58 @@ GRAPH: {
 			}
 		}
 	}
-}
 
+	// only generate syntaxes that are directly or indirectly nested by Ecmascript
+	a_nested_scopes = (() => {
+		// reflection
+		let k_ecmascript = new syntax({
+			source: '../ecmascript.sublime-syntax',
+		});
 
-// only generate syntaxes that are directly or indirectly nested by Ecmascript
-let a_nested_scopes = (() => {
-	// reflection
-	let k_ecmascript = new syntax({
-		source: '../ecmascript.sublime-syntax',
-	});
+		// get nested scopes
+		let [, as_nested] = k_ecmascript.analyze();
 
-	// get nested scopes
-	let [, as_nested] = k_ecmascript.analyze();
+		// filter nested ones
+		as_nested = new Set([...as_nested]
+			.filter(s => s.endsWith('.nested.es'))
+			.map(s => s.replace(/\.nested\.es$/, '')));
 
-	// filter nested ones
-	as_nested = new Set([...as_nested]
-		.filter(s => s.endsWith('.nested.es'))
-		.map(s => s.replace(/\.nested\.es$/, '')));
+		const add_dependencies = (si_scope) => {
+			// node has outgoing edges
+			if(h_outs[si_scope]) {
+				// each of its dependency
+				for(let si_out of h_outs[si_scope]) {
+					// already in output
+					if(as_nested.has(si_out)) continue;
 
-	const add_dependencies = (si_scope) => {
-		// node has outgoing edges
-		if(h_outs[si_scope]) {
-			// each of its dependency
-			for(let si_out of h_outs[si_scope]) {
-				// already in output
-				if(as_nested.has(si_out)) continue;
+					// dirty dependency
+					if(si_out in h_dirty) {
+						// add to outputs
+						as_nested.add(si_out);
 
-				// dirty dependency
-				if(si_out in h_dirty) {
-					// add to outputs
-					as_nested.add(si_out);
-
-					// check all of its dependencies
-					add_dependencies(si_out);
+						// check all of its dependencies
+						add_dependencies(si_out);
+					}
 				}
 			}
+		};
+
+		// each dirty syntax
+		for(let si_scope of Object.keys(h_dirty)) {
+			// direct dependent
+			if(as_nested.has(si_scope)) {
+				// add to outputs
+				as_nested.add(si_scope);
+
+				// check all of its dependencies
+				add_dependencies(si_scope);
+			}
 		}
-	};
 
-	// each dirty syntax
-	for(let si_scope of Object.keys(h_dirty)) {
-		// direct dependent
-		if(as_nested.has(si_scope)) {
-			// add to outputs
-			as_nested.add(si_scope);
+		return [...as_nested];
+	})();
+}
 
-			// check all of its dependencies
-			add_dependencies(si_scope);
-		}
-	}
-
-	return [...as_nested];
-})();
 
 // export emk build descriptor
 module.exports = {

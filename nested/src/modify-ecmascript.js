@@ -2,6 +2,8 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const jp = require('jsonpath');
 
+const B_DEBUG_ILLEGAL = false;
+
 // syntax file
 let p_file = process.argv[2];
 
@@ -22,10 +24,20 @@ let g_syntax = yaml.safeLoad(s_syntax, {
 	let h_contexts = g_syntax.contexts;
 	for(let [si_context] of Object.entries(h_contexts)) {
 		// remove blacklisted contexts
-		if(si_context.startsWith('syntax_')) {
+		if(si_context.startsWith('syntax_') || /(_JSX|JSX_)/.test(si_context)) {
 			delete h_contexts[si_context];
 		}
 	}
+
+	// remove ae_JSX
+	let a_ae_rules = h_contexts.assignmentExpression_CORE;
+	a_ae_rules.splice(a_ae_rules.findIndex(g => 'ae_JSX' === g.include), 1);
+
+	// see: https://github.com/SublimeTextIssues/Core/issues/2395
+	h_contexts.main = [
+		{meta_include_prototype:false},
+		{include:'root'},
+	];
 }
 
 // make this syntax a nested one
@@ -80,7 +92,6 @@ if('nest' === s_mode) {
 	};
 
 	const distinct_id = n_id => Buffer.from(n_id+'').toString('base64').replace(/=+$/, '');
-	// const distinct_id = n_id => `s${n_id}`;
 
 	const yaml_load = z_yaml => 'string' === typeof z_yaml
 		? yaml.safeLoad(`%YAML 1.2\n---\n${gobble(z_yaml)}\n`)
@@ -129,14 +140,6 @@ if('nest' === s_mode) {
 			  set: classDeclaration_AFTER_HERITAGE
 		`, 1),
 
-		// '$.contexts.generatorMethod_AFTER_ASTERISK': insert_rules(/* syntax: sublime-syntax#context */ `
-		// 	- match: '(({{identifierPart}}))(?=\\s*\\$\\{)'
-		// 	  captures:
-		// 	    1: entity.name.method.js
-		// 	    2: entity.name.method.generator.es
-		// 	  set: generatorMethod_AFTER_NAME_INTERP
-		// `, 1),
-
 		'$.contexts.*': (a_rules) => {
 			let h_resume_scopes = {};
 
@@ -170,16 +173,18 @@ if('nest' === s_mode) {
 				}
 
 				// illegal token distinct naming for debugging
-				if(g_rule.scope && 'invalid.illegal.token.es' === g_rule.scope) {
-					g_rule.scope += '.'+distinct_id(c_illegals++);
-				}
+				if(B_DEBUG_ILLEGAL) {
+					if(g_rule.scope && 'invalid.illegal.token.es' === g_rule.scope) {
+						g_rule.scope += '.'+distinct_id(c_illegals++);
+					}
 
-				if(g_rule.include && g_rule.include.startsWith('other_illegal')) {
-					a_rules.splice(i_rule, 1, {
-						match: '{{MAT_word_or_any_one_char}}',
-						scope: `invalid.illegal.token.es.${distinct_id(c_illegals++)}`,
-						...(g_rule.include.endsWith('_pop')? {pop:true}: {}),
-					});
+					if(g_rule.include && g_rule.include.startsWith('other_illegal')) {
+						a_rules.splice(i_rule, 1, {
+							match: '{{MAT_word_or_any_one_char}}',
+							scope: `invalid.illegal.token.es.${distinct_id(c_illegals++)}`,
+							...(g_rule.include.endsWith('_pop')? {pop:true}: {}),
+						});
+					}
 				}
 			}
 
@@ -262,32 +267,6 @@ if('nest' === s_mode) {
 				{include:'functionDeclaration_AFTER_NAME'},
 			], -1)(a_rules);
 		},
-
-		// ...(['get', 'set'].reduce((h_queries, s_modifier) => Object.assign(h_queries, {
-		// 	[`$.contexts.accessorMethod_AFTER_${s_modifier.toUpperCase()}`]: insert_rules(/* syntax: sublime-syntax#contexts */ `
-		// 		- match: '(({{identifierName}}(?=\\s*\\$\\{)))'
-		// 		  captures:
-		// 		    1: entity.name.method.js
-		// 		    2: entity.name.accessor.${s_modifier}.es
-		// 		  set: accessorMethod_AFTER_${s_modifier.toUpperCase()}_NAME_INTERP
-		// 	`, 0),
-		// }), {})),
-
-		// '$.contexts.asyncMethod_AFTER_NAME': insert_rules(/* syntax: sublime-syntax#contexts */ `
-		// 	- match: '(({{identifierName}}(?=\\s*\\$\\{)))'
-		// 	  captures:
-		// 	    1: entity.name.method.js
-		// 	    2: entity.name.method.async.es
-		// 	  set: asyncMethod_AFTER_NAME_INTERP
-		// `, 0),
-
-		// '$.contexts.generatorMethod_AFTER_NAME': insert_rules(/* syntax: sublime-syntax#contexts */ `
-		// 	- match: '(({{identifierName}}(?=\\s*\\$\\{)))'
-		// 	  captures:
-		// 	    1: entity.name.method.js
-		// 	    2: entity.name.method.generator.es
-		// 	  set: generatorMethod_AFTER_NAME_INTERP
-		// `, 0),
 
 		'$.contexts': h_contexts => Object.assign(h_contexts, {
 			// method, asyncMethod, and generatorMethod
