@@ -7,4 +7,5 @@ contexts:
   prototype:
     - include: scope:source.es#safe_prototype
   main:
+    - meta_scope: source.es
     - include: scope:source.es

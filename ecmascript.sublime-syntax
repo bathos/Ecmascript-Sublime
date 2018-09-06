@@ -2,6 +2,7 @@
 ---
 name: Ecmascript
 file_extensions: [ js, jsx, es, es6, mjs ]
+hidden: true
 scope: source.es
 
 # es 20:15
@@ -131,6 +132,8 @@ variables:
   syntaxDirective_GLSL:  '[Gg](?:lsl|LSL){{syntaxDirectiveTail}}'
   syntaxDirective_HTML:  '[Hh](?:tml|TML){{syntaxDirectiveTail}}'
   syntaxDirective_JS:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?{{syntaxDirectiveTail}}'
+  syntaxDirective_JS_VALUE:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?\#value{{syntaxDirectiveTail}}'
+  syntaxDirective_JS_OBJECT_LITERAL:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?\#object-literal{{syntaxDirectiveTail}}'
   syntaxDirective_JS_SIMPLE:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?-[Ss](?:imple|IMPLE){{syntaxDirectiveTail}}'
   syntaxDirective_JSON:  '[Jj](?:son|SON){{syntaxDirectiveTail}}'
   syntaxDirective_MARKDOWN:  '[Mm](?:ark[Dd](?:own|OWN)|ARKDOWN|[Dd]){{syntaxDirectiveTail}}'
@@ -149,6 +152,8 @@ variables:
         | {{syntaxDirective_GLSL}}
         | {{syntaxDirective_HTML}}
         | {{syntaxDirective_JS}}
+        | {{syntaxDirective_JS_VALUE}}
+        | {{syntaxDirective_JS_OBJECT_LITERAL}}
         | {{syntaxDirective_JS_SIMPLE}}
         | {{syntaxDirective_JSON}}
         | {{syntaxDirective_MARKDOWN}}
@@ -5634,6 +5639,20 @@ contexts:
         3: variable.other.readwrite.tag.es
         4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_JS, syntax_JS_OPEN ]
+    - match: '{{syntaxDirective_JS_VALUE}}'
+      captures:
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+        4: punctuation.definition.string.interpolated.begin.es
+      set: [ syntax_meta_JS, syntax_JS_VALUE_OPEN ]
+    - match: '{{syntaxDirective_JS_OBJECT_LITERAL}}'
+      captures:
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+        4: punctuation.definition.string.interpolated.begin.es
+      set: [ syntax_meta_JS, syntax_JS_OBJECT_LITERAL_OPEN ]
     - match: '{{syntaxDirective_JS_SIMPLE}}'
       captures:
         1: punctuation.definition.comment.end.es
@@ -5775,6 +5794,22 @@ contexts:
     - match: '`'
       scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: scope:source.js.nested.es
+      with_prototype:
+        - include: syntax_AFTER_OPEN_NESTS_JS
+
+  syntax_JS_VALUE_OPEN:
+    - meta_include_prototype: false
+    - match: '`'
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+      set: scope:source.js.nested.es#assignmentExpression_CORE
+      with_prototype:
+        - include: syntax_AFTER_OPEN_NESTS_JS
+
+  syntax_JS_OBJECT_LITERAL_OPEN:
+    - meta_include_prototype: false
+    - match: '`'
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+      set: scope:source.js.nested.es#literalObject_OPEN
       with_prototype:
         - include: syntax_AFTER_OPEN_NESTS_JS
 
