@@ -3,6 +3,16 @@
 name: Ecmascript
 file_extensions: [ js, jsx, es, es6, mjs ]
 scope: source.js
+
+# This file represents the top-level scope for the main Ecmascript Syntax as
+# `source.js`. In order to safely push the secondary `source.es` scope onto the
+# stack, we nest it separately and set the meta_scope from here. This is a fix
+# for a bug w/ ST3 that in some cases incorrectly created a single scope with
+# a space, named `source.js source.es`.
+#
+# In order to prevent two syntaxes from appearing in the menu, we use
+# `hidden: true` on the nested `source.es` syntax.
+
 contexts:
   prototype:
     - include: scope:source.es#safe_prototype

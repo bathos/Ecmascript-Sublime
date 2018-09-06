@@ -2,8 +2,11 @@
 ---
 name: Ecmascript
 file_extensions: [ js, jsx, es, es6, mjs ]
-hidden: true
 scope: source.es
+
+# This file is hidden from the syntax menu since the parent syntax `source.js`
+# will push this scope onto the stack automatically.
+hidden: true
 
 # es 20:15
 # though I walk through the valley of the shadow
