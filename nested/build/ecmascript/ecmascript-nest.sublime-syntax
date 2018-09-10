@@ -8,6 +8,7 @@ file_extensions:
   - es6
   - mjs
 scope: source.js.nested.es
+hidden: true
 variables:
   MAT_word_or_any_one_char: \w+|\S
   PLA_anything: '(?=[\S\s])'
@@ -82,12 +83,14 @@ variables:
   hexNum: '(0[Xx])(?:\h+(?:_+\h+)*)(n)?'
   idEnd: '(?=\$[^\{]|[^_‍‍{{ID_Continue}}]|$)'
   syntaxDirectiveHead: '(\s*syntax\s*:\s*)'
-  syntaxDirectiveTail: '\s*(\*\/)\s*((({{identifier}})))?(?=\s*`)'
+  syntaxDirectiveTail: '\s*(\*\/)\s*(({{identifier}}))?(?=\s*`)'
   syntaxDirective_CSS: '[Cc](?:ss|SS){{syntaxDirectiveTail}}'
   syntaxDirective_DOT: '[Dd](?:ot|OT){{syntaxDirectiveTail}}'
   syntaxDirective_GLSL: '[Gg](?:lsl|LSL){{syntaxDirectiveTail}}'
   syntaxDirective_HTML: '[Hh](?:tml|TML){{syntaxDirectiveTail}}'
   syntaxDirective_JS: '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?{{syntaxDirectiveTail}}'
+  syntaxDirective_JS_VALUE: '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?\#value{{syntaxDirectiveTail}}'
+  syntaxDirective_JS_OBJECT_LITERAL: '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?\#object-literal{{syntaxDirectiveTail}}'
   syntaxDirective_JS_SIMPLE: >-
     [Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?-[Ss](?:imple|IMPLE){{syntaxDirectiveTail}}
   syntaxDirective_JSON: '[Jj](?:son|SON){{syntaxDirectiveTail}}'
@@ -106,6 +109,8 @@ variables:
         | {{syntaxDirective_GLSL}}
         | {{syntaxDirective_HTML}}
         | {{syntaxDirective_JS}}
+        | {{syntaxDirective_JS_VALUE}}
+        | {{syntaxDirective_JS_OBJECT_LITERAL}}
         | {{syntaxDirective_JS_SIMPLE}}
         | {{syntaxDirective_JSON}}
         | {{syntaxDirective_MARKDOWN}}
@@ -2881,7 +2886,7 @@ contexts:
       set:
         - ae_AFTER_VALUE
         - regex_AFTER_OPEN
-    - match: '((({{identifier}})))\s*(\\`)'
+    - match: '(({{identifier}}))\s*(\\`)'
       captures:
         '1': entity.quasi.tag.name.js
         '2': variable.other.readwrite.tag.es
@@ -3803,7 +3808,7 @@ contexts:
       set:
         - ae_NO_IN_AFTER_VALUE
         - regex_AFTER_OPEN
-    - match: '((({{identifier}})))\s*(\\`)'
+    - match: '(({{identifier}}))\s*(\\`)'
       captures:
         '1': entity.quasi.tag.name.js
         '2': variable.other.readwrite.tag.es
@@ -5493,4 +5498,3 @@ contexts:
     - include: block_comment
   syntax_NO_IN_OPEN:
     - include: block_comment
-hidden: true

@@ -128,7 +128,7 @@ variables:
 
   # SYNTAX DIRECTIVES ##########################################################
   syntaxDirectiveHead: '(\s*syntax\s*:\s*)'
-  syntaxDirectiveTail: '\s*(\*\/)\s*((({{identifier}})))?(?=\s*`)'
+  syntaxDirectiveTail: '\s*(\*\/)\s*(({{identifier}}))?(?=\s*`)'
 
   syntaxDirective_CSS:   '[Cc](?:ss|SS){{syntaxDirectiveTail}}'
   syntaxDirective_DOT:   '[Dd](?:ot|OT){{syntaxDirectiveTail}}'
@@ -2911,7 +2911,7 @@ contexts:
     - match: '\/'
       scope: punctuation.definition.string.regexp.begin.es
       set: [ ae_AFTER_VALUE, regex_AFTER_OPEN ]
-    - match: '((({{identifier}})))\s*(`)'
+    - match: '(({{identifier}}))\s*(`)'
       captures:
         1: entity.quasi.tag.name.js # ^BS
         2: variable.other.readwrite.tag.es
@@ -3771,7 +3771,7 @@ contexts:
     - match: '\/'
       scope: punctuation.definition.string.regexp.begin.es
       set: [ ae_NO_IN_AFTER_VALUE, regex_AFTER_OPEN ]
-    - match: '((({{identifier}})))\s*(`)'
+    - match: '(({{identifier}}))\s*(`)'
       captures:
         1: entity.quasi.tag.name.js
         2: variable.other.readwrite.tag.es
@@ -5612,112 +5612,96 @@ contexts:
         1: punctuation.definition.comment.end.es
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
-        4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_CSS, syntax_CSS_OPEN ]
     - match: '{{syntaxDirective_DOT}}'
       captures:
         1: punctuation.definition.comment.end.es
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
-        4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_DOT, syntax_DOT_OPEN ]
     - match: '{{syntaxDirective_GLSL}}'
       captures:
         1: punctuation.definition.comment.end.es
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
-        4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_GLSL, syntax_GLSL_OPEN ]
     - match: '{{syntaxDirective_HTML}}'
       captures:
         1: punctuation.definition.comment.end.es
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
-        4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_HTML, syntax_HTML_OPEN ]
     - match: '{{syntaxDirective_JS}}'
       captures:
         1: punctuation.definition.comment.end.es
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
-        4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_JS, syntax_JS_OPEN ]
     - match: '{{syntaxDirective_JS_VALUE}}'
       captures:
         1: punctuation.definition.comment.end.es
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
-        4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_JS, syntax_JS_VALUE_OPEN ]
     - match: '{{syntaxDirective_JS_OBJECT_LITERAL}}'
       captures:
         1: punctuation.definition.comment.end.es
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
-        4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_JS, syntax_JS_OBJECT_LITERAL_OPEN ]
     - match: '{{syntaxDirective_JS_SIMPLE}}'
       captures:
         1: punctuation.definition.comment.end.es
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
-        4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_JS, syntax_JS_SIMPLE_OPEN ]
     - match: '{{syntaxDirective_JSON}}'
       captures:
         1: punctuation.definition.comment.end.es
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
-        4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_JSON, syntax_JSON_OPEN ]
     - match: '{{syntaxDirective_MARKDOWN}}'
       captures:
         1: punctuation.definition.comment.end.es
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
-        4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_MARKDOWN, syntax_MARKDOWN_OPEN ]
     - match: '{{syntaxDirective_SHELL}}'
       captures:
         1: punctuation.definition.comment.end.es
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
-        4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_SHELL, syntax_SHELL_OPEN ]
     - match: '{{syntaxDirective_SQL}}'
       captures:
         1: punctuation.definition.comment.end.es
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
-        4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_SQL, syntax_SQL_OPEN ]
     - match: '{{syntaxDirective_SUBLIME_SYNTAX}}'
       captures:
         1: punctuation.definition.comment.end.es
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
-        4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_SUBLIME_SYNTAX, syntax_SUBLIME_SYNTAX_OPEN ]
     - match: '{{syntaxDirective_SUBLIME_SYNTAX_CONTEXT}}'
       captures:
         1: punctuation.definition.comment.end.es
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
-        4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_SUBLIME_SYNTAX, syntax_SUBLIME_SYNTAX_CONTEXT_OPEN ]
     - match: '{{syntaxDirective_XML}}'
       captures:
         1: punctuation.definition.comment.end.es
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
-        4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_XML, syntax_XML_OPEN ]
     - match: '{{syntaxDirective_YAML}}'
       captures:
         1: punctuation.definition.comment.end.es
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
-        4: punctuation.definition.string.interpolated.begin.es
       set: [ syntax_meta_YAML, syntax_YAML_OPEN ]
 
 # CSS SYNTAX ###################################################################

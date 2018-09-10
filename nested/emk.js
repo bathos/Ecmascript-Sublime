@@ -196,6 +196,11 @@ GRAPH: {
 }
 
 
+const H_TESTS = fs.readdirSync('src/test')
+	.reduce((h_tests, s_file) => Object.assign(h_tests, {
+		[`syntax_test_${s_file}`]: s_file,
+	}), {});
+
 // export emk build descriptor
 module.exports = {
 	defs: {
@@ -207,6 +212,8 @@ module.exports = {
 			.map(s => h_syntaxes[s].replace(/^(?:[^/]+\/)/, '').replace(/-source$/, '')),
 
 		syntax_module: Object.keys(h_syntax_modules),
+
+		test_file: Object.keys(H_TESTS),
 	},
 
 	tasks: {
@@ -250,6 +257,18 @@ module.exports = {
 						node $1 $2 ${h.ecmascript_mode.replace(/^ecmascript-(.+)\.sublime-syntax$/, '$1')} > $@
 					`,
 				}),
+
+				test: {
+					':test_file': h => ({
+						deps: [
+							`src/test/${H_TESTS[h.test_file]}`,
+						],
+
+						run: /* syntax: bash */ `
+							node $1 > $@
+						`,
+					}),
+				},
 			},
 
 			':syntax': h => (si_scope => ({
