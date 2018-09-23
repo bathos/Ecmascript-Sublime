@@ -31,6 +31,7 @@ Here's the list of currently supported syntaxes. I just went with all the ones t
  - `json`
  - `dot` (Graphviz)
  - `glsl` (GLslang for WebGL)
+ - `lua`
  - `sql`
  - `xml`
  - `yaml`
