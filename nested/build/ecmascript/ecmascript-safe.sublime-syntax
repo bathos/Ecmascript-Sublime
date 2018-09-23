@@ -85,34 +85,44 @@ variables:
   syntaxDirectiveHead: '(\s*syntax\s*:\s*)'
   syntaxDirectiveTail: '\s*(\*\/)\s*(({{identifier}}))?(?=\s*`)'
   syntaxDirective_CSS: '[Cc](?:ss|SS){{syntaxDirectiveTail}}'
+  syntaxDirective_CSS_STYLE: '[Cc](?:ss|SS)[.#][Ss]tyle{{syntaxDirectiveTail}}'
   syntaxDirective_DOT: '[Dd](?:ot|OT){{syntaxDirectiveTail}}'
   syntaxDirective_GLSL: '[Gg](?:lsl|LSL){{syntaxDirectiveTail}}'
   syntaxDirective_HTML: '[Hh](?:tml|TML){{syntaxDirectiveTail}}'
   syntaxDirective_JS: '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?{{syntaxDirectiveTail}}'
-  syntaxDirective_JS_VALUE: '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?\#value{{syntaxDirectiveTail}}'
-  syntaxDirective_JS_OBJECT_LITERAL: '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?\#object-literal{{syntaxDirectiveTail}}'
+  syntaxDirective_JS_VALUE: '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?[.#][Vv]alue{{syntaxDirectiveTail}}'
+  syntaxDirective_JS_METHOD: '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?[.#][Mm]ethod{{syntaxDirectiveTail}}'
+  syntaxDirective_JS_REGEXP: '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?[.#][Rr]egexp?{{syntaxDirectiveTail}}'
+  syntaxDirective_JS_OBJECT_LITERAL: >-
+    [Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?[.#][Oo]bject-[Ll]iteral{{syntaxDirectiveTail}}
   syntaxDirective_JS_SIMPLE: >-
     [Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?-[Ss](?:imple|IMPLE){{syntaxDirectiveTail}}
   syntaxDirective_JSON: '[Jj](?:son|SON){{syntaxDirectiveTail}}'
+  syntaxDirective_LUA: '[Ll](?:ua|UA){{syntaxDirectiveTail}}'
   syntaxDirective_MARKDOWN: '[Mm](?:ark[Dd](?:own|OWN)|ARKDOWN|[Dd]){{syntaxDirectiveTail}}'
   syntaxDirective_SHELL: '(?:[Bb](?:ash|ASH)|[Ss](?:hell|HELL)){{syntaxDirectiveTail}}'
   syntaxDirective_SQL: '[Ss](?:ql|QL){{syntaxDirectiveTail}}'
   syntaxDirective_SUBLIME_SYNTAX: '[Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX){{syntaxDirectiveTail}}'
-  syntaxDirective_SUBLIME_SYNTAX_CONTEXT: '[Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX)\#contexts?{{syntaxDirectiveTail}}'
+  syntaxDirective_SUBLIME_SYNTAX_CONTEXT: >-
+    [Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX)[.#][Cc]ontexts?{{syntaxDirectiveTail}}
   syntaxDirective_XML: '[Xx](?:ml|ML){{syntaxDirectiveTail}}'
   syntaxDirective_YAML: '[Yy](?:aml|AML){{syntaxDirectiveTail}}'
   syntaxDirective: |-
     (?x)
       ((\/\*)){{syntaxDirectiveHead}}
       (?= {{syntaxDirective_CSS}}
+        | {{syntaxDirective_CSS_STYLE}}
         | {{syntaxDirective_DOT}}
         | {{syntaxDirective_GLSL}}
         | {{syntaxDirective_HTML}}
         | {{syntaxDirective_JS}}
         | {{syntaxDirective_JS_VALUE}}
+        | {{syntaxDirective_JS_METHOD}}
+        | {{syntaxDirective_JS_REGEXP}}
         | {{syntaxDirective_JS_OBJECT_LITERAL}}
         | {{syntaxDirective_JS_SIMPLE}}
         | {{syntaxDirective_JSON}}
+        | {{syntaxDirective_LUA}}
         | {{syntaxDirective_MARKDOWN}}
         | {{syntaxDirective_SHELL}}
         | {{syntaxDirective_SQL}}

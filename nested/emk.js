@@ -211,6 +211,8 @@ module.exports = {
 			.filter(s => 'source.js' !== s)
 			.map(s => h_syntaxes[s].replace(/^(?:[^/]+\/)/, '').replace(/-source$/, '')),
 
+		color_scheme: ['excelsior'],
+
 		syntax_module: Object.keys(h_syntax_modules),
 
 		test_file: Object.keys(H_TESTS),
@@ -269,6 +271,17 @@ module.exports = {
 						`,
 					}),
 				},
+
+				':color_scheme.tmTheme': h => ({
+					deps: [
+						'src/enhance-color-scheme.js',
+						`../${h.color_scheme}.YAML-tmTheme`,
+					],
+
+					run: /* syntax: bash */ `
+						node $1 $2 > $@
+					`,
+				}),
 			},
 
 			':syntax': h => (si_scope => ({

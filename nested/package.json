@@ -9,10 +9,11 @@
   "author": "Blake Regalia <blake.regalia@gmail.com>",
   "license": "ISC",
   "devDependencies": {
-    "emk": "^1.2.0"
+    "emk": "^1.4.2"
   },
   "dependencies": {
     "js-yaml": "^3.12.0",
-    "jsonpath": "^1.0.0"
+    "jsonpath": "^1.0.0",
+    "plist": "^3.0.1"
   }
 }

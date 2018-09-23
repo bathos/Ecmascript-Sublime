@@ -131,19 +131,23 @@ variables:
   syntaxDirectiveTail: '\s*(\*\/)\s*(({{identifier}}))?(?=\s*`)'
 
   syntaxDirective_CSS:   '[Cc](?:ss|SS){{syntaxDirectiveTail}}'
+  syntaxDirective_CSS_STYLE:   '[Cc](?:ss|SS)[.#][Ss]tyle{{syntaxDirectiveTail}}'
   syntaxDirective_DOT:   '[Dd](?:ot|OT){{syntaxDirectiveTail}}'
   syntaxDirective_GLSL:  '[Gg](?:lsl|LSL){{syntaxDirectiveTail}}'
   syntaxDirective_HTML:  '[Hh](?:tml|TML){{syntaxDirectiveTail}}'
   syntaxDirective_JS:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?{{syntaxDirectiveTail}}'
-  syntaxDirective_JS_VALUE:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?\#value{{syntaxDirectiveTail}}'
-  syntaxDirective_JS_OBJECT_LITERAL:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?\#object-literal{{syntaxDirectiveTail}}'
+  syntaxDirective_JS_VALUE:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?[.#][Vv]alue{{syntaxDirectiveTail}}'
+  syntaxDirective_JS_METHOD:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?[.#][Mm]ethod{{syntaxDirectiveTail}}'
+  syntaxDirective_JS_REGEXP:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?[.#][Rr]egexp?{{syntaxDirectiveTail}}'
+  syntaxDirective_JS_OBJECT_LITERAL:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?[.#][Oo]bject-[Ll]iteral{{syntaxDirectiveTail}}'
   syntaxDirective_JS_SIMPLE:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?-[Ss](?:imple|IMPLE){{syntaxDirectiveTail}}'
   syntaxDirective_JSON:  '[Jj](?:son|SON){{syntaxDirectiveTail}}'
+  syntaxDirective_LUA:  '[Ll](?:ua|UA){{syntaxDirectiveTail}}'
   syntaxDirective_MARKDOWN:  '[Mm](?:ark[Dd](?:own|OWN)|ARKDOWN|[Dd]){{syntaxDirectiveTail}}'
   syntaxDirective_SHELL: '(?:[Bb](?:ash|ASH)|[Ss](?:hell|HELL)){{syntaxDirectiveTail}}'
   syntaxDirective_SQL:   '[Ss](?:ql|QL){{syntaxDirectiveTail}}'
   syntaxDirective_SUBLIME_SYNTAX:   '[Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX){{syntaxDirectiveTail}}'
-  syntaxDirective_SUBLIME_SYNTAX_CONTEXT:   '[Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX)\#contexts?{{syntaxDirectiveTail}}'
+  syntaxDirective_SUBLIME_SYNTAX_CONTEXT:   '[Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX)[.#][Cc]ontexts?{{syntaxDirectiveTail}}'
   syntaxDirective_XML:   '[Xx](?:ml|ML){{syntaxDirectiveTail}}'
   syntaxDirective_YAML:  '[Yy](?:aml|AML){{syntaxDirectiveTail}}'
 
@@ -151,14 +155,18 @@ variables:
     (?x)
       ((\/\*)){{syntaxDirectiveHead}}
       (?= {{syntaxDirective_CSS}}
+        | {{syntaxDirective_CSS_STYLE}}
         | {{syntaxDirective_DOT}}
         | {{syntaxDirective_GLSL}}
         | {{syntaxDirective_HTML}}
         | {{syntaxDirective_JS}}
         | {{syntaxDirective_JS_VALUE}}
+        | {{syntaxDirective_JS_METHOD}}
+        | {{syntaxDirective_JS_REGEXP}}
         | {{syntaxDirective_JS_OBJECT_LITERAL}}
         | {{syntaxDirective_JS_SIMPLE}}
         | {{syntaxDirective_JSON}}
+        | {{syntaxDirective_LUA}}
         | {{syntaxDirective_MARKDOWN}}
         | {{syntaxDirective_SHELL}}
         | {{syntaxDirective_SQL}}
@@ -5613,6 +5621,12 @@ contexts:
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
       set: [ syntax_meta_CSS, syntax_CSS_OPEN ]
+    - match: '{{syntaxDirective_CSS_STYLE}}'
+      captures:
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+      set: [ syntax_meta_CSS, syntax_CSS_RULE_LIST_BODY_OPEN ]
     - match: '{{syntaxDirective_DOT}}'
       captures:
         1: punctuation.definition.comment.end.es
@@ -5643,6 +5657,18 @@ contexts:
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
       set: [ syntax_meta_JS, syntax_JS_VALUE_OPEN ]
+    - match: '{{syntaxDirective_JS_METHOD}}'
+      captures:
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+      set: [ syntax_meta_JS, syntax_JS_METHOD_OPEN ]
+    - match: '{{syntaxDirective_JS_REGEXP}}'
+      captures:
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+      set: [ syntax_meta_JS, syntax_JS_REGEXP_OPEN ]
     - match: '{{syntaxDirective_JS_OBJECT_LITERAL}}'
       captures:
         1: punctuation.definition.comment.end.es
@@ -5661,6 +5687,12 @@ contexts:
         2: entity.quasi.tag.name.js # ^BS
         3: variable.other.readwrite.tag.es
       set: [ syntax_meta_JSON, syntax_JSON_OPEN ]
+    - match: '{{syntaxDirective_LUA}}'
+      captures:
+        1: punctuation.definition.comment.end.es
+        2: entity.quasi.tag.name.js # ^BS
+        3: variable.other.readwrite.tag.es
+      set: [ syntax_meta_LUA, syntax_LUA_OPEN ]
     - match: '{{syntaxDirective_MARKDOWN}}'
       captures:
         1: punctuation.definition.comment.end.es
@@ -5717,6 +5749,14 @@ contexts:
     - match: '`'
       scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: scope:source.css
+      with_prototype:
+        - include: syntax_AFTER_OPEN
+
+  syntax_CSS_RULE_LIST_BODY_OPEN:
+    - meta_include_prototype: false
+    - match: '`'
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+      set: scope:source.css#rule-list-body
       with_prototype:
         - include: syntax_AFTER_OPEN
 
@@ -5792,6 +5832,22 @@ contexts:
       with_prototype:
         - include: syntax_AFTER_OPEN_NESTS_JS
 
+  syntax_JS_METHOD_OPEN:
+    - meta_include_prototype: false
+    - match: '`'
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+      set: scope:source.js.nested.es#classDeclaration_AFTER_BRACE
+      with_prototype:
+        - include: syntax_AFTER_OPEN_NESTS_JS
+
+  syntax_JS_REGEXP_OPEN:
+    - meta_include_prototype: false
+    - match: '`'
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+      set: scope:source.js.nested.es#regex_AFTER_OPEN
+      with_prototype:
+        - include: syntax_AFTER_OPEN_NESTS_JS
+
   syntax_JS_OBJECT_LITERAL_OPEN:
     - meta_include_prototype: false
     - match: '`'
@@ -5818,7 +5874,7 @@ contexts:
 # JSON SYNTAX ##################################################################
 
   syntax_meta_JSON:
-    - meta_content_scope: meta.interpolation.syntax.js
+    - meta_content_scope: meta.interpolation.syntax.json
     - meta_include_prototype: false
     - match: '{{PLA_anything}}'
       pop: true
@@ -5828,6 +5884,22 @@ contexts:
     - match: '`'
       scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: scope:source.json
+      with_prototype:
+        - include: syntax_AFTER_OPEN
+
+# LUA SYNTAX ###################################################################
+
+  syntax_meta_LUA:
+    - meta_content_scope: meta.interpolation.syntax.lua
+    - meta_include_prototype: false
+    - match: '{{PLA_anything}}'
+      pop: true
+
+  syntax_LUA_OPEN:
+    - meta_include_prototype: false
+    - match: '`'
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+      set: scope:source.lua
       with_prototype:
         - include: syntax_AFTER_OPEN
 

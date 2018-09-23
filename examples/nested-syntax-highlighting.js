@@ -11,6 +11,8 @@
 	}
 `;
 
+	/* syntax: css.style */ `font-size: ${size}pt`;
+
 /* syntax: dot */ `
 	digraph graph_name {
 		a [label="apple"];
@@ -31,12 +33,38 @@
 	}
 `;
 
+	/* syntax: js.object-literal */ `
+		color: 'yellow',
+		taste: ${flavor},
+		organic: true,
+	`;
+
+	/* syntax: js.value */ `.toString()`;
+
+	/* syntax: js.method */ `
+		anonymous() {
+			return true;
+		}
+	`;
+
+	new Regexp(/* syntax: js.regexp */ `(a+b[a-c]){2}`);
+
 /* syntax: json */ `
 	{
 		"name": "douglas",
 		"score": 42,
 		"info": ${JSON.stringify(info)}
 	}
+`;
+
+/* syntax: lua */ `
+	local function cleanup()
+		for i, v in ipairs(${handler}) do
+			pcall(v)
+		end
+
+		table.insert(${handler}, f)
+	end
 `;
 
 // Requires a GLSL language, such as the "OpenGL Shading Language (GLSL)" plugin
@@ -48,11 +76,18 @@
 `;
 
 /* syntax: html */ `
-	<div className="${class_name}">
-		<span>content</span>
+	<style>
+		.large {
+			font-size: 24pt;
+		}
+	</style>
+	<div className="large ${class_name}">
+		<span style="display:${display_format}; font:12pt">
+			content
+		</span>
 	</div>
 	<script type="text/javascript">
-		// look, nested Ecmascript!
+		// look, nested Ecmascript! its inside a script tag, within an interpolated HTML template literal string
 		if(nested_javascript) {
 			for(let i=0; i<set.size(); i++) {
 				console.log(\`${channel}: \${set[i]}\`);
