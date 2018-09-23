@@ -272,7 +272,7 @@ module.exports = {
 					}),
 				},
 
-				':color_scheme.tmTheme': h => ({
+				':color_scheme.tmTheme.hard': h => ({
 					deps: [
 						'src/enhance-color-scheme.js',
 						`../${h.color_scheme}.YAML-tmTheme`,
