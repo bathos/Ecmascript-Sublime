@@ -276,6 +276,7 @@ module.exports = {
 					deps: [
 						'src/enhance-color-scheme.js',
 						`../${h.color_scheme}.YAML-tmTheme`,
+						'build/base-packages/HTML/HTML.sublime-syntax',
 					],
 
 					run: /* syntax: bash */ `
