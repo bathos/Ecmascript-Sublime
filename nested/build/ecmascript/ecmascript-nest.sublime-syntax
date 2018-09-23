@@ -1099,28 +1099,28 @@ contexts:
       captures:
         '1': meta.function.js entity.name.function.js
         '2': meta.symbol-helper.generator.es
-        '3': variable.other.readwrite.allCap.es
-        '4': variable.other.readwrite.initCap.es
-        '5': variable.other.readwrite.es
-        '6': entity.name.function.generator.es
+        '3': entity.name.function.generator.es
+        '4': variable.other.readwrite.allCap.es
+        '5': variable.other.readwrite.initCap.es
+        '6': variable.other.readwrite.es
       set: constLetVarDeclaration_AFTER_BINDING
     - match: '((({{allThreeIDs}})))(?=\s*=\s*async\s+function{{idEnd}})'
       captures:
         '1': meta.function.js entity.name.function.js
         '2': meta.symbol-helper.function.es
-        '3': variable.other.readwrite.allCap.es
-        '4': variable.other.readwrite.initCap.es
-        '5': variable.other.readwrite.es
-        '6': entity.name.function.async.es
+        '3': entity.name.function.async.es
+        '4': variable.other.readwrite.allCap.es
+        '5': variable.other.readwrite.initCap.es
+        '6': variable.other.readwrite.es
       set: constLetVarDeclaration_AFTER_BINDING
     - match: '((({{allThreeIDs}})))(?=\s*=\s*function{{idEnd}})'
       captures:
         '1': meta.function.js entity.name.function.js
         '2': meta.symbol-helper.function.es
-        '3': variable.other.readwrite.allCap.es
-        '4': variable.other.readwrite.initCap.es
-        '5': variable.other.readwrite.es
-        '6': entity.name.function.es
+        '3': entity.name.function.es
+        '4': variable.other.readwrite.allCap.es
+        '5': variable.other.readwrite.initCap.es
+        '6': variable.other.readwrite.es
       set: constLetVarDeclaration_AFTER_BINDING
     - match: '(({{allThreeIDs}}))(?=\s*=\s*class\s*(?:\{|extends{idEnd}))'
       captures:
@@ -1147,10 +1147,10 @@ contexts:
       captures:
         '1': meta.function.arrow.js entity.name.function.js
         '2': meta.symbol-helper.arrow.es
-        '3': variable.other.readwrite.allCap.es
-        '4': variable.other.readwrite.initCap.es
-        '5': variable.other.readwrite.es
-        '6': entity.name.function.es
+        '3': entity.name.function.es
+        '4': variable.other.readwrite.allCap.es
+        '5': variable.other.readwrite.initCap.es
+        '6': variable.other.readwrite.es
       set: constLetVarDeclaration_AFTER_BINDING
     - match: '{{allThreeIDs}}'
       captures:
