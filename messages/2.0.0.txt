@@ -1,0 +1,15 @@
+v2.0.0
+------------------------
+
+# BREAKING CHANGE -- Sorry!
+
+  The `excelsior` color scheme has moved. If you just got an error message then
+  please make sure to adjust your settings appropriately:
+
+  First, you will want to update your global settings, easiest way to do that:
+    Command Palette > "UI: Select Color Scheme" > "excelsior"
+
+  You might have also defined syntax-specific settings at one point. Open a 
+  source.es or source.js file and then go to:
+    Sublime Text Preferences > "Settings - Syntax Specific"
+  ... and check if you need to update the `color_scheme` key in the JSON config.
