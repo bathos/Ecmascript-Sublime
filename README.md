@@ -280,10 +280,6 @@ handful of things that cannot be made to match because of what I guess could be
 called philosophical differences, but it should now be possible to use
 Ecmascript Sublime with just about any theme without cringing.
 
-I should note, there is another theme included with the package. It isn’t a real
-theme though -- it assigns random colors to hundreds of scopes. It is useful for
-referencing when designing themes but you’d be insane to actually use it.
-
 If you’re interested in adding support for Ecmascript Sublime to your theme, or
 are developing a new theme with this in mind, you’ll probably want a list of
 the targetable scopes...
