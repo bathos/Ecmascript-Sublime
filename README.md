@@ -223,8 +223,8 @@ depth is not always as great as with established language features, though.
 
 The following proposed features, as they stand today anyway, are covered:
 
- - generator & array comprehensions (should probably remove at some point)
  - class and method decorators
+ - private methods
  - object literal spread and object binding pattern rest
  - bind operator
  - do expression
@@ -232,7 +232,7 @@ The following proposed features, as they stand today anyway, are covered:
  - optional catch binding
  - dynamic import & import.meta
  - function.sent
- - class fields
+ - class fields (private fields and instance initializers)
  - export extensions
 
 In addition to ES and some proposed ES, JSX is supported.
@@ -311,19 +311,6 @@ in ‘.regexp’ do not also have ‘.es’.
   - `meta.comment.box-drawing` (box drawing characters can be targeted)
   - `meta.directive.use-strict` (the `'use strict'` directive)
   - `punctuation.definition.comment` (the delimiting `//`, `/*` or `*/`)
-- **Comprehensions**
-  - `keyword.control.loop.conditional.if.comprehension.array`
-  - `keyword.control.loop.conditional.if.comprehension.generator`
-  - `keyword.control.loop.for.comprehension.array`
-  - `keyword.control.loop.for.comprehension.generator`
-  - `keyword.control.loop.of.comprehension.array`
-  - `keyword.control.loop.of.comprehension.generator`
-  - `punctuation.definition.comprehension.array`
-  - `punctuation.definition.comprehension.generator`
-  - `punctuation.definition.expression.conditional.comprehension.array`
-  - `punctuation.definition.expression.conditional.comprehension.generator`
-  - `punctuation.definition.expression.loop.comprehension.array`
-  - `punctuation.definition.expression.loop.comprehension.generator`
 - **Constants & Literals**
   - **General**
     - `constant`
@@ -979,7 +966,6 @@ can cause mismatching, where the pipe represents a problematic linebreak:
  - Statement label | `:`
  - Parameter(s) | `=>`
  - `function` | `*`
- - [ or ( of a comprehension | for
  - `async` | `function` (but only in expressions -- this is because async could
    also be an identifier, and accomodating that is important because of the
    popular Node library)
