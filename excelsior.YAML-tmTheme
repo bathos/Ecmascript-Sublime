@@ -339,11 +339,15 @@ settings:
 
 - name: Private Method
   scope: >-
+    entity.name.accessor.get.private,
+    entity.name.accessor.set.private,
     entity.name.method.private,
+    punctuation.definition.accessor.private.body,
+    punctuation.definition.parameters.accessor.private,
     punctuation.definition.parameters.method.private,
     punctuation.definition.method.private
   settings:
-    foreground: '#C76ED4'
+    foreground: '#B7B1BE'
 
 - name: Generator Method
   scope: >-

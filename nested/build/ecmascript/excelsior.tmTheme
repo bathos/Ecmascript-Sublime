@@ -599,11 +599,11 @@
       <key>name</key>
       <string>Private Method</string>
       <key>scope</key>
-      <string>entity.name.method.private, punctuation.definition.parameters.method.private, punctuation.definition.method.private</string>
+      <string>entity.name.accessor.get.private, entity.name.accessor.set.private, entity.name.method.private, punctuation.definition.accessor.private.body, punctuation.definition.parameters.accessor.private, punctuation.definition.parameters.method.private, punctuation.definition.method.private</string>
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#C76ED4</string>
+        <string>#b7b1be</string>
       </dict>
     </dict>
     <dict>

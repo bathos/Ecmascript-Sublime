@@ -1033,17 +1033,17 @@ contexts:
       captures:
         1: keyword.generator.asterisk.js # ^BS
         2: storage.modifier.generator.asterisk.method.es
-      set: [ classDeclaration_AFTER_BRACE, generatorMethod_AFTER_ASTERISK ]
+      set: [ classDeclaration_AFTER_BRACE, generatorMethod_AFTER_ASTERISK_CLASS ]
     - match: '((get)){{idEnd}}(?!\s*[\(=;])'
       captures:
         1: storage.type.accessor.js # ^BS
         2: storage.modifier.accessor.get.es
-      set: [ classDeclaration_AFTER_BRACE, accessorMethod_AFTER_GET ]
+      set: [ classDeclaration_AFTER_BRACE, accessorMethod_AFTER_GET_CLASS ]
     - match: '((set)){{idEnd}}(?!\s*[\(=;])'
       captures:
         1: storage.type.accessor.js # ^BS
         2: storage.modifier.accessor.set.es
-      set: [ classDeclaration_AFTER_BRACE, accessorMethod_AFTER_SET ]
+      set: [ classDeclaration_AFTER_BRACE, accessorMethod_AFTER_SET_CLASS ]
     - match: '((async)){{idEnd}}((\s*\*))?'
       captures:
         1: storage.type.js # ^BS
@@ -3970,6 +3970,14 @@ contexts:
     # Possibly this is an object property.
     - include: other_illegal_pop
 
+  accessorMethod_AFTER_GET_CLASS:
+    - match: ((#{{identifierName}}))
+      captures:
+        1: entity.name.method.js # ^BS -- monokai
+        2: entity.name.accessor.get.private.es
+      set: accessorMethod_AFTER_GET_NAME_PRIVATE
+    - include: accessorMethod_AFTER_GET
+
   accessorMethod_AFTER_GET_NAME:
     - match: '((\())'
       captures:
@@ -3978,12 +3986,28 @@ contexts:
       set: accessorMethod_AFTER_GET_PAREN_OPEN
     - include: other_illegal_pop
 
+  accessorMethod_AFTER_GET_NAME_PRIVATE:
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.parameters.accessor.private.begin.es
+        2: meta.brace.round.js # ^BS
+      set: accessorMethod_AFTER_GET_PAREN_OPEN_PRIVATE
+    - include: other_illegal_pop
+
   accessorMethod_AFTER_GET_PAREN_OPEN:
     - match: '((\)))'
       captures:
         1: punctuation.definition.parameters.accessor.end.es
         2: meta.brace.round.js # ^BS
       set: accessorMethod_BEFORE_BRACE
+    - include: other_illegal
+
+  accessorMethod_AFTER_GET_PAREN_OPEN_PRIVATE:
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.parameters.accessor.private.end.es
+        2: meta.brace.round.js # ^BS
+      set: accessorMethod_BEFORE_BRACE_PRIVATE
     - include: other_illegal
 
   accessorMethod_AFTER_SET:
@@ -4038,12 +4062,28 @@ contexts:
       set: [ accessorMethod_AFTER_SET_NAME, computedProp_AFTER_AE, assignmentExpression ]
     - include: other_illegal_pop
 
+  accessorMethod_AFTER_SET_CLASS:
+    - match: ((#{{identifierName}}))
+      captures:
+        1: entity.name.method.js # ^BS -- monokai
+        2: entity.name.accessor.set.private.es
+      set: accessorMethod_AFTER_SET_NAME_PRIVATE
+    - include: accessorMethod_AFTER_SET
+
   accessorMethod_AFTER_SET_NAME:
     - match: '((\())'
       captures:
         1: punctuation.definition.parameters.accessor.begin.es
         2: meta.brace.round.js # ^BS
       set: [ accessorMethod_AFTER_SET_PARAM, parameters ]
+    - include: other_illegal_pop
+
+  accessorMethod_AFTER_SET_NAME_PRIVATE:
+    - match: '((\())'
+      captures:
+        1: punctuation.definition.parameters.accessor.private.begin.es
+        2: meta.brace.round.js # ^BS
+      set: [ accessorMethod_AFTER_SET_PARAM_PRIVATE, parameters ]
     - include: other_illegal_pop
 
   accessorMethod_AFTER_SET_PARAM:
@@ -4054,6 +4094,14 @@ contexts:
       set: accessorMethod_BEFORE_BRACE
     - include: other_illegal
 
+  accessorMethod_AFTER_SET_PARAM_PRIVATE:
+    - match: '((\)))'
+      captures:
+        1: punctuation.definition.parameters.accessor.private.end.es
+        2: meta.brace.round.js # ^BS
+      set: accessorMethod_BEFORE_BRACE_PRIVATE
+    - include: other_illegal
+
   accessorMethod_BEFORE_BRACE:
     - match: '((\{))'
       captures:
@@ -4062,10 +4110,30 @@ contexts:
       set: accessorMethod_AFTER_BRACE
     - include: other_illegal_pop
 
+  accessorMethod_BEFORE_BRACE_PRIVATE:
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.accessor.private.body.begin.es
+        2: meta.brace.curly.js # ^BS
+      set: accessorMethod_AFTER_BRACE_PRIVATE
+    - include: other_illegal_pop
+
   accessorMethod_AFTER_BRACE:
     - match: '((\}))'
       captures:
         1: punctuation.definition.accessor.body.end.es
+        2: meta.brace.curly.js # ^BS
+      pop: true
+    - include: useStrict
+    - match: '(return){{idEnd}}'
+      scope: keyword.control.flow.return.accessor.es
+      push: returnStatement
+    - include: statements
+
+  accessorMethod_AFTER_BRACE_PRIVATE:
+    - match: '((\}))'
+      captures:
+        1: punctuation.definition.accessor.private.body.end.es
         2: meta.brace.curly.js # ^BS
       pop: true
     - include: useStrict
@@ -4125,6 +4193,14 @@ contexts:
         2: meta.brace.square.js # ^BS
       set: [ generatorMethod_AFTER_NAME, computedProp_AFTER_AE, assignmentExpression ]
     - include: other_illegal_pop
+
+  generatorMethod_AFTER_ASTERISK_CLASS:
+    - match: '((#{{identifierName}})){{idEnd}}'
+      captures:
+        1: entity.name.method.js # ^BS -- monokai
+        2: entity.name.method.private.es
+      set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME_PRIVATE ]
+    - include: generatorMethod_AFTER_ASTERISK
 
   generatorMethod_AFTER_NAME:
     - match: '((\())'
