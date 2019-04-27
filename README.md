@@ -434,6 +434,7 @@ in ‘.regexp’ do not also have ‘.es’.
       - `variable.parameter.rest`
     - **Execution & Do Expressions**
       - `keyword.control.do-expression.do` (the keyword from ES7, not the loop)
+      - `meta.decorator.arguments`
       - `meta.instantiation` (applied to identifier being instantiated)
       - `meta.invocation` (applied to identifier being invoked)
       - `punctuation.definition.arguments` (parens in invocation/instantiation)
@@ -453,6 +454,7 @@ in ‘.regexp’ do not also have ‘.es’.
       - `storage.modifier.accessor.set` (keyword `set`)
     - **Async Functions**
       - `entity.name.method.async` (name of async function)
+      - `entity.name.method.private.async`
       - `entity.name.function.async`
       - `entity.name.function.async.arrow`
       - `keyword.control.flow.await` (keyword `await`)
@@ -461,26 +463,31 @@ in ‘.regexp’ do not also have ‘.es’.
       - `punctuation.definition.function.async.arrow.body`
       - `punctuation.definition.function.async.body`
       - `punctuation.definition.method.async.body`
+      - `punctuation.definition.method.private.async.body`
       - `punctuation.definition.parameters.function.async`
       - `punctuation.definition.parameters.function.async.arrow`
       - `punctuation.definition.parameters.method.async`
+      - `punctuation.definition.parameters.method.private.async`
       - `storage.modifier.async` (keyword `async`, general)
       - `storage.modifier.async.expression` (keyword `async`, in expression)
       - `storage.modifier.async.method` (keyword `async`, in method declaration)
     - **Classes**
       - `entity.name.class`
       - `entity.name.constructor`
+      - `meta.decorator`
+      - `meta.decorator.parenthesized`
       - `meta.super-expression`
       - `punctuation.definition.class.body`
       - `punctuation.definition.constructor.body`
       - `punctuation.definition.decorator`
+      - `punctuation.definition.method.private.body`
       - `punctuation.definition.parameters.constructor`
-      - `punctuation.terminator.property` (es7? class property semicolon)
+      - `punctuation.terminator.property`
       - `storage.modifier.extends`
       - `storage.modifier.static`
       - `storage.type.class`
       - `storage.type.class.expression`
-      - `variable.other.readwrite.property.class.es` (es7? class property key)
+      - `variable.other.readwrite.property.class.es`
       - `variable.language.private`
       - `variable.language.private.class`
     - **Functions**
@@ -489,6 +496,7 @@ in ‘.regexp’ do not also have ‘.es’.
       - `entity.name.function.allCap`
       - `entity.name.function.initCap`
       - `entity.name.method`
+      - `entity.name.method.private`
       - `keyword.control.flow.return`
       - `punctuation.definition.function`
       - `punctuation.definition.function.arrow.body`
@@ -499,6 +507,7 @@ in ‘.regexp’ do not also have ‘.es’.
       - `punctuation.definition.parameters.function`
       - `punctuation.definition.parameters.function.arrow`
       - `punctuation.definition.parameters.method`
+      - `punctuation.definition.parameters.method.private`
       - `storage.type.function.arrow`
       - `storage.type.function.async`
       - `storage.type.function.async.arrow`
@@ -575,6 +584,7 @@ in ‘.regexp’ do not also have ‘.es’.
     - `keyword.operator.relational.lte`
   - **Evaluative**
     - `keyword.operator.accessor`
+    - `keyword.operator.accessor.decorator`
     - `keyword.operator.bind`
     - `keyword.operator.comma`
     - `keyword.operator.new`
@@ -706,14 +716,6 @@ in ‘.regexp’ do not also have ‘.es’.
     - `support.class.builtin` (e.g. `Array`)
     - `support.function.builtin` (e.g. `parseInt`)
     - `support.variable.builtin` (e.g. `Math`)
-  - **Domain-Specific Objects**
-    - `support.class.node` (that is, `Buffer`)
-    - `support.variable.node.module` (module & exports environmental vars)
-    - `support.function.node.require`
-    - `support.variable.dom` (e.g. `document`; kept this list minimal though)
-    - `support.variable.dom-library` (e.g. `$`)
-    - `support.variable.functional-library` (e.g. `_`)
-    - `support.variable.node` (e.g. `process`)
 - **JSX**
   - `entity.name.tag.jsx` (html element name)
   - `keyword.operator.accessor.jsx` (access dot in ‘namespaced’ element name)

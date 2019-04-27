@@ -245,6 +245,7 @@ settings:
     punctuation.definition.block.do-expression,
     punctuation.definition.function.async.body,
     punctuation.definition.function.body,
+    punctuation.definition.function.async.arrow.body,
     punctuation.definition.function.arrow.body,
     punctuation.definition.parameters.function
   settings:
@@ -336,6 +337,14 @@ settings:
   settings:
     foreground: '#F4805B'
 
+- name: Private Method
+  scope: >-
+    entity.name.method.private,
+    punctuation.definition.parameters.method.private,
+    punctuation.definition.method.private
+  settings:
+    foreground: '#C76ED4'
+
 - name: Generator Method
   scope: >-
     entity.name.method.generator,
@@ -346,11 +355,24 @@ settings:
 
 - name: Decorator
   scope: >-
-    punctuation.definition.decorator,
+    keyword.operator.accessor.decorator,
     variable.other.readwrite.decorator
   settings:
     fontStyle: 'italic'
     foreground: '#597873'
+
+- name: Decorator Arguments
+  scope: >-
+    meta.decorator.arguments.es punctuation.definition.arguments,
+    punctuation.definition.decorator
+  settings:
+    foreground: '#597873'
+
+- name: Decorator Parenthesized Expression
+  scope: >-
+    meta.decorator.parenthesized.es
+  settings:
+    background: '#333333'
 
 - name: Module Import, Export
   scope: >-
