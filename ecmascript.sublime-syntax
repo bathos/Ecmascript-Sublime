@@ -2734,17 +2734,17 @@ contexts:
     - match: '\/'
       scope: punctuation.definition.string.regexp.begin.es
       set: [ ae_AFTER_VALUE, regex_AFTER_OPEN ]
-    - match: '((css))\s*(`)'
-      captures:
-        1: entity.quasi.tag.name.js # ^BS
-        2: variable.other.readwrite.tag.es
-        3: string.interpolated.es punctuation.definition.string.interpolated.begin.es
-      set: [ ae_AFTER_VALUE, ae_CSS_STRING ]
-    - match: '((html))\s*(?=`)'
-      captures:
-        1: entity.quasi.tag.name.js # ^BS
-        2: variable.other.readwrite.tag.es
-      set: [ ae_AFTER_VALUE, syntax_EXIT, syntax_meta_HTML, syntax_HTML_OPEN ]
+#    - match: '((css))\s*(`)'
+#      captures:
+#        1: entity.quasi.tag.name.js # ^BS
+#        2: variable.other.readwrite.tag.es
+#        3: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+#      set: [ ae_AFTER_VALUE, ae_CSS_STRING ]
+#    - match: '((html))\s*(?=`)'
+#      captures:
+#        1: entity.quasi.tag.name.js # ^BS
+#        2: variable.other.readwrite.tag.es
+#      set: [ ae_AFTER_VALUE, syntax_EXIT, syntax_meta_HTML, syntax_HTML_OPEN ]
     - match: '(({{identifier}}))\s*(`)'
       captures:
         1: entity.quasi.tag.name.js # ^BS
