@@ -3,7 +3,7 @@
 		"keys": ["enter"],
 		"command": "insert_snippet",
 		"args": {
-			"contents": "\n\t$1\n"
+			"contents": "\n\t$0\n"
 		},
 		"context": [
 			{
