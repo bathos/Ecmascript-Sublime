@@ -128,6 +128,19 @@ settings:
     foreground: '#B2BD95'
     fontStyle: 'italic'
 
+- scope: meta.directive.syntax.keyword
+  settings:
+    foreground: '#75789c'
+
+- scope: meta.directive.syntax.language
+  settings:
+    foreground: '#98a8b3'
+
+## inherit from comment.*
+# - scope: meta.directive.syntax.context
+#   settings:
+#     foreground: '#758B99'
+
 # LINTING #####################################################################
 
 - scope: markup.warning.sublime_linter
@@ -634,7 +647,7 @@ settings:
     meta.group.capturing.regexp
     meta.group.capturing.regexp
   settings:
-    background: '#7BB664 89'
+    background: '#7BB66489'
 
 - name: Regex Outer Punc
   scope: punctuation.definition.string.regexp

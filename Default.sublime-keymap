@@ -39,5 +39,52 @@
 				"match_all": true,
 			}
 		]
+	},
+	{
+		"keys": ["primary+'"],
+		"command": "toggle_nested_syntax",
+		"args": {},
+		"context": [
+			{
+				"key": "auto_complete_visible",
+				"operator": "equal",
+				"operand": false
+			},
+			{
+				"key": "selector",
+				"operator": "equal",
+				"operand": "source.es string.interpolated.es, source.es meta.interpolation.syntax",
+				"match_all": true,
+			},
+			{
+				"key": "num_selections",
+				"operator": "equal",
+				"operand": 1
+			},
+		]
+	},
+	{
+		"keys": ["primary+'"],
+		"command": "insert_nested_syntax",
+		"args": {},
+		"context": [
+			{
+				"key": "auto_complete_visible",
+				"operator": "equal",
+				"operand": false
+			},
+			{
+				"key": "selector",
+				"operator": "equal",
+				"operand": "source.es & (meta.whitespace.es | punctuation.definition.arguments.end.es | punctuation.definition.array.end.es | invalid.illegal.token.es) - string.interpolated.es - meta.interpolation.syntax",
+				"match_all": true,
+			},
+			{
+				"key": "selection_empty",
+				"operator": "equal",
+				"operand": true,
+				"match_all": true,
+			}
+		]
 	}
 ]

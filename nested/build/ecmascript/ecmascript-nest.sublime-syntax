@@ -84,29 +84,32 @@ variables:
   idEnd: '(?=\$[^\{]|[^_‍‍{{ID_Continue}}]|$)'
   syntaxDirectiveHead: '(\s*syntax\s*:\s*)'
   syntaxDirectiveTail: '\s*(\*\/)\s*(({{identifier}}))?(?=\s*`)'
-  syntaxDirective_CSS: '[Cc](?:ss|SS){{syntaxDirectiveTail}}'
-  syntaxDirective_CSS_STYLE: '[Cc](?:ss|SS)[.#][Ss]tyle{{syntaxDirectiveTail}}'
-  syntaxDirective_DOT: '[Dd](?:ot|OT){{syntaxDirectiveTail}}'
-  syntaxDirective_GLSL: '[Gg](?:lsl|LSL){{syntaxDirectiveTail}}'
-  syntaxDirective_HTML: '[Hh](?:tml|TML){{syntaxDirectiveTail}}'
-  syntaxDirective_JS: '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?{{syntaxDirectiveTail}}'
-  syntaxDirective_JS_VALUE: '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?[.#][Vv]alue{{syntaxDirectiveTail}}'
-  syntaxDirective_JS_METHOD: '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?[.#][Mm]ethod{{syntaxDirectiveTail}}'
-  syntaxDirective_JS_REGEXP: '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?[.#][Rr]egexp?{{syntaxDirectiveTail}}'
+  syntaxDirective_CSS: '([Cc](?:ss|SS))(){{syntaxDirectiveTail}}'
+  syntaxDirective_CSS_STYLE: '([Cc](?:ss|SS))([.#][Ss]tyle){{syntaxDirectiveTail}}'
+  syntaxDirective_DOT: '([Dd](?:ot|OT))(){{syntaxDirectiveTail}}'
+  syntaxDirective_GLSL: '([Gg](?:lsl|LSL))(){{syntaxDirectiveTail}}'
+  syntaxDirective_HTML: '([Hh](?:tml|TML))(){{syntaxDirectiveTail}}'
+  syntaxDirective_JS: '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)(){{syntaxDirectiveTail}}'
+  syntaxDirective_JS_VALUE: '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Vv]alue){{syntaxDirectiveTail}}'
+  syntaxDirective_JS_METHOD: '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Mm]ethod){{syntaxDirectiveTail}}'
+  syntaxDirective_JS_REGEXP: >-
+    ([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Rr]egexp?){{syntaxDirectiveTail}}
   syntaxDirective_JS_OBJECT_LITERAL: >-
-    [Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?[.#][Oo]bject-[Ll]iteral{{syntaxDirectiveTail}}
+    ([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Oo]bject-[Ll]iteral){{syntaxDirectiveTail}}
   syntaxDirective_JS_SIMPLE: >-
-    [Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?-[Ss](?:imple|IMPLE){{syntaxDirectiveTail}}
-  syntaxDirective_JSON: '[Jj](?:son|SON){{syntaxDirectiveTail}}'
-  syntaxDirective_LUA: '[Ll](?:ua|UA){{syntaxDirectiveTail}}'
-  syntaxDirective_MARKDOWN: '[Mm](?:ark[Dd](?:own|OWN)|ARKDOWN|[Dd]){{syntaxDirectiveTail}}'
-  syntaxDirective_SHELL: '(?:[Bb](?:ash|ASH)|[Ss](?:hell|HELL)){{syntaxDirectiveTail}}'
-  syntaxDirective_SQL: '[Ss](?:ql|QL){{syntaxDirectiveTail}}'
-  syntaxDirective_SUBLIME_SYNTAX: '[Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX){{syntaxDirectiveTail}}'
+    ([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?-[Ss](?:imple|IMPLE)){{syntaxDirectiveTail}}
+  syntaxDirective_JSON: '([Jj](?:son|SON))(){{syntaxDirectiveTail}}'
+  syntaxDirective_LUA: '([Ll](?:ua|UA))(){{syntaxDirectiveTail}}'
+  syntaxDirective_MARKDOWN: '([Mm](?:ark[Dd](?:own|OWN)|ARKDOWN|[Dd]))(){{syntaxDirectiveTail}}'
+  syntaxDirective_SHELL: '([Bb](?:ash|ASH)|[Ss](?:hell|HELL))(){{syntaxDirectiveTail}}'
+  syntaxDirective_SQL: '([Ss](?:ql|QL))(){{syntaxDirectiveTail}}'
+  syntaxDirective_SUBLIME_SYNTAX: '([Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX))(){{syntaxDirectiveTail}}'
   syntaxDirective_SUBLIME_SYNTAX_CONTEXT: >-
-    [Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX)[.#][Cc]ontexts?{{syntaxDirectiveTail}}
-  syntaxDirective_XML: '[Xx](?:ml|ML){{syntaxDirectiveTail}}'
-  syntaxDirective_YAML: '[Yy](?:aml|AML){{syntaxDirectiveTail}}'
+    ([Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX))([.#][Cc]ontexts?){{syntaxDirectiveTail}}
+  syntaxDirective_SUBLIME_SYNTAX_REGEX: >-
+    ([Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX))([.#][Rr]egexp?){{syntaxDirectiveTail}}
+  syntaxDirective_XML: '([Xx](?:ml|ML))(){{syntaxDirectiveTail}}'
+  syntaxDirective_YAML: '([Yy](?:aml|AML))(){{syntaxDirectiveTail}}'
   syntaxDirective: |-
     (?x)
       ((\/\*)){{syntaxDirectiveHead}}
@@ -128,6 +131,7 @@ variables:
         | {{syntaxDirective_SQL}}
         | {{syntaxDirective_SUBLIME_SYNTAX}}
         | {{syntaxDirective_SUBLIME_SYNTAX_CONTEXT}}
+        | {{syntaxDirective_SUBLIME_SYNTAX_REGEX}}
         | {{syntaxDirective_XML}}
         | {{syntaxDirective_YAML}}
       )
