@@ -22,10 +22,27 @@ let g_syntax = yaml.safeLoad(s_syntax, {
 {
 	// each context
 	let h_contexts = g_syntax.contexts;
-	for(let [si_context] of Object.entries(h_contexts)) {
+	for(let [si_context, a_rules] of Object.entries(h_contexts)) {
 		// remove blacklisted contexts
 		if(si_context.startsWith('syntax_') || /(_JSX|JSX_)/.test(si_context)) {
 			delete h_contexts[si_context];
+		}
+
+		// iterate in reverse to allow for splicing
+		for(let i_rule=a_rules.length-1; i_rule>=0; i_rule--) {
+			let g_rule = a_rules[i_rule];
+
+			// rule has comment (could be annotation)
+			if(g_rule.comment) {
+				// match annotation
+				let m_annotation = /\$(\w+)\(.*\)/.exec(g_rule.comment);
+				if(m_annotation) {
+					// blacklist
+					if('blacklist' === m_annotation[1]) {
+						a_rules.splice(i_rule, 1);
+					}
+				}
+			}
 		}
 	}
 

@@ -60,14 +60,14 @@ variables:
   jsxElementIdentifier: '{{identifierName}}(?:-(?:{{identifierPart}})*)*'
   jsxNamespaceIdentifier: '({{identifierInitCapStrict}})(\.)'
   intrinsicConstructors: >-
-    Array(?:Buffer)? | Atomics | Boolean | Date | DataView |
-    (?:Eval|Range|Reference|Syntax|Type|URI)?Error | Float(?:32|64)Array |
-    Function | Int(?:8|16|32)Array | Number | Object | Promise | Proxy | Reflect
-    | RegExp | SharedArrayBuffer | String | Symbol |
+    Array(?:Buffer)? | Atomics | BigInt | Big(Ui|I)nt64Array | Boolean | Date |
+    DataView | (?:Eval|Range|Reference|Syntax|Type|URI)?Error |
+    Float(?:32|64)Array | Function | Int(?:8|16|32)Array | Number | Object |
+    Promise | Proxy | RegExp | SharedArrayBuffer | String | Symbol |
     Uint(?:8(?:Clamped)?|16|32)Array | (?:Weak)?(?:Map|Set)
   intrinsicFunctions: >-
-    (?:de|en)codeURI(?:Component)? | eval | is(?:Finite|Nan) |
-    parse(?:Float|Int) | (?:set|clear)(?:Timeout|Interval|Immediate)
+    (?:de|en)codeURI(?:Component)? | eval | is(?:Finite|NaN) |
+    parse(?:Float|Int)
   binNum: '(0[Bb])(?:[01]+(?:_+[01]+)*)(n)?'
   octNum: '(0[Oo])(?:[0-7]+(?:_+[0-7]+)*)(n)?'
   decNum: |-
@@ -892,21 +892,21 @@ contexts:
         '2': storage.modifier.generator.asterisk.method.es
       set:
         - classDeclaration_AFTER_BRACE
-        - generatorMethod_AFTER_ASTERISK
+        - generatorMethod_AFTER_ASTERISK_CLASS
     - match: '((get)){{idEnd}}(?!\s*[\(=;])'
       captures:
         '1': storage.type.accessor.js
         '2': storage.modifier.accessor.get.es
       set:
         - classDeclaration_AFTER_BRACE
-        - accessorMethod_AFTER_GET
+        - accessorMethod_AFTER_GET_CLASS
     - match: '((set)){{idEnd}}(?!\s*[\(=;])'
       captures:
         '1': storage.type.accessor.js
         '2': storage.modifier.accessor.set.es
       set:
         - classDeclaration_AFTER_BRACE
-        - accessorMethod_AFTER_SET
+        - accessorMethod_AFTER_SET_CLASS
     - match: '((async)){{idEnd}}((\s*\*))?'
       captures:
         '1': storage.type.js
@@ -948,6 +948,13 @@ contexts:
             set: assignmentExpression
           - match: '{{PLA_anything}}'
             pop: true
+    - match: '((#{{identifierName}})){{idEnd}}'
+      captures:
+        '1': entity.name.method.js
+        '2': entity.name.method.private.es
+      set:
+        - classDeclaration_AFTER_BRACE
+        - method_AFTER_NAME_PRIVATE
     - match: '(({{identifierName}})){{idEnd}}'
       captures:
         '1': entity.name.method.js
@@ -1576,12 +1583,57 @@ contexts:
       push: assignmentExpression
     - include: else_pop
   decoratorExpression:
-    - match: '(?!async{{idEnd}})(({{identifier}}))(?!\s*=){{idEnd}}'
+    - match: '{{PLA_anything}}'
+      set:
+        - decoratorExpression_EXIT
+        - decoratorExpression_START
+  decoratorExpression_ARGS_EXIT:
+    - meta_scope: meta.decorator.arguments.es
+    - match: '{{PLA_anything}}'
+      pop: true
+  decoratorExpression_AFTER_ACCESS:
+    - match: '(({{identifier}}))'
       captures:
         '1': entity.name.tag.js
         '2': variable.other.readwrite.decorator.es
-      set: ae_AFTER_IDENTIFIER
-    - include: assignmentExpression
+      set: decoratorExpression_RHS
+    - match: '{{MAT_word_or_any_one_char}}'
+      scope: invalid.illegal.token.es
+  decoratorExpression_EXIT:
+    - meta_scope: meta.decorator.es
+    - match: '{{PLA_anything}}'
+      pop: true
+  decoratorExpression_RHS:
+    - match: \.
+      scope: keyword.operator.accessor.decorator.es
+      set: decoratorExpression_AFTER_ACCESS
+    - match: ((\())
+      captures:
+        '1': punctuation.definition.arguments.begin.es
+        '2': meta.brace.round.js
+      set:
+        - decoratorExpression_ARGS_EXIT
+        - arguments
+    - match: '{{PLA_anything}}'
+      pop: true
+  decoratorExpression_START:
+    - match: ((\())
+      captures:
+        '1': punctuation.definition.decorator.begin.es
+        '2': meta.brace.round.js
+      set:
+        - decoratorExpression_PAREN_EXIT
+        - expression
+    - include: decoratorExpression_AFTER_ACCESS
+  decoratorExpression_PAREN_EXIT:
+    - meta_scope: meta.decorator.parenthesized.es
+    - match: ((\)))
+      captures:
+        '1': punctuation.definition.decorator.end.es
+        '2': meta.brace.round.js
+      set: decoratorExpression_RHS
+    - match: '{{MAT_word_or_any_one_char}}'
+      scope: invalid.illegal.token.es
   assignmentExpression:
     - include: assignmentExpression_CORE
     - include: other_illegal_pop
@@ -1590,7 +1642,6 @@ contexts:
     - include: ae_LITERAL_VALUES
     - include: ae_NUMBERS
     - include: ae_STRING_REGEX
-    - include: ae_ARRAY_COMPREHENSION
     - include: ae_OBJECT_ARRAY_BINDING
     - include: ae_OBJECT_ARRAY_LITERAL
     - include: ae_YIELD_NEW
@@ -1598,7 +1649,6 @@ contexts:
     - include: ae_PREFIX_OPS
     - include: ae_ARROW
     - include: ae_IDENTIFIERS
-    - include: ae_GENERATOR_COMPREHENSION
     - include: ae_PARENTHESIZED
     - include: ae_DO
   ae_AFTER_IDENTIFIER:
@@ -1817,85 +1867,6 @@ contexts:
     - match: '(?=[\}\)\]])'
       pop: true
     - include: other_illegal_pop
-  ae_ARRAY_COMPREHENSION:
-    - match: '((\[))\s*(for){{idEnd}}'
-      captures:
-        '1': punctuation.definition.comprehension.array.begin.es
-        '2': meta.brace.square.js
-        '3': keyword.control.loop.for.comprehension.array.es
-      set: ae_ARRAY_COMPREHENSION_AFTER_FOR
-  ae_ARRAY_COMPREHENSION_AFTER_FOR:
-    - match: ((\())
-      captures:
-        '1': punctuation.definition.expression.loop.comprehension.array.begin.es
-        '2': meta.brace.round.js
-      set:
-        - ae_ARRAY_COMPREHENSION_AFTER_LHSE
-        - assignmentExpression
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_ARRAY_COMPREHENSION_BEFORE_CLOSE
-  ae_ARRAY_COMPREHENSION_AFTER_LHSE:
-    - match: 'of{{idEnd}}'
-      scope: keyword.control.loop.of.comprehension.array.es
-      set:
-        - ae_ARRAY_COMPREHENSION_AFTER_EXP_BODY
-        - expression
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_ARRAY_COMPREHENSION_AFTER_EXP_BODY
-  ae_ARRAY_COMPREHENSION_AFTER_EXP_BODY:
-    - match: ((\)))
-      captures:
-        '1': punctuation.definition.expression.loop.comprehension.array.begin.es
-        '2': meta.brace.round.js
-      set: ae_ARRAY_COMPREHENSION_AFTER_EXP
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_ARRAY_COMPREHENSION_BEFORE_CLOSE
-  ae_ARRAY_COMPREHENSION_AFTER_EXP:
-    - match: 'if{{idEnd}}'
-      scope: keyword.control.loop.conditional.if.comprehension.array.es
-      set: ae_ARRAY_COMPREHENSION_AFTER_IF
-    - match: 'for{{idEnd}}'
-      scope: keyword.control.loop.for.comprehension.array.es
-      set: ae_ARRAY_COMPREHENSION_AFTER_FOR
-    - match: '{{PLA_anything}}'
-      set:
-        - ae_ARRAY_COMPREHENSION_BEFORE_CLOSE
-        - expression
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_ARRAY_COMPREHENSION_BEFORE_CLOSE
-  ae_ARRAY_COMPREHENSION_AFTER_IF:
-    - match: ((\())
-      captures:
-        '1': >-
-          punctuation.definition.expression.conditional.comprehension.array.begin.es
-        '2': meta.brace.round.js
-      set:
-        - ae_ARRAY_COMPREHENSION_AFTER_IF_EXP
-        - expression
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_ARRAY_COMPREHENSION_AFTER_IF_EXP
-  ae_ARRAY_COMPREHENSION_AFTER_IF_EXP:
-    - match: ((\)))
-      captures:
-        '1': >-
-          punctuation.definition.expression.conditional.comprehension.array.begin.es
-        '2': meta.brace.round.js
-      set: ae_ARRAY_COMPREHENSION_AFTER_EXP
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_ARRAY_COMPREHENSION_BEFORE_CLOSE
-  ae_ARRAY_COMPREHENSION_BEFORE_CLOSE:
-    - match: '((\]))'
-      captures:
-        '1': punctuation.definition.comprehension.array.end.es
-        '2': meta.brace.square.js
-      set: ae_AFTER_VALUE
-    - include: other_illegal
   ae_ARROW:
     - match: '(?x) \( (?= (?<parens> [^\(\)] | \( \g<parens>* \) )* \)\s*=> )'
       scope: punctuation.definition.parameters.function.arrow.begin.es
@@ -2080,90 +2051,6 @@ contexts:
         - ae_AFTER_THING
         - generatorDeclaration_AFTER_NAME
     - include: other_illegal_pop
-  ae_GENERATOR_COMPREHENSION:
-    - match: '((\())\s*(for){{idEnd}}'
-      captures:
-        '1': punctuation.definition.comprehension.generator.begin.es
-        '2': meta.brace.round.js
-        '3': keyword.control.loop.for.comprehension.generator.es
-      set: ae_GENERATOR_COMPREHENSION_AFTER_FOR
-  ae_GENERATOR_COMPREHENSION_AFTER_FOR:
-    - match: ((\())
-      captures:
-        '1': >-
-          punctuation.definition.expression.loop.comprehension.generator.begin.es
-        '2': meta.brace.round.js
-      set:
-        - ae_GENERATOR_COMPREHENSION_AFTER_LHSE
-        - assignmentExpression
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_GENERATOR_COMPREHENSION_BEFORE_CLOSE
-  ae_GENERATOR_COMPREHENSION_AFTER_LHSE:
-    - match: 'of{{idEnd}}'
-      scope: keyword.control.loop.of.comprehension.generator.es
-      set:
-        - ae_GENERATOR_COMPREHENSION_AFTER_EXP_BODY
-        - expression
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_GENERATOR_COMPREHENSION_AFTER_EXP_BODY
-  ae_GENERATOR_COMPREHENSION_AFTER_EXP_BODY:
-    - match: ((\)))
-      captures:
-        '1': >-
-          punctuation.definition.expression.loop.comprehension.generator.begin.es
-        '2': meta.brace.round.js
-      set: ae_GENERATOR_COMPREHENSION_AFTER_EXP
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_GENERATOR_COMPREHENSION_BEFORE_CLOSE
-  ae_GENERATOR_COMPREHENSION_AFTER_EXP:
-    - match: 'if{{idEnd}}'
-      scope: keyword.control.loop.conditional.if.comprehension.generator.es
-      set: ae_GENERATOR_COMPREHENSION_AFTER_IF
-    - match: 'for{{idEnd}}'
-      scope: keyword.control.loop.for.comprehension.generator.es
-      set: ae_GENERATOR_COMPREHENSION_AFTER_FOR
-    - match: '{{PLA_anything}}'
-      set:
-        - ae_GENERATOR_COMPREHENSION_BEFORE_CLOSE
-        - expression
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_GENERATOR_COMPREHENSION_BEFORE_CLOSE
-  ae_GENERATOR_COMPREHENSION_AFTER_IF:
-    - match: ((\())
-      captures:
-        '1': >-
-          punctuation.definition.expression.conditional.comprehension.generator.begin.es
-        '2': meta.brace.round.js
-      set:
-        - ae_GENERATOR_COMPREHENSION_AFTER_IF_EXP
-        - expression
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_GENERATOR_COMPREHENSION_AFTER_IF_EXP
-  ae_GENERATOR_COMPREHENSION_AFTER_IF_EXP:
-    - match: ((\)))
-      captures:
-        '1': >-
-          punctuation.definition.expression.conditional.comprehension.generator.begin.es
-        '2': meta.brace.round.js
-      set: ae_GENERATOR_COMPREHENSION_AFTER_EXP
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_GENERATOR_COMPREHENSION_BEFORE_CLOSE
-  ae_GENERATOR_COMPREHENSION_BEFORE_CLOSE:
-    - match: ((\)))
-      captures:
-        '1': punctuation.definition.comprehension.generator.end.es
-        '2': meta.brace.round.js
-      set: ae_AFTER_THING
-    - match: \(
-      scope: invalid.illegal.token.es
-      set: ae_GENERATOR_COMPREHENSION_AFTER_EXP_BODY
-    - include: other_illegal
   ae_IDENTIFIERS:
     - include: ae_IDENTIFIERS_LANGUAGE
     - match: >-
@@ -2236,7 +2123,6 @@ contexts:
         '4': storage.type.function.arrow.es
       set: ae_ASYNC_ARROW_AFTER_ARROW
     - include: ae_IDENTIFIERS_INTRINSIC
-    - include: ae_IDENTIFIERS_ENVIRONMENTAL
     - match: '((({{identifierAllCapsStrict}})))\s*((\())'
       captures:
         '1': variable.other.readwrite.allCap.es
@@ -2317,52 +2203,6 @@ contexts:
     - match: 'arguments{{idEnd}}'
       scope: variable.language.arguments.es
       set: ae_AFTER_THING
-  ae_IDENTIFIERS_ENVIRONMENTAL:
-    - match: ((((Buffer)))\s*)((\())
-      captures:
-        '1': variable.other.readwrite.es
-        '2': meta.instance.constructor entity.name.type.new
-        '3': meta.instantiation.es
-        '4': support.class.node.es
-        '5': punctuation.definition.arguments.begin.es
-        '6': meta.brace.round.js
-      set:
-        - ae_AFTER_THING
-        - arguments
-    - match: '(Buffer){{idEnd}}'
-      scope: variable.other.readwrite.es
-      captures:
-        '1': support.class.node.es
-      set: ae_AFTER_THING
-    - match: (((require)))\s*((\())
-      captures:
-        '1': meta.function-call
-        '2': meta.invocation.es
-        '3': support.function.node.require.es
-        '4': punctuation.definition.arguments.begin.es
-        '5': meta.brace.round.js
-      set:
-        - ae_AFTER_THING
-        - arguments
-    - match: '(global|GLOBAL|process|__(?:dir|file)name|require){{idEnd}}'
-      scope: support.variable.node.es
-      set: ae_AFTER_THING
-    - match: '(?:(module)(?:(\.)(exports))?|(exports)){{idEnd}}'
-      captures:
-        '1': support.variable.node.module.es
-        '2': keyword.operator.accessor.es
-        '3': support.variable.node.module.es
-        '4': support.variable.node.module.es
-      set: ae_AFTER_THING
-    - match: '(_|R){{idEnd}}'
-      scope: support.variable.functional-library.es
-      set: ae_AFTER_THING
-    - match: '(?:\$|angular|Polymer|React(DOM)?){{idEnd}}'
-      scope: support.variable.dom-library.es
-      set: ae_AFTER_THING
-    - match: '(document|frames|history|location|navigator|screen|window){{idEnd}}'
-      scope: support.variable.dom.es
-      set: ae_AFTER_THING
   ae_IDENTIFIERS_INTRINSIC:
     - match: '(?x) (((({{intrinsicConstructors}})))\s*)((\())'
       captures:
@@ -2380,7 +2220,7 @@ contexts:
       captures:
         '1': support.class.builtin.es
       set: ae_AFTER_THING
-    - match: '(?:console|Intl|JSON|Math|SIMD){{idEnd}}'
+    - match: '(?:globalThis|Intl|JSON|Math|Reflect){{idEnd}}'
       scope: support.variable.builtin.es
       set: ae_AFTER_THING
     - match: '(?x) ((( {{intrinsicFunctions}} )))\s*((\())'
@@ -2700,7 +2540,6 @@ contexts:
     - match: |-
         (?x)
           (new) \s+ (((
-            ( Buffer ) |
             ( {{intrinsicConstructors}} ) |
             {{identifier}}
           ))){{idEnd}}(?!\s*\.)
@@ -2709,8 +2548,7 @@ contexts:
         '2': variable.other.readwrite.es
         '3': meta.instance.constructor entity.name.type.new
         '4': meta.instantiation.es
-        '5': support.class.node.es
-        '6': support.class.builtin.es
+        '5': support.class.builtin.es
       set: ae_AFTER_THING
     - match: |-
         (?x)
@@ -2777,7 +2615,6 @@ contexts:
     - include: ae_NO_IN_LITERAL_VALUES
     - include: ae_NO_IN_NUMBERS
     - include: ae_NO_IN_STRING_REGEX
-    - include: ae_NO_IN_ARRAY_COMPREHENSION
     - include: ae_NO_IN_OBJECT_ARRAY_BINDING
     - include: ae_NO_IN_OBJECT_ARRAY_LITERAL
     - include: ae_NO_IN_YIELD_NEW
@@ -2785,7 +2622,6 @@ contexts:
     - include: ae_PREFIX_OPS
     - include: ae_NO_IN_ARROW
     - include: ae_NO_IN_IDENTIFIERS
-    - include: ae_NO_IN_GENERATOR_COMPREHENSION
     - include: ae_NO_IN_PARENTHESIZED
     - include: ae_NO_IN_DO
   ae_NO_IN_AFTER_IDENTIFIER:
@@ -2883,85 +2719,6 @@ contexts:
       scope: variable.language.private.es
       set: ae_NO_IN_AFTER_THING
     - include: other_illegal_pop
-  ae_NO_IN_ARRAY_COMPREHENSION:
-    - match: '((\[))\s*(for){{idEnd}}'
-      captures:
-        '1': punctuation.definition.comprehension.array.begin.es
-        '2': meta.brace.square.js
-        '3': keyword.control.loop.for.comprehension.array.es
-      set: ae_NO_IN_ARRAY_COMPREHENSION_AFTER_FOR
-  ae_NO_IN_ARRAY_COMPREHENSION_AFTER_FOR:
-    - match: ((\())
-      captures:
-        '1': punctuation.definition.expression.loop.comprehension.array.begin.es
-        '2': meta.brace.round.js
-      set:
-        - ae_NO_IN_ARRAY_COMPREHENSION_AFTER_LHSE
-        - assignmentExpression_NO_IN
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_NO_IN_ARRAY_COMPREHENSION_BEFORE_CLOSE
-  ae_NO_IN_ARRAY_COMPREHENSION_AFTER_LHSE:
-    - match: 'of{{idEnd}}'
-      scope: keyword.control.loop.of.comprehension.array.es
-      set:
-        - ae_NO_IN_ARRAY_COMPREHENSION_AFTER_EXP_BODY
-        - expression
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_NO_IN_ARRAY_COMPREHENSION_AFTER_EXP_BODY
-  ae_NO_IN_ARRAY_COMPREHENSION_AFTER_EXP_BODY:
-    - match: ((\)))
-      captures:
-        '1': punctuation.definition.expression.loop.comprehension.array.begin.es
-        '2': meta.brace.round.js
-      set: ae_NO_IN_ARRAY_COMPREHENSION_AFTER_EXP
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_NO_IN_ARRAY_COMPREHENSION_BEFORE_CLOSE
-  ae_NO_IN_ARRAY_COMPREHENSION_AFTER_EXP:
-    - match: 'if{{idEnd}}'
-      scope: keyword.control.loop.conditional.if.comprehension.array.es
-      set: ae_NO_IN_ARRAY_COMPREHENSION_AFTER_IF
-    - match: 'for{{idEnd}}'
-      scope: keyword.control.loop.for.comprehension.array.es
-      set: ae_NO_IN_ARRAY_COMPREHENSION_AFTER_FOR
-    - match: '{{PLA_anything}}'
-      set:
-        - ae_NO_IN_ARRAY_COMPREHENSION_BEFORE_CLOSE
-        - expression
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_NO_IN_ARRAY_COMPREHENSION_BEFORE_CLOSE
-  ae_NO_IN_ARRAY_COMPREHENSION_AFTER_IF:
-    - match: ((\())
-      captures:
-        '1': >-
-          punctuation.definition.expression.conditional.comprehension.array.begin.es
-        '2': meta.brace.round.js
-      set:
-        - ae_NO_IN_ARRAY_COMPREHENSION_AFTER_IF_EXP
-        - expression
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_NO_IN_ARRAY_COMPREHENSION_AFTER_IF_EXP
-  ae_NO_IN_ARRAY_COMPREHENSION_AFTER_IF_EXP:
-    - match: ((\)))
-      captures:
-        '1': >-
-          punctuation.definition.expression.conditional.comprehension.array.begin.es
-        '2': meta.brace.round.js
-      set: ae_NO_IN_ARRAY_COMPREHENSION_AFTER_EXP
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_NO_IN_ARRAY_COMPREHENSION_BEFORE_CLOSE
-  ae_NO_IN_ARRAY_COMPREHENSION_BEFORE_CLOSE:
-    - match: '((\]))'
-      captures:
-        '1': punctuation.definition.comprehension.array.end.es
-        '2': meta.brace.square.js
-      set: ae_NO_IN_AFTER_VALUE
-    - include: other_illegal
   ae_NO_IN_ARROW:
     - match: '(?x) \( (?= (?<parens> [^\(\)] | \( \g<parens>* \) )* \)\s*=> )'
       scope: punctuation.definition.parameters.function.arrow.begin.es
@@ -3080,90 +2837,6 @@ contexts:
         - ae_NO_IN_AFTER_THING
         - generatorDeclaration_AFTER_NAME
     - include: other_illegal_pop
-  ae_NO_IN_GENERATOR_COMPREHENSION:
-    - match: '((\())\s*(for){{idEnd}}'
-      captures:
-        '1': punctuation.definition.comprehension.generator.begin.es
-        '2': meta.brace.round.js
-        '3': keyword.control.loop.for.comprehension.generator.es
-      set: ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_FOR
-  ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_FOR:
-    - match: ((\())
-      captures:
-        '1': >-
-          punctuation.definition.expression.loop.comprehension.generator.begin.es
-        '2': meta.brace.round.js
-      set:
-        - ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_LHSE
-        - assignmentExpression_NO_IN
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_NO_IN_GENERATOR_COMPREHENSION_BEFORE_CLOSE
-  ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_LHSE:
-    - match: 'of{{idEnd}}'
-      scope: keyword.control.loop.of.comprehension.generator.es
-      set:
-        - ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_EXP_BODY
-        - expression
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_EXP_BODY
-  ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_EXP_BODY:
-    - match: ((\)))
-      captures:
-        '1': >-
-          punctuation.definition.expression.loop.comprehension.generator.begin.es
-        '2': meta.brace.round.js
-      set: ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_EXP
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_NO_IN_GENERATOR_COMPREHENSION_BEFORE_CLOSE
-  ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_EXP:
-    - match: 'if{{idEnd}}'
-      scope: keyword.control.loop.conditional.if.comprehension.generator.es
-      set: ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_IF
-    - match: 'for{{idEnd}}'
-      scope: keyword.control.loop.for.comprehension.generator.es
-      set: ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_FOR
-    - match: '{{PLA_anything}}'
-      set:
-        - ae_NO_IN_GENERATOR_COMPREHENSION_BEFORE_CLOSE
-        - expression
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_NO_IN_GENERATOR_COMPREHENSION_BEFORE_CLOSE
-  ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_IF:
-    - match: ((\())
-      captures:
-        '1': >-
-          punctuation.definition.expression.conditional.comprehension.generator.begin.es
-        '2': meta.brace.round.js
-      set:
-        - ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_IF_EXP
-        - expression
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_IF_EXP
-  ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_IF_EXP:
-    - match: ((\)))
-      captures:
-        '1': >-
-          punctuation.definition.expression.conditional.comprehension.generator.begin.es
-        '2': meta.brace.round.js
-      set: ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_EXP
-    - match: '{{MAT_word_or_any_one_char}}'
-      scope: invalid.illegal.token.es
-      set: ae_NO_IN_GENERATOR_COMPREHENSION_BEFORE_CLOSE
-  ae_NO_IN_GENERATOR_COMPREHENSION_BEFORE_CLOSE:
-    - match: ((\)))
-      captures:
-        '1': punctuation.definition.comprehension.generator.end.es
-        '2': meta.brace.round.js
-      set: ae_NO_IN_AFTER_THING
-    - match: \(
-      scope: invalid.illegal.token.es
-      set: ae_NO_IN_GENERATOR_COMPREHENSION_AFTER_EXP_BODY
-    - include: other_illegal
   ae_NO_IN_IDENTIFIERS:
     - include: ae_NO_IN_IDENTIFIERS_LANGUAGE
     - match: '({{identifier}})\s*(=>)'
@@ -3172,7 +2845,6 @@ contexts:
         '2': storage.type.function.arrow.es
       set: ae_NO_IN_ARROW_AFTER_ARROW
     - include: ae_NO_IN_IDENTIFIERS_INTRINSIC
-    - include: ae_NO_IN_IDENTIFIERS_ENVIRONMENTAL
     - match: '((({{identifierAllCapsStrict}})))\s*((\())'
       captures:
         '1': variable.other.readwrite.allCap.es
@@ -3253,46 +2925,6 @@ contexts:
     - match: 'arguments{{idEnd}}'
       scope: variable.language.arguments.es
       set: ae_NO_IN_AFTER_THING
-  ae_NO_IN_IDENTIFIERS_ENVIRONMENTAL:
-    - match: ((((Buffer)))\s*)((\())
-      captures:
-        '1': variable.other.readwrite.es
-        '2': meta.instance.constructor entity.name.type.new
-        '3': meta.instantiation.es
-        '4': support.class.node.es
-        '5': punctuation.definition.arguments.begin.es
-        '6': meta.brace.round.js
-      set:
-        - ae_NO_IN_AFTER_THING
-        - arguments
-    - match: '(Buffer){{idEnd}}'
-      scope: variable.other.readwrite.es
-      captures:
-        '1': support.class.node.es
-      set: ae_NO_IN_AFTER_THING
-    - match: (((require)))\s*((\())
-      captures:
-        '1': meta.function-call
-        '2': meta.invocation.es
-        '3': support.function.node.require.es
-        '4': punctuation.definition.arguments.begin.es
-        '5': meta.brace.round.js
-      set:
-        - ae_NO_IN_AFTER_THING
-        - arguments
-    - match: >-
-        (global|GLOBAL|process|__(?:dir|file)name|module|exports|require){{idEnd}}
-      scope: support.variable.node.es
-      set: ae_NO_IN_AFTER_THING
-    - match: '(_|R){{idEnd}}'
-      scope: support.variable.functional-library.es
-      set: ae_NO_IN_AFTER_THING
-    - match: '(?:\$|angular|Polymer|React){{idEnd}}'
-      scope: support.variable.dom-library.es
-      set: ae_NO_IN_AFTER_THING
-    - match: '(document|frames|history|location|navigator|screen|window){{idEnd}}'
-      scope: support.variable.dom.es
-      set: ae_NO_IN_AFTER_THING
   ae_NO_IN_IDENTIFIERS_INTRINSIC:
     - match: '(?x) (((({{intrinsicConstructors}})))\s*)((\())'
       captures:
@@ -3310,7 +2942,7 @@ contexts:
       captures:
         '1': support.class.builtin.es
       set: ae_NO_IN_AFTER_THING
-    - match: '(?:console|Intl|JSON|Math|SIMD){{idEnd}}'
+    - match: '(?:globalThis|Intl|JSON|Math|Reflect){{idEnd}}'
       scope: support.variable.builtin.es
       set: ae_NO_IN_AFTER_THING
     - match: '(?x) ((( {{intrinsicFunctions}} )))\s*((\())'
@@ -3607,7 +3239,6 @@ contexts:
     - match: |-
         (?x)
           (new) \s+ (((
-            ( Buffer ) |
             ( {{intrinsicConstructors}} ) |
             {{identifier}}
           ))){{idEnd}}(?!\s*\.)
@@ -3616,8 +3247,7 @@ contexts:
         '2': variable.other.readwrite.es
         '3': meta.instance.constructor entity.name.type.new
         '4': meta.instantiation.es
-        '5': support.class.node.es
-        '6': support.class.builtin.es
+        '5': support.class.builtin.es
       set: ae_NO_IN_AFTER_THING
     - match: |-
         (?x)
@@ -3905,12 +3535,44 @@ contexts:
         - method_AFTER_PARAMS
         - parameters
     - include: other_illegal_pop
+  method_AFTER_NAME_PRIVATE:
+    - match: ((\())
+      captures:
+        '1': punctuation.definition.parameters.method.private.begin.es
+        '2': meta.brace.round.js
+      set:
+        - method_AFTER_PARAMS_PRIVATE
+        - parameters
+    - include: other_illegal_pop
+  method_AFTER_NAME_PRIVATE_ASYNC:
+    - match: ((\())
+      captures:
+        '1': punctuation.definition.parameters.method.private.async.begin.es
+        '2': meta.brace.round.js
+      set:
+        - method_AFTER_PARAMS_PRIVATE_ASYNC
+        - parameters
+    - include: other_illegal_pop
   method_AFTER_PARAMS:
     - match: ((\)))
       captures:
         '1': punctuation.definition.parameters.method.end.es
         '2': meta.brace.round.js
       set: method_BEFORE_BRACE
+    - include: other_illegal
+  method_AFTER_PARAMS_PRIVATE:
+    - match: ((\)))
+      captures:
+        '1': punctuation.definition.parameters.method.private.end.es
+        '2': meta.brace.round.js
+      set: method_BEFORE_BRACE_PRIVATE
+    - include: other_illegal
+  method_AFTER_PARAMS_PRIVATE_ASYNC:
+    - match: ((\)))
+      captures:
+        '1': punctuation.definition.parameters.method.private.async.end.es
+        '2': meta.brace.round.js
+      set: method_BEFORE_BRACE_PRIVATE_ASYNC
     - include: other_illegal
   method_BEFORE_BRACE:
     - match: '((\{))'
@@ -3919,10 +3581,40 @@ contexts:
         '2': meta.brace.curly.js
       set: method_AFTER_BRACE
     - include: other_illegal_pop
+  method_BEFORE_BRACE_PRIVATE:
+    - match: '((\{))'
+      captures:
+        '1': punctuation.definition.method.private.body.begin.es
+        '2': meta.brace.curly.js
+      set: method_AFTER_BRACE_PRIVATE
+    - include: other_illegal_pop
+  method_BEFORE_BRACE_PRIVATE_ASYNC:
+    - match: '((\{))'
+      captures:
+        '1': punctuation.definition.method.private.async.body.begin.es
+        '2': meta.brace.curly.js
+      set: method_AFTER_BRACE_PRIVATE_ASYNC
+    - include: other_illegal_pop
   method_AFTER_BRACE:
     - match: '((\}))'
       captures:
         '1': punctuation.definition.method.body.end.es
+        '2': meta.brace.curly.js
+      pop: true
+    - include: useStrict
+    - include: statements
+  method_AFTER_BRACE_PRIVATE:
+    - match: '((\}))'
+      captures:
+        '1': punctuation.definition.method.private.body.end.es
+        '2': meta.brace.curly.js
+      pop: true
+    - include: useStrict
+    - include: statements
+  method_AFTER_BRACE_PRIVATE_ASYNC:
+    - match: '((\}))'
+      captures:
+        '1': punctuation.definition.method.private.async.body.end.es
         '2': meta.brace.curly.js
       pop: true
     - include: useStrict
@@ -3933,6 +3625,11 @@ contexts:
         '1': entity.name.method.js
         '2': entity.name.method.async.es
       set: asyncMethod_AFTER_NAME
+    - match: '((#{{identifierName}}))'
+      captures:
+        '1': entity.name.method.js
+        '2': entity.name.method.private.async.es
+      set: method_AFTER_NAME_PRIVATE_ASYNC
     - match: ''''
       scope: punctuation.definition.string.quoted.single.begin.es
       set:
@@ -4074,6 +3771,13 @@ contexts:
         - computedProp_AFTER_AE
         - assignmentExpression
     - include: other_illegal_pop
+  accessorMethod_AFTER_GET_CLASS:
+    - match: '((#{{identifierName}}))'
+      captures:
+        '1': entity.name.method.js
+        '2': entity.name.accessor.get.private.es
+      set: accessorMethod_AFTER_GET_NAME_PRIVATE
+    - include: accessorMethod_AFTER_GET
   accessorMethod_AFTER_GET_NAME:
     - match: ((\())
       captures:
@@ -4081,12 +3785,26 @@ contexts:
         '2': meta.brace.round.js
       set: accessorMethod_AFTER_GET_PAREN_OPEN
     - include: other_illegal_pop
+  accessorMethod_AFTER_GET_NAME_PRIVATE:
+    - match: ((\())
+      captures:
+        '1': punctuation.definition.parameters.accessor.private.begin.es
+        '2': meta.brace.round.js
+      set: accessorMethod_AFTER_GET_PAREN_OPEN_PRIVATE
+    - include: other_illegal_pop
   accessorMethod_AFTER_GET_PAREN_OPEN:
     - match: ((\)))
       captures:
         '1': punctuation.definition.parameters.accessor.end.es
         '2': meta.brace.round.js
       set: accessorMethod_BEFORE_BRACE
+    - include: other_illegal
+  accessorMethod_AFTER_GET_PAREN_OPEN_PRIVATE:
+    - match: ((\)))
+      captures:
+        '1': punctuation.definition.parameters.accessor.private.end.es
+        '2': meta.brace.round.js
+      set: accessorMethod_BEFORE_BRACE_PRIVATE
     - include: other_illegal
   accessorMethod_AFTER_SET:
     - match: '(({{identifierName}}))'
@@ -4146,6 +3864,13 @@ contexts:
         - computedProp_AFTER_AE
         - assignmentExpression
     - include: other_illegal_pop
+  accessorMethod_AFTER_SET_CLASS:
+    - match: '((#{{identifierName}}))'
+      captures:
+        '1': entity.name.method.js
+        '2': entity.name.accessor.set.private.es
+      set: accessorMethod_AFTER_SET_NAME_PRIVATE
+    - include: accessorMethod_AFTER_SET
   accessorMethod_AFTER_SET_NAME:
     - match: ((\())
       captures:
@@ -4155,12 +3880,28 @@ contexts:
         - accessorMethod_AFTER_SET_PARAM
         - parameters
     - include: other_illegal_pop
+  accessorMethod_AFTER_SET_NAME_PRIVATE:
+    - match: ((\())
+      captures:
+        '1': punctuation.definition.parameters.accessor.private.begin.es
+        '2': meta.brace.round.js
+      set:
+        - accessorMethod_AFTER_SET_PARAM_PRIVATE
+        - parameters
+    - include: other_illegal_pop
   accessorMethod_AFTER_SET_PARAM:
     - match: ((\)))
       captures:
         '1': punctuation.definition.parameters.accessor.end.es
         '2': meta.brace.round.js
       set: accessorMethod_BEFORE_BRACE
+    - include: other_illegal
+  accessorMethod_AFTER_SET_PARAM_PRIVATE:
+    - match: ((\)))
+      captures:
+        '1': punctuation.definition.parameters.accessor.private.end.es
+        '2': meta.brace.round.js
+      set: accessorMethod_BEFORE_BRACE_PRIVATE
     - include: other_illegal
   accessorMethod_BEFORE_BRACE:
     - match: '((\{))'
@@ -4169,10 +3910,28 @@ contexts:
         '2': meta.brace.curly.js
       set: accessorMethod_AFTER_BRACE
     - include: other_illegal_pop
+  accessorMethod_BEFORE_BRACE_PRIVATE:
+    - match: '((\{))'
+      captures:
+        '1': punctuation.definition.accessor.private.body.begin.es
+        '2': meta.brace.curly.js
+      set: accessorMethod_AFTER_BRACE_PRIVATE
+    - include: other_illegal_pop
   accessorMethod_AFTER_BRACE:
     - match: '((\}))'
       captures:
         '1': punctuation.definition.accessor.body.end.es
+        '2': meta.brace.curly.js
+      pop: true
+    - include: useStrict
+    - match: '(return){{idEnd}}'
+      scope: keyword.control.flow.return.accessor.es
+      push: returnStatement
+    - include: statements
+  accessorMethod_AFTER_BRACE_PRIVATE:
+    - match: '((\}))'
+      captures:
+        '1': punctuation.definition.accessor.private.body.end.es
         '2': meta.brace.curly.js
       pop: true
     - include: useStrict
@@ -4238,6 +3997,15 @@ contexts:
         - computedProp_AFTER_AE
         - assignmentExpression
     - include: other_illegal_pop
+  generatorMethod_AFTER_ASTERISK_CLASS:
+    - match: '((#{{identifierName}})){{idEnd}}'
+      captures:
+        '1': entity.name.method.js
+        '2': entity.name.method.private.es
+      set:
+        - classDeclaration_AFTER_BRACE
+        - method_AFTER_NAME_PRIVATE
+    - include: generatorMethod_AFTER_ASTERISK
   generatorMethod_AFTER_NAME:
     - match: ((\())
       captures:
@@ -5014,6 +4782,89 @@ contexts:
         '1': meta.directive.use-strict.es
         '2': punctuation.definition.string.quoted.double.begin.es
         '3': punctuation.definition.string.quoted.double.end.es
+  ae_CSS_STRING:
+    - meta_content_scope: source.css meta.interpolation.syntax.css
+    - meta_include_prototype: false
+    - match: \/\*
+      scope: punctuation.definition.comment.css
+      push:
+        - - meta_scope: comment.block.css
+          - match: \*\/
+            scope: punctuation.definition.comment.css
+            pop: true
+    - match: '@[\w\-]+'
+      scope: keyword.control.at-rule.css
+    - match: '#[\w\-]+'
+      scope: entity.other.attribute-name.id.css
+    - match: '\.[\w\-]+'
+      scope: entity.other.attribute-name.class.css
+    - match: '::[\w\-]+'
+      scope: entity.other.pseudo-element.css
+    - match: ':global\('
+      scope: meta.styled-jsx.global.jsx
+      push:
+        - - match: \)
+            scope: meta.styled-jsx.global.jsx
+            pop: true
+          - include: ae_CSS_STRING
+    - match: ':[\w\-]+'
+      scope: entity.other.pseudo-class.css
+    - match: '--[\w\-]+'
+      scope: support.type.custom-property.name.css
+    - match: '[\w\-]+(?=\s*:)'
+      scope: meta.property-name.css
+    - match: url\(
+      scope: meta.function-call.css
+      push:
+        - - match: \)
+            scope: meta.function-call.css
+            pop: true
+          - match: '(?:"[^"]*"|''[^'']*'')'
+            scope: string.quoted.css
+          - match: '(?!`|\$\{|\/\*).'
+            scope: string.unquoted.css
+          - include: ae_CSS_STRING
+    - match: '(?:[\w\-]*\(|[\(\)])'
+      scope: meta.function-call.css
+    - match: >-
+        (?:cm|deg|e[mx]|g(?:ra)?d|k?Hz|in|m[ms]|p[ctx]|r(?:ad|em)|s|turn|v[hmw]|%)(?!\w)
+      scope: keyword.other.unit.css
+    - match: '(?!-?\d)[\w\-]+'
+      scope: meta.property-value.css
+    - match: ':'
+      scope: punctuation.separator.key-value.css
+    - match: ;
+      scope: punctuation.terminator.rule.css
+    - match: '[+>~,\-\/\*]'
+      scope: punctuation.separator.combinator.css
+    - match: '[{}]'
+      scope: punctuation.section.property-list.css
+    - match: '(?:[\[\]]|[~\|\^\$\*]?=|i\])'
+      scope: keyword.operator.attribute-selector.css
+    - match: '\-?[\d\.]*\d[\d\.]*'
+      scope: constant.numeric.css
+    - match: '(?:"[^"]*"|''[^'']*'')'
+      scope: string.quoted.css
+    - match: '\\[`\$\{]'
+      scope: constant.character.escape.es
+    - match: \\\n
+      scope: constant.character.escape.pointless.es
+    - include: string_COMMON_ESCAPES
+    - match: '`'
+      scope: string.interpolated.es punctuation.definition.string.interpolated.end.es
+      pop: true
+    - match: '((\$\{))'
+      captures:
+        '1': entity.quasi.element.js punctuation.quasi.element.begin.js
+        '2': punctuation.definition.string.interpolated.element.begin.es
+      push:
+        - - match: '((\}))'
+            captures:
+              '1': entity.quasi.element.js punctuation.quasi.element.end.js
+              '2': punctuation.definition.string.interpolated.element.end.es
+            pop: true
+          - include: other_illegal_pop
+        - - include: expression
   syntax_OPEN:
     - include: block_comment
   syntax_NO_IN_OPEN:

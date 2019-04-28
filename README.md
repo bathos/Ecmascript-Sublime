@@ -223,8 +223,8 @@ depth is not always as great as with established language features, though.
 
 The following proposed features, as they stand today anyway, are covered:
 
- - generator & array comprehensions (should probably remove at some point)
  - class and method decorators
+ - private methods
  - object literal spread and object binding pattern rest
  - bind operator
  - do expression
@@ -232,7 +232,7 @@ The following proposed features, as they stand today anyway, are covered:
  - optional catch binding
  - dynamic import & import.meta
  - function.sent
- - class fields
+ - class fields (private fields and instance initializers)
  - export extensions
 
 In addition to ES and some proposed ES, JSX is supported.
@@ -280,10 +280,6 @@ handful of things that cannot be made to match because of what I guess could be
 called philosophical differences, but it should now be possible to use
 Ecmascript Sublime with just about any theme without cringing.
 
-I should note, there is another theme included with the package. It isn’t a real
-theme though -- it assigns random colors to hundreds of scopes. It is useful for
-referencing when designing themes but you’d be insane to actually use it.
-
 If you’re interested in adding support for Ecmascript Sublime to your theme, or
 are developing a new theme with this in mind, you’ll probably want a list of
 the targetable scopes...
@@ -311,19 +307,6 @@ in ‘.regexp’ do not also have ‘.es’.
   - `meta.comment.box-drawing` (box drawing characters can be targeted)
   - `meta.directive.use-strict` (the `'use strict'` directive)
   - `punctuation.definition.comment` (the delimiting `//`, `/*` or `*/`)
-- **Comprehensions**
-  - `keyword.control.loop.conditional.if.comprehension.array`
-  - `keyword.control.loop.conditional.if.comprehension.generator`
-  - `keyword.control.loop.for.comprehension.array`
-  - `keyword.control.loop.for.comprehension.generator`
-  - `keyword.control.loop.of.comprehension.array`
-  - `keyword.control.loop.of.comprehension.generator`
-  - `punctuation.definition.comprehension.array`
-  - `punctuation.definition.comprehension.generator`
-  - `punctuation.definition.expression.conditional.comprehension.array`
-  - `punctuation.definition.expression.conditional.comprehension.generator`
-  - `punctuation.definition.expression.loop.comprehension.array`
-  - `punctuation.definition.expression.loop.comprehension.generator`
 - **Constants & Literals**
   - **General**
     - `constant`
@@ -434,6 +417,7 @@ in ‘.regexp’ do not also have ‘.es’.
       - `variable.parameter.rest`
     - **Execution & Do Expressions**
       - `keyword.control.do-expression.do` (the keyword from ES7, not the loop)
+      - `meta.decorator.arguments`
       - `meta.instantiation` (applied to identifier being instantiated)
       - `meta.invocation` (applied to identifier being invoked)
       - `punctuation.definition.arguments` (parens in invocation/instantiation)
@@ -453,6 +437,7 @@ in ‘.regexp’ do not also have ‘.es’.
       - `storage.modifier.accessor.set` (keyword `set`)
     - **Async Functions**
       - `entity.name.method.async` (name of async function)
+      - `entity.name.method.private.async`
       - `entity.name.function.async`
       - `entity.name.function.async.arrow`
       - `keyword.control.flow.await` (keyword `await`)
@@ -461,26 +446,31 @@ in ‘.regexp’ do not also have ‘.es’.
       - `punctuation.definition.function.async.arrow.body`
       - `punctuation.definition.function.async.body`
       - `punctuation.definition.method.async.body`
+      - `punctuation.definition.method.private.async.body`
       - `punctuation.definition.parameters.function.async`
       - `punctuation.definition.parameters.function.async.arrow`
       - `punctuation.definition.parameters.method.async`
+      - `punctuation.definition.parameters.method.private.async`
       - `storage.modifier.async` (keyword `async`, general)
       - `storage.modifier.async.expression` (keyword `async`, in expression)
       - `storage.modifier.async.method` (keyword `async`, in method declaration)
     - **Classes**
       - `entity.name.class`
       - `entity.name.constructor`
+      - `meta.decorator`
+      - `meta.decorator.parenthesized`
       - `meta.super-expression`
       - `punctuation.definition.class.body`
       - `punctuation.definition.constructor.body`
       - `punctuation.definition.decorator`
+      - `punctuation.definition.method.private.body`
       - `punctuation.definition.parameters.constructor`
-      - `punctuation.terminator.property` (es7? class property semicolon)
+      - `punctuation.terminator.property`
       - `storage.modifier.extends`
       - `storage.modifier.static`
       - `storage.type.class`
       - `storage.type.class.expression`
-      - `variable.other.readwrite.property.class.es` (es7? class property key)
+      - `variable.other.readwrite.property.class.es`
       - `variable.language.private`
       - `variable.language.private.class`
     - **Functions**
@@ -489,6 +479,7 @@ in ‘.regexp’ do not also have ‘.es’.
       - `entity.name.function.allCap`
       - `entity.name.function.initCap`
       - `entity.name.method`
+      - `entity.name.method.private`
       - `keyword.control.flow.return`
       - `punctuation.definition.function`
       - `punctuation.definition.function.arrow.body`
@@ -499,6 +490,7 @@ in ‘.regexp’ do not also have ‘.es’.
       - `punctuation.definition.parameters.function`
       - `punctuation.definition.parameters.function.arrow`
       - `punctuation.definition.parameters.method`
+      - `punctuation.definition.parameters.method.private`
       - `storage.type.function.arrow`
       - `storage.type.function.async`
       - `storage.type.function.async.arrow`
@@ -575,6 +567,7 @@ in ‘.regexp’ do not also have ‘.es’.
     - `keyword.operator.relational.lte`
   - **Evaluative**
     - `keyword.operator.accessor`
+    - `keyword.operator.accessor.decorator`
     - `keyword.operator.bind`
     - `keyword.operator.comma`
     - `keyword.operator.new`
@@ -706,14 +699,6 @@ in ‘.regexp’ do not also have ‘.es’.
     - `support.class.builtin` (e.g. `Array`)
     - `support.function.builtin` (e.g. `parseInt`)
     - `support.variable.builtin` (e.g. `Math`)
-  - **Domain-Specific Objects**
-    - `support.class.node` (that is, `Buffer`)
-    - `support.variable.node.module` (module & exports environmental vars)
-    - `support.function.node.require`
-    - `support.variable.dom` (e.g. `document`; kept this list minimal though)
-    - `support.variable.dom-library` (e.g. `$`)
-    - `support.variable.functional-library` (e.g. `_`)
-    - `support.variable.node` (e.g. `process`)
 - **JSX**
   - `entity.name.tag.jsx` (html element name)
   - `keyword.operator.accessor.jsx` (access dot in ‘namespaced’ element name)
@@ -977,7 +962,6 @@ can cause mismatching, where the pipe represents a problematic linebreak:
  - Statement label | `:`
  - Parameter(s) | `=>`
  - `function` | `*`
- - [ or ( of a comprehension | for
  - `async` | `function` (but only in expressions -- this is because async could
    also be an identifier, and accomodating that is important because of the
    popular Node library)

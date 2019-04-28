@@ -503,6 +503,7 @@ keyword.control.flow.return,
 punctuation.definition.block.do-expression,
 punctuation.definition.function.async.body,
 punctuation.definition.function.body,
+punctuation.definition.function.async.arrow.body,
 punctuation.definition.function.arrow.body,
 punctuation.definition.parameters.function</string>
         <key>settings</key>
@@ -657,6 +658,23 @@ punctuation.definition.parameters.method</string>
       </dict>
       <dict>
         <key>name</key>
+        <string>Private Method</string>
+        <key>scope</key>
+        <string>entity.name.accessor.get.private,
+entity.name.accessor.set.private,
+entity.name.method.private,
+punctuation.definition.accessor.private.body,
+punctuation.definition.parameters.accessor.private,
+punctuation.definition.parameters.method.private,
+punctuation.definition.method.private</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#B7B1BE</string>
+        </dict>
+      </dict>
+      <dict>
+        <key>name</key>
         <string>Generator Method</string>
         <key>scope</key>
         <string>entity.name.method.generator,
@@ -672,7 +690,7 @@ punctuation.definition.parameters.method.generator</string>
         <key>name</key>
         <string>Decorator</string>
         <key>scope</key>
-        <string>punctuation.definition.decorator,
+        <string>keyword.operator.accessor.decorator,
 variable.other.readwrite.decorator</string>
         <key>settings</key>
         <dict>
@@ -680,6 +698,29 @@ variable.other.readwrite.decorator</string>
           <string>italic</string>
           <key>foreground</key>
           <string>#597873</string>
+        </dict>
+      </dict>
+      <dict>
+        <key>name</key>
+        <string>Decorator Arguments</string>
+        <key>scope</key>
+        <string>meta.decorator.arguments.es punctuation.definition.arguments,
+punctuation.definition.decorator</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#597873</string>
+        </dict>
+      </dict>
+      <dict>
+        <key>name</key>
+        <string>Decorator Parenthesized Expression</string>
+        <key>scope</key>
+        <string>meta.decorator.parenthesized.es</string>
+        <key>settings</key>
+        <dict>
+          <key>background</key>
+          <string>#333333</string>
         </dict>
       </dict>
       <dict>
