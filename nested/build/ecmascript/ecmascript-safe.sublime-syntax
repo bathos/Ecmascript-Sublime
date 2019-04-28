@@ -4783,7 +4783,7 @@ contexts:
         '2': punctuation.definition.string.quoted.double.begin.es
         '3': punctuation.definition.string.quoted.double.end.es
   ae_CSS_STRING:
-    - meta_content_scope: source.css
+    - meta_content_scope: source.css meta.interpolation.syntax.css
     - meta_include_prototype: false
     - match: \/\*
       scope: punctuation.definition.comment.css

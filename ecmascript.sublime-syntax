@@ -2734,17 +2734,19 @@ contexts:
     - match: '\/'
       scope: punctuation.definition.string.regexp.begin.es
       set: [ ae_AFTER_VALUE, regex_AFTER_OPEN ]
-#    - match: '((css))\s*(`)'
-#      captures:
-#        1: entity.quasi.tag.name.js # ^BS
-#        2: variable.other.readwrite.tag.es
-#        3: string.interpolated.es punctuation.definition.string.interpolated.begin.es
-#      set: [ ae_AFTER_VALUE, ae_CSS_STRING ]
-#    - match: '((html))\s*(?=`)'
-#      captures:
-#        1: entity.quasi.tag.name.js # ^BS
-#        2: variable.other.readwrite.tag.es
-#      set: [ ae_AFTER_VALUE, syntax_EXIT, syntax_meta_HTML, syntax_HTML_OPEN ]
+    - match: '((css))\s*(`)'
+      comment: '$blacklist(nested)'
+      captures:
+        1: entity.quasi.tag.name.js # ^BS
+        2: variable.other.readwrite.tag.es
+        3: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+      set: [ ae_AFTER_VALUE, ae_CSS_STRING ]
+    - match: '((html))\s*(?=`)'
+      comment: '$blacklist(nested)'
+      captures:
+        1: entity.quasi.tag.name.js # ^BS
+        2: variable.other.readwrite.tag.es
+      set: [ ae_AFTER_VALUE, syntax_EXIT, syntax_meta_HTML, syntax_HTML_OPEN ]
     - match: '(({{identifier}}))\s*(`)'
       captures:
         1: entity.quasi.tag.name.js # ^BS
@@ -5482,7 +5484,7 @@ contexts:
 # syntax definition instead, so both solutions are available.
 
   ae_CSS_STRING:
-    - meta_content_scope: source.css
+    - meta_content_scope: source.css meta.interpolation.syntax.css
     - meta_include_prototype: false
     - match: '\/\*'
       scope: punctuation.definition.comment.css
