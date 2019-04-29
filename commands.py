@@ -127,6 +127,7 @@ class ToggleNestedSyntaxCommand(sublime_plugin.TextCommand):
       i_traverse = self.over(i_cursor, ss_template_literal)
 
       # update cursor
+      y_cursor.b = y_cursor.end()
       y_cursor.a = i_literal
 
       # add cursor
