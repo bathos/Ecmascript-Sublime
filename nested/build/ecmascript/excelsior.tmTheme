@@ -326,6 +326,24 @@
       </dict>
       <dict>
         <key>scope</key>
+        <string>meta.directive.syntax.keyword</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#75789c</string>
+        </dict>
+      </dict>
+      <dict>
+        <key>scope</key>
+        <string>meta.directive.syntax.language</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#98a8b3</string>
+        </dict>
+      </dict>
+      <dict>
+        <key>scope</key>
         <string>markup.warning.sublime_linter</string>
         <key>settings</key>
         <dict>
@@ -1223,7 +1241,7 @@ string.regexp punctuation.definition.assertion.positive</string>
         <key>settings</key>
         <dict>
           <key>background</key>
-          <string>#7BB664 89</string>
+          <string>#7BB66489</string>
         </dict>
       </dict>
       <dict>

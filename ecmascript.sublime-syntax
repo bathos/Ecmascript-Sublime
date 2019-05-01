@@ -130,26 +130,27 @@ variables:
   syntaxDirectiveHead: '(\s*syntax\s*:\s*)'
   syntaxDirectiveTail: '\s*(\*\/)\s*(({{identifier}}))?(?=\s*`)'
 
-  syntaxDirective_CSS:   '[Cc](?:ss|SS){{syntaxDirectiveTail}}'
-  syntaxDirective_CSS_STYLE:   '[Cc](?:ss|SS)[.#][Ss]tyle{{syntaxDirectiveTail}}'
-  syntaxDirective_DOT:   '[Dd](?:ot|OT){{syntaxDirectiveTail}}'
-  syntaxDirective_GLSL:  '[Gg](?:lsl|LSL){{syntaxDirectiveTail}}'
-  syntaxDirective_HTML:  '[Hh](?:tml|TML){{syntaxDirectiveTail}}'
-  syntaxDirective_JS:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?{{syntaxDirectiveTail}}'
-  syntaxDirective_JS_VALUE:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?[.#][Vv]alue{{syntaxDirectiveTail}}'
-  syntaxDirective_JS_METHOD:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?[.#][Mm]ethod{{syntaxDirectiveTail}}'
-  syntaxDirective_JS_REGEXP:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?[.#][Rr]egexp?{{syntaxDirectiveTail}}'
-  syntaxDirective_JS_OBJECT_LITERAL:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?[.#][Oo]bject-[Ll]iteral{{syntaxDirectiveTail}}'
-  syntaxDirective_JS_SIMPLE:    '[Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?-[Ss](?:imple|IMPLE){{syntaxDirectiveTail}}'
-  syntaxDirective_JSON:  '[Jj](?:son|SON){{syntaxDirectiveTail}}'
-  syntaxDirective_LUA:  '[Ll](?:ua|UA){{syntaxDirectiveTail}}'
-  syntaxDirective_MARKDOWN:  '[Mm](?:ark[Dd](?:own|OWN)|ARKDOWN|[Dd]){{syntaxDirectiveTail}}'
-  syntaxDirective_SHELL: '(?:[Bb](?:ash|ASH)|[Ss](?:hell|HELL)){{syntaxDirectiveTail}}'
-  syntaxDirective_SQL:   '[Ss](?:ql|QL){{syntaxDirectiveTail}}'
-  syntaxDirective_SUBLIME_SYNTAX:   '[Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX){{syntaxDirectiveTail}}'
-  syntaxDirective_SUBLIME_SYNTAX_CONTEXT:   '[Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX)[.#][Cc]ontexts?{{syntaxDirectiveTail}}'
-  syntaxDirective_XML:   '[Xx](?:ml|ML){{syntaxDirectiveTail}}'
-  syntaxDirective_YAML:  '[Yy](?:aml|AML){{syntaxDirectiveTail}}'
+  syntaxDirective_CSS:                    '([Cc](?:ss|SS))(){{syntaxDirectiveTail}}'
+  syntaxDirective_CSS_STYLE:              '([Cc](?:ss|SS))([.#][Ss]tyle){{syntaxDirectiveTail}}'
+  syntaxDirective_DOT:                    '([Dd](?:ot|OT))(){{syntaxDirectiveTail}}'
+  syntaxDirective_GLSL:                   '([Gg](?:lsl|LSL))(){{syntaxDirectiveTail}}'
+  syntaxDirective_HTML:                   '([Hh](?:tml|TML))(){{syntaxDirectiveTail}}'
+  syntaxDirective_JS:                     '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)(){{syntaxDirectiveTail}}'
+  syntaxDirective_JS_VALUE:               '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Vv]alue){{syntaxDirectiveTail}}'
+  syntaxDirective_JS_METHOD:              '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Mm]ethod){{syntaxDirectiveTail}}'
+  syntaxDirective_JS_REGEXP:              '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Rr]egexp?){{syntaxDirectiveTail}}'
+  syntaxDirective_JS_OBJECT_LITERAL:      '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Oo]bject-[Ll]iteral){{syntaxDirectiveTail}}'
+  syntaxDirective_JS_SIMPLE:              '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?-[Ss](?:imple|IMPLE)){{syntaxDirectiveTail}}'
+  syntaxDirective_JSON:                   '([Jj](?:son|SON))(){{syntaxDirectiveTail}}'
+  syntaxDirective_LUA:                    '([Ll](?:ua|UA))(){{syntaxDirectiveTail}}'
+  syntaxDirective_MARKDOWN:               '([Mm](?:ark[Dd](?:own|OWN)|ARKDOWN|[Dd]))(){{syntaxDirectiveTail}}'
+  syntaxDirective_SHELL:                  '([Bb](?:ash|ASH)|[Ss](?:hell|HELL))(){{syntaxDirectiveTail}}'
+  syntaxDirective_SQL:                    '([Ss](?:ql|QL))(){{syntaxDirectiveTail}}'
+  syntaxDirective_SUBLIME_SYNTAX:         '([Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX))(){{syntaxDirectiveTail}}'
+  syntaxDirective_SUBLIME_SYNTAX_CONTEXT: '([Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX))([.#][Cc]ontexts?){{syntaxDirectiveTail}}'
+  syntaxDirective_SUBLIME_SYNTAX_REGEX:   '([Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX))([.#][Rr]egexp?){{syntaxDirectiveTail}}'
+  syntaxDirective_XML:                    '([Xx](?:ml|ML))(){{syntaxDirectiveTail}}'
+  syntaxDirective_YAML:                   '([Yy](?:aml|AML))(){{syntaxDirectiveTail}}'
 
   syntaxDirective: >-
     (?x)
@@ -172,6 +173,7 @@ variables:
         | {{syntaxDirective_SQL}}
         | {{syntaxDirective_SUBLIME_SYNTAX}}
         | {{syntaxDirective_SUBLIME_SYNTAX_CONTEXT}}
+        | {{syntaxDirective_SUBLIME_SYNTAX_REGEX}}
         | {{syntaxDirective_XML}}
         | {{syntaxDirective_YAML}}
       )
@@ -5215,7 +5217,7 @@ contexts:
       captures:
         1: meta.comment.border.es
         2: punctuation.definition.comment.begin.es
-        3: comment.block.es
+        3: meta.directive.syntax.keyword.es
       set: [ ae_AFTER_VALUE, syntax_EXIT, syntax_DIRECTIVE ]
     - include: block_comment
 
@@ -5224,7 +5226,7 @@ contexts:
       captures:
         1: meta.comment.border.es
         2: punctuation.definition.comment.begin.es
-        3: comment.block.es
+        3: meta.directive.syntax.keyword.es
       set: [ ae_NO_IN_AFTER_VALUE, syntax_EXIT, syntax_DIRECTIVE ]
     - include: block_comment
 
@@ -5305,123 +5307,171 @@ contexts:
     - meta_include_prototype: false
     - match: '{{syntaxDirective_CSS}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_CSS, syntax_CSS_OPEN ]
     - match: '{{syntaxDirective_CSS_STYLE}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_CSS, syntax_CSS_RULE_LIST_BODY_OPEN ]
     - match: '{{syntaxDirective_DOT}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_DOT, syntax_DOT_OPEN ]
     - match: '{{syntaxDirective_GLSL}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_GLSL, syntax_GLSL_OPEN ]
     - match: '{{syntaxDirective_HTML}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_HTML, syntax_HTML_OPEN ]
     - match: '{{syntaxDirective_JS}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_JS, syntax_JS_OPEN ]
     - match: '{{syntaxDirective_JS_VALUE}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_JS, syntax_JS_VALUE_OPEN ]
     - match: '{{syntaxDirective_JS_METHOD}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_JS, syntax_JS_METHOD_OPEN ]
     - match: '{{syntaxDirective_JS_REGEXP}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_JS, syntax_JS_REGEXP_OPEN ]
     - match: '{{syntaxDirective_JS_OBJECT_LITERAL}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_JS, syntax_JS_OBJECT_LITERAL_OPEN ]
     - match: '{{syntaxDirective_JS_SIMPLE}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_JS, syntax_JS_SIMPLE_OPEN ]
     - match: '{{syntaxDirective_JSON}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_JSON, syntax_JSON_OPEN ]
     - match: '{{syntaxDirective_LUA}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_LUA, syntax_LUA_OPEN ]
     - match: '{{syntaxDirective_MARKDOWN}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_MARKDOWN, syntax_MARKDOWN_OPEN ]
     - match: '{{syntaxDirective_SHELL}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_SHELL, syntax_SHELL_OPEN ]
     - match: '{{syntaxDirective_SQL}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_SQL, syntax_SQL_OPEN ]
     - match: '{{syntaxDirective_SUBLIME_SYNTAX}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_SUBLIME_SYNTAX, syntax_SUBLIME_SYNTAX_OPEN ]
     - match: '{{syntaxDirective_SUBLIME_SYNTAX_CONTEXT}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_SUBLIME_SYNTAX, syntax_SUBLIME_SYNTAX_CONTEXT_OPEN ]
+    - match: '{{syntaxDirective_SUBLIME_SYNTAX_REGEX}}'
+      captures:
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
+      set: [ syntax_meta_SUBLIME_SYNTAX, syntax_SUBLIME_SYNTAX_REGEX_OPEN ]
     - match: '{{syntaxDirective_XML}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_XML, syntax_XML_OPEN ]
     - match: '{{syntaxDirective_YAML}}'
       captures:
-        1: punctuation.definition.comment.end.es
-        2: entity.quasi.tag.name.js # ^BS
-        3: variable.other.readwrite.tag.es
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
       set: [ syntax_meta_YAML, syntax_YAML_OPEN ]
 
 # CSS SYNTAX ###################################################################
@@ -5779,6 +5829,14 @@ contexts:
     - match: '`'
       scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: scope:source.yaml.sublime.syntax.nested.es#contexts_block
+      with_prototype:
+        - include: syntax_AFTER_OPEN
+
+  syntax_SUBLIME_SYNTAX_REGEX_OPEN:
+    - meta_include_prototype: false
+    - match: '`'
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+      set: scope:source.yaml.sublime.syntax.nested.es#expect_regexp
       with_prototype:
         - include: syntax_AFTER_OPEN
 
