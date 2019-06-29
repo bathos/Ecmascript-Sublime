@@ -3415,6 +3415,16 @@ contexts:
         '2': variable.other.readwrite.property.shorthand.initCap.es
         '3': variable.other.readwrite.property.shorthand.es
       set: literalObject_AFTER_SHORTHAND
+    - match: '((({{identifierName}})))\s*(\()'
+      captures:
+        '1': entity.name.method.js
+        '2': entity.name.method.es
+        '3': variable.other.readwrite.property.es
+        '4': punctuation.definition.parameters.method.begin.es
+      set:
+        - literalObject_AFTER_AE
+        - method_AFTER_PARAMS
+        - parameters
     - match: '(({{identifierName}}))'
       captures:
         '1': constant.other.object.key.js string.unquoted.label.js
