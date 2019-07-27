@@ -4,7 +4,14 @@ name: Ecmascript nested syntax - HTML
 scope: text.html.basic.nested.es
 variables:
   attribute_char: '(?:[^ "''>/=\x00-\x1f\x7f-\x9f])'
-  unquoted_attribute_value: '(?:[^\s<>/''''"]|/(?!>))+'
+  # The first alternative in the unquoted_attribute_value pattern captures cases
+  # like this in ES tagged templates:
+  #
+  #   <foo bar=${expression} baz=${expression}>
+  #
+  # If we did not treat this as a special case, ‘baz=’ would end up being seen
+  # as an unquoted attribute value.
+  unquoted_attribute_value: '(?=\$\{)|(?:[^\s<>/''''"]|/(?!>))+'
   not_equals_lookahead: '(?=\s*[^\s=])'
   block_tag_name: |-
     (?ix:
@@ -197,6 +204,23 @@ contexts:
       captures:
         '1': punctuation.definition.tag.begin.html
         '2': entity.name.tag.other.html
+      push:
+        - meta_scope: meta.tag.other.html
+        - match: '(?: ?/)?>'
+          scope: punctuation.definition.tag.end.html
+          pop: true
+        - include: tag-attributes
+    # Special case for handling ES tagged template where interpolation occurs in
+    # tag name position:
+    #
+    #   <${expression} attr=val>
+    #
+    # If we did not include this case, the ‘<’ would be scoped as ordinary
+    # chardata.
+    #
+    - match: '(</?)(?=\$\{)'
+      captures:
+        '1': punctuation.definition.tag.begin.html
       push:
         - meta_scope: meta.tag.other.html
         - match: '(?: ?/)?>'
