@@ -203,15 +203,7 @@ contexts:
           scope: punctuation.definition.tag.end.html
           pop: true
         - include: tag-attributes
-    # Special case for handling ES tagged template where interpolation occurs in
-    # tag name position:
-    #
-    #   <${expression} attr=val>
-    #
-    # If we did not include this case, the ‘<’ would be scoped as ordinary
-    # chardata.
-    #
-    - match: '(</?)(?=\$\{)'
+    - match: '(</?)(?=\${)'
       captures:
         '1': punctuation.definition.tag.begin.html
       push:
@@ -276,7 +268,7 @@ contexts:
       scope: meta.attribute-with-value.html entity.other.attribute-name.html
       set:
         - meta_content_scope: meta.tag.style.begin.html meta.attribute-with-value.html
-        - match: =(?=\$\{)
+        - match: '=(?=\$\{)'
           scope: punctuation.separator.key-value.html
           pop: true
         - match: =
@@ -351,7 +343,7 @@ contexts:
       scope: meta.attribute-with-value.html entity.other.attribute-name.html
       set:
         - meta_content_scope: meta.tag.script.begin.html meta.attribute-with-value.html
-        - match: =(?=\$\{)
+        - match: '=(?=\$\{)'
           scope: punctuation.separator.key-value.html
           pop: true
         - match: =
@@ -422,17 +414,7 @@ contexts:
     - meta_scope: meta.attribute-with-value.html
     - include: immediately-pop
   tag-generic-attribute-equals:
-    # The first match here captures cases like this in ES tagged templates:
-    #
-    #   <foo bar=${expression} baz=${expression}>
-    #
-    # If we did not treat this as a special case, ‘baz=’ would end up being seen
-    # as an unquoted attribute value.
-    #
-    # Because there are various places where = is matched with special handling
-    # for well-known attributes, this repeats a few times elsewhere.
-    #
-    - match: =(?=\$\{)
+    - match: '=(?=\$\{)'
       scope: punctuation.separator.key-value.html
       pop: true
     - match: =
@@ -471,7 +453,7 @@ contexts:
     - meta_scope: meta.attribute-with-value.class.html
     - include: immediately-pop
   tag-class-attribute-equals:
-    - match: =(?=\$\{)
+    - match: '=(?=\$\{)'
       scope: punctuation.separator.key-value.html
       pop: true
     - match: =
@@ -512,7 +494,7 @@ contexts:
     - meta_scope: meta.attribute-with-value.id.html
     - include: immediately-pop
   tag-id-attribute-equals:
-    - match: =(?=\$\{)
+    - match: '=(?=\$\{)'
       scope: punctuation.separator.key-value.html
       pop: true
     - match: =
@@ -553,7 +535,7 @@ contexts:
     - meta_scope: meta.attribute-with-value.style.html
     - include: immediately-pop
   tag-style-attribute-equals:
-    - match: =(?=\$\{)
+    - match: '=(?=\$\{)'
       scope: punctuation.separator.key-value.html
       pop: true
     - match: =
@@ -598,7 +580,7 @@ contexts:
     - meta_scope: meta.attribute-with-value.event.html
     - include: immediately-pop
   tag-event-attribute-equals:
-    - match: =(?=\$\{)
+    - match: '=(?=\$\{)'
       scope: punctuation.separator.key-value.html
       pop: true
     - match: =

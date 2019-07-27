@@ -2,6 +2,22 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const jp = require('jsonpath');
 
+// -- rule for escaping interpolation element --
+const interp_escape_lookahead = () => ({
+	// The first match here captures cases like this in ES tagged templates:
+	//
+	//   <foo bar=${expression} baz=${expression}>
+	//
+	// If we did not treat this as a special case, ‘baz=’ would end up being seen
+	// as an unquoted attribute value.
+	//
+	// Because there are various places where = is matched with special handling
+	// for well-known attributes, this repeats a few times elsewhere.
+	match: /* syntax: sublime-syntax.regex */ `=(?=\\$\\{)`,
+	scope: 'punctuation.separator.key-value.html',
+	pop: true,
+});
+
 // transforms for select syntaxes
 const h_syntax_transforms = {
 	// the default markdown syntax embeds LOTS of contexts recursively.
@@ -16,6 +32,59 @@ const h_syntax_transforms = {
 
 				if(g_rule.embed) a_rules.splice(i_rule, 1);
 			}
+		},
+	},
+
+	'text.html.basic': {
+		'$.variables': (h_vars) => {
+			h_vars.unquoted_attribute_value = /* syntax: sublime-syntax.regexp */ `(?:[^\\s<>/''"]|/(?!>))+`;
+		},
+
+		'$.contexts["style-type-attribute"][0].set': (a_rules) => {
+			a_rules.splice(1, 0, interp_escape_lookahead());
+		},
+
+		'$.contexts["script-type-attribute"][0].set': (a_rules) => {
+			a_rules.splice(1, 0, interp_escape_lookahead());
+		},
+
+		'$.contexts': (h_contexts) => {
+			// each context
+			for(let [si_context, a_rules] of Object.entries(h_contexts)) {
+				// an attribute equals context
+				if(si_context.endsWith('-attribute-equals')) {
+					a_rules.unshift(interp_escape_lookahead());
+				}
+			}
+		},
+
+		'$.contexts.main': (a_rules) => {
+			a_rules.splice(-2, 0, {
+				// Special case for handling ES tagged template where interpolation occurs in
+				// tag name position:
+
+				// <${expression} attr=val>
+
+				// If we did not include this case, the ‘<’ would be scoped as ordinary
+				// chardata.
+				match: /* syntax: sublime-syntax.regexp */ `(</?)(?=\\$\{)`,
+				captures: {
+					1: 'punctuation.definition.tag.begin.html',
+				},
+				push: [
+					{
+						meta_scope: 'meta.tag.other.html',
+					},
+					{
+						match: `(?: ?/)?>`,
+						scope: 'punctuation.definition.tag.end.html',
+						pop: true,
+					},
+					{
+						include: 'tag-attributes',
+					},
+				],
+			});
 		},
 	},
 
