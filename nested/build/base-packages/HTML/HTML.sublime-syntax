@@ -203,6 +203,15 @@ contexts:
           scope: punctuation.definition.tag.end.html
           pop: true
         - include: tag-attributes
+    - match: '(</?)(?=\${)'
+      captures:
+        '1': punctuation.definition.tag.begin.html
+      push:
+        - meta_scope: meta.tag.other.html
+        - match: '(?: ?/)?>'
+          scope: punctuation.definition.tag.end.html
+          pop: true
+        - include: tag-attributes
     - include: entities
     - match: <>
       scope: invalid.illegal.incomplete.html
@@ -259,6 +268,9 @@ contexts:
       scope: meta.attribute-with-value.html entity.other.attribute-name.html
       set:
         - meta_content_scope: meta.tag.style.begin.html meta.attribute-with-value.html
+        - match: '=(?=\$\{)'
+          scope: punctuation.separator.key-value.html
+          pop: true
         - match: =
           scope: punctuation.separator.key-value.html
           set:
@@ -331,6 +343,9 @@ contexts:
       scope: meta.attribute-with-value.html entity.other.attribute-name.html
       set:
         - meta_content_scope: meta.tag.script.begin.html meta.attribute-with-value.html
+        - match: '=(?=\$\{)'
+          scope: punctuation.separator.key-value.html
+          pop: true
         - match: =
           scope: punctuation.separator.key-value.html
           set:
@@ -399,6 +414,9 @@ contexts:
     - meta_scope: meta.attribute-with-value.html
     - include: immediately-pop
   tag-generic-attribute-equals:
+    - match: '=(?=\$\{)'
+      scope: punctuation.separator.key-value.html
+      pop: true
     - match: =
       scope: punctuation.separator.key-value.html
       set: tag-generic-attribute-value
@@ -435,6 +453,9 @@ contexts:
     - meta_scope: meta.attribute-with-value.class.html
     - include: immediately-pop
   tag-class-attribute-equals:
+    - match: '=(?=\$\{)'
+      scope: punctuation.separator.key-value.html
+      pop: true
     - match: =
       scope: punctuation.separator.key-value.html
       set: tag-class-attribute-value
@@ -473,6 +494,9 @@ contexts:
     - meta_scope: meta.attribute-with-value.id.html
     - include: immediately-pop
   tag-id-attribute-equals:
+    - match: '=(?=\$\{)'
+      scope: punctuation.separator.key-value.html
+      pop: true
     - match: =
       scope: punctuation.separator.key-value.html
       set: tag-id-attribute-value
@@ -511,6 +535,9 @@ contexts:
     - meta_scope: meta.attribute-with-value.style.html
     - include: immediately-pop
   tag-style-attribute-equals:
+    - match: '=(?=\$\{)'
+      scope: punctuation.separator.key-value.html
+      pop: true
     - match: =
       scope: punctuation.separator.key-value.html
       set: tag-style-attribute-value
@@ -553,6 +580,9 @@ contexts:
     - meta_scope: meta.attribute-with-value.event.html
     - include: immediately-pop
   tag-event-attribute-equals:
+    - match: '=(?=\$\{)'
+      scope: punctuation.separator.key-value.html
+      pop: true
     - match: =
       scope: punctuation.separator.key-value.html
       set: tag-event-attribute-value
