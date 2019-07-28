@@ -13,7 +13,7 @@ const interp_escape_lookahead = () => ({
 	//
 	// Because there are various places where = is matched with special handling
 	// for well-known attributes, this repeats a few times elsewhere.
-	match: /* syntax: sublime-syntax.regex */ `=(?=\\$\\{)`,
+	match: String.raw /* syntax: sublime-syntax.regex */ `=(?=\$\{)`,
 	scope: 'punctuation.separator.key-value.html',
 	pop: true,
 });
@@ -37,7 +37,7 @@ const h_syntax_transforms = {
 
 	'text.html.basic': {
 		'$.variables': (h_vars) => {
-			h_vars.unquoted_attribute_value = /* syntax: sublime-syntax.regexp */ `(?:[^\\s<>/''"]|/(?!>))+`;
+			h_vars.unquoted_attribute_value = String.raw /* syntax: sublime-syntax.regexp */ `(?:[^\s<>/''"]|/(?!>))+`;
 		},
 
 		'$.contexts["style-type-attribute"][0].set': (a_rules) => {
@@ -67,7 +67,7 @@ const h_syntax_transforms = {
 
 				// If we did not include this case, the ‘<’ would be scoped as ordinary
 				// chardata.
-				match: /* syntax: sublime-syntax.regexp */ `(</?)(?=\\$\{)`,
+				match: String.raw /* syntax: sublime-syntax.regexp */ `(</?)(?=\$\{)`,
 				captures: {
 					1: 'punctuation.definition.tag.begin.html',
 				},
