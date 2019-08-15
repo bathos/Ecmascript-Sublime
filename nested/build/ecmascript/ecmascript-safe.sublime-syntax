@@ -2363,22 +2363,22 @@ contexts:
       scope: keyword.operator.assignment.augmented.bitwise.shift.right.es
       set: assignmentExpression
   ae_LITERAL_VALUES:
-    - match: 'NaN(?![{{ID_Continue}}])'
+    - match: 'NaN(?![\${{ID_Continue}}])'
       scope: constant.language.nan.es
       set: ae_AFTER_VALUE
-    - match: 'null(?![{{ID_Continue}}])'
+    - match: 'null(?![\${{ID_Continue}}])'
       scope: constant.language.null.es
       set: ae_AFTER_VALUE
-    - match: 'true(?![{{ID_Continue}}])'
+    - match: 'true(?![\${{ID_Continue}}])'
       scope: constant.language.boolean.true.es
       set: ae_AFTER_VALUE
-    - match: 'false(?![{{ID_Continue}}])'
+    - match: 'false(?![\${{ID_Continue}}])'
       scope: constant.language.boolean.false.es
       set: ae_AFTER_VALUE
-    - match: 'Infinity(?![{{ID_Continue}}])'
+    - match: 'Infinity(?![\${{ID_Continue}}])'
       scope: constant.language.infinity.es
       set: ae_AFTER_VALUE
-    - match: 'undefined(?![{{ID_Continue}}])'
+    - match: 'undefined(?![\${{ID_Continue}}])'
       scope: constant.language.undefined.es
       set: ae_AFTER_VALUE
   ae_NUMBERS:
@@ -3089,22 +3089,22 @@ contexts:
       scope: keyword.operator.assignment.augmented.bitwise.shift.right.es
       set: assignmentExpression_NO_IN
   ae_NO_IN_LITERAL_VALUES:
-    - match: 'NaN(?![{{ID_Continue}}])'
+    - match: 'NaN(?![\${{ID_Continue}}])'
       scope: constant.language.nan.es
       set: ae_NO_IN_AFTER_VALUE
-    - match: 'null(?![{{ID_Continue}}])'
+    - match: 'null(?![\${{ID_Continue}}])'
       scope: constant.language.null.es
       set: ae_NO_IN_AFTER_VALUE
-    - match: 'true(?![{{ID_Continue}}])'
+    - match: 'true(?![\${{ID_Continue}}])'
       scope: constant.language.boolean.true.es
       set: ae_NO_IN_AFTER_VALUE
-    - match: 'false(?![{{ID_Continue}}])'
+    - match: 'false(?![\${{ID_Continue}}])'
       scope: constant.language.boolean.false.es
       set: ae_NO_IN_AFTER_VALUE
-    - match: 'Infinity(?![{{ID_Continue}}])'
+    - match: 'Infinity(?![\${{ID_Continue}}])'
       scope: constant.language.infinity.es
       set: ae_NO_IN_AFTER_VALUE
-    - match: 'undefined(?![{{ID_Continue}}])'
+    - match: 'undefined(?![\${{ID_Continue}}])'
       scope: constant.language.undefined.es
       set: ae_NO_IN_AFTER_VALUE
   ae_NO_IN_NUMBERS:
