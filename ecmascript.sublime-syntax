@@ -3583,10 +3583,12 @@ contexts:
         1: storage.type.accessor.js # ^BS
         2: storage.modifier.accessor.set.es
       set: [ literalObject_AFTER_AE, accessorMethod_AFTER_SET ]
-    - match: '((async)){{idEnd}}(?!\s*:)'
+    - match: '((async)){{idEnd}}(?:((\s*\*))?|(?!\s*:))'
       captures:
         1: storage.type.js # ^BS
         2: storage.modifier.async.es
+        3: keyword.generator.asterisk.js # ^BS
+        4: storage.modifier.generator.asterisk.method.es
       set: [ literalObject_AFTER_AE, asyncMethod_AFTER_ASYNC ]
     # NORMAL METHODS
     - match: '(({{allThreeIDs}}))\s*(\()'
