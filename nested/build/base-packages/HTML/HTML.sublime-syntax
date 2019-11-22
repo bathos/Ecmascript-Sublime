@@ -203,7 +203,7 @@ contexts:
           scope: punctuation.definition.tag.end.html
           pop: true
         - include: tag-attributes
-    - match: '(</?)(?=\${)'
+    - match: '(</?)(?=\$\{)'
       captures:
         '1': punctuation.definition.tag.begin.html
       push:
@@ -400,7 +400,7 @@ contexts:
           pop: true
         - include: entities
   tag-generic-attribute:
-    - match: '(?={{attribute_char}})'
+    - match: '(?={{attribute_char}}|=)'
       scope: entity.other.attribute-name.html
       push:
         - tag-generic-attribute-meta

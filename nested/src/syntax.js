@@ -48,6 +48,11 @@ const h_syntax_transforms = {
 			a_rules.splice(1, 0, interp_escape_lookahead());
 		},
 
+		// allow for empty attribute names so they can be interpolated
+		'$.contexts["tag-generic-attribute"][0]': (g_rule) => {
+			g_rule.match = g_rule.match.replace(/(\)?)$/, '|=$1');
+		},
+
 		'$.contexts': (h_contexts) => {
 			// each context
 			for(let [si_context, a_rules] of Object.entries(h_contexts)) {
