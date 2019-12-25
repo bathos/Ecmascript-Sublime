@@ -95,7 +95,7 @@ variables:
   # Note, Symbol is not a real constructor -- but even ECMA 262 calls it one.
 
   intrinsicConstructors: >-
-    Array(?:Buffer)? | Atomics | BigInt | Big(Ui|I)nt64Array | Boolean | Date |
+    Array(?:Buffer)? | BigInt | Big(Ui|I)nt64Array | Boolean | Date |
     DataView | (?:Eval|Range|Reference|Syntax|Type|URI)?Error |
     Float(?:32|64)Array | Function | Int(?:8|16|32)Array |
     Number | Object | Promise | Proxy | RegExp | SharedArrayBuffer |
@@ -2411,7 +2411,7 @@ contexts:
         1: support.class.builtin.es
       set: ae_AFTER_THING
     # OBJECTS
-    - match: '(?:globalThis|Intl|JSON|Math|Reflect){{idEnd}}'
+    - match: '(?:globalThis|Atomics|Intl|JSON|Math|Reflect){{idEnd}}'
       scope: support.variable.builtin.es
       set: ae_AFTER_THING
     # FUNCTIONS
