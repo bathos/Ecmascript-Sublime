@@ -572,6 +572,7 @@ in ‘.regexp’ do not also have ‘.es’.
     - `keyword.operator.bind`
     - `keyword.operator.comma`
     - `keyword.operator.new`
+    - `keyword.operator.pipeline` (smart and F# pipelines proposals)
     - `keyword.operator.spread`
     - `keyword.operator.ternary`
     - `keyword.operator.ternary.else`
@@ -694,6 +695,7 @@ in ‘.regexp’ do not also have ‘.es’.
     - `variable.language.new-target.fake-property` (the target in `new.target`)
     - `variable.language.super`
     - `variable.language.this`
+    - `variable.language.topic` (smart pipelines proposal)
   - **Special Properties**
     - `variable.other.readwrite.property.proto` (i.e., `x.__proto__`; a certified Bad Part)
     - `variable.other.readwrite.property.prototype` (i.e. `X.prototype`)

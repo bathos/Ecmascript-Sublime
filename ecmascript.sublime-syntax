@@ -2367,6 +2367,10 @@ contexts:
     - match: 'this{{idEnd}}'
       scope: variable.language.this.es
       set: ae_AFTER_THING
+    # PIPELINE PROPOSAL
+    - match: '#'
+      scope: variable.language.topic.es
+      set: ae_AFTER_THING
     # SUPER
     - match: '(((super)))\s*((\())'
       captures:
@@ -2482,7 +2486,7 @@ contexts:
     - match: '&(?!=)'
       scope: keyword.operator.bitwise.logical.and.es
       set: assignmentExpression
-    - match: '\|(?![=\|])'
+    - match: '\|(?![=\|>])'
       scope: keyword.operator.bitwise.logical.or.es
       set: assignmentExpression
     - match: '\^(?!=)'
@@ -2517,7 +2521,10 @@ contexts:
     - match: 'in{{idEnd}}'
       scope: keyword.operator.relational.in.es
       set: assignmentExpression
-    # BINDING
+    # APPLICATION
+    - match: '\|>'
+      scope: keyword.operator.pipeline.es
+      set: assignmentExpression
     - match: '::'
       scope: keyword.operator.bind.es
       set: assignmentExpression
