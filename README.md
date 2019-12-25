@@ -693,6 +693,7 @@ in ‘.regexp’ do not also have ‘.es’.
     - `variable.language.new-target.fake-accessor` (the dot in `new.target`)
     - `variable.language.new-target.fake-object` (the new in `new.target`)
     - `variable.language.new-target.fake-property` (the target in `new.target`)
+    - `variable.language.partial-application` (partial application proposal)
     - `variable.language.super`
     - `variable.language.this`
     - `variable.language.topic` (smart pipelines proposal)

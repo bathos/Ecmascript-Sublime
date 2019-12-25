@@ -4705,6 +4705,10 @@ contexts:
     - match: '\.{3}'
       scope: keyword.operator.spread.es
       set: [ arguments_AFTER_AE, assignmentExpression ]
+    # PARTIAL APPLICATION PROPOSAL
+    - match: '\?(?!\?|\.(?!\d))'
+      scope: variable.language.partial-application.es
+      set: arguments_AFTER_AE
     - match: '{{PLA_anything}}'
       set: [ arguments_AFTER_AE, assignmentExpression ]
     - include: other_illegal
