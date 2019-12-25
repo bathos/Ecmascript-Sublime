@@ -2428,6 +2428,10 @@ contexts:
       set: ae_AFTER_THING
 
   ae_INFIX_OPS:
+    # NULLISH COALESCING
+    - match: '\?\?'
+      scope: keyword.operator.logical.or.nullish-coalescing.es
+      set: assignmentExpression
     # TERNARY
     - match: '\?'
       scope: keyword.operator.ternary.if.es
@@ -3193,6 +3197,9 @@ contexts:
       scope: support.function.builtin.es
       set: ae_NO_IN_AFTER_THING
   ae_NO_IN_INFIX_OPS:
+    - match: '\?\?'
+      scope: keyword.operator.logical.or.nullish-coalescing.es
+      set: assignmentExpression_NO_IN
     - match: '\?'
       scope: keyword.operator.ternary.if.es
       set: ae_NO_IN_TERNARY_AFTER_QUESTION

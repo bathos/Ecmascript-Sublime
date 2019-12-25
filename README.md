@@ -583,6 +583,7 @@ in ‘.regexp’ do not also have ‘.es’.
     - `keyword.operator.logical.and`
     - `keyword.operator.logical.not`
     - `keyword.operator.logical.or`
+    - `keyword.operator.logical.or.nullish-coalescing`
     - `meta.idiomatic-cast.boolean` (i.e. `!!val`)
   - **Mathematic**
     - `keyword.operator.arithmetic`
