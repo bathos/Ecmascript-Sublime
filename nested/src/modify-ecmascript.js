@@ -142,9 +142,9 @@ if('nest' === s_mode) {
 		'$.contexts.string_COMMON_ESCAPES[?(@.match)]': match_replace(/^(.)/, '\\\\$1'),
 
 		'$.variables': h_variables => Object.assign(h_variables, {
-			identifierPart: regexp(/(?:\$(?!\{)|[_‍‍{{ID_Continue}}]|{{unicodeEscape}})*/),
-			identifierStart: regexp(/(?:\$(?!\{)|[_{{ID_Start}}]|{{unicodeEscape}})/),
-			idEnd: regexp(/(?=\$[^\{]|[^_‍‍{{ID_Continue}}]|$)/),  // eslint-disable-line no-useless-escape
+			identifierPart: regexp(/(?:\$(?!\{)|[{{identifierContinueChars}}]|{{unicodeEscape}})/),
+			identifierStart: regexp(/(?:\$(?!\{)|[\p{IDS}$_]|{{unicodeEscape}})/),
+			idEnd: regexp(/(?=\$(?!\{)|[^{{identifierContinueChars}}\\]|$)/),
 		}),
 
 		'$.contexts.classDeclaration_AFTER_CLASS[?(@.set=="classDeclaration_AFTER_NAME")]': match_replace(/(\)+)$/, '|(?=\\s*(?:\\{|extends))$1'),
