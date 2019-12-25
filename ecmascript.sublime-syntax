@@ -1890,7 +1890,7 @@ contexts:
       scope: invalid.illegal.token
       pop: true
     # Accessor operator
-    - match: '\.'
+    - match: '\.(?!\d|\.\.)'
       scope: keyword.operator.accessor.es
       set: ae_AFTER_ACCESSOR_OPERATOR
     # TODO: This concerned earlier grammars for the decorator proposal but it is
@@ -2931,7 +2931,7 @@ contexts:
     - include: ae_NO_IN_INFIX_OPS_ASSIGNMENT
     - include: ae_NO_IN_AFTER_VALUE
   ae_NO_IN_AFTER_VALUE:
-    - match: '\.'
+    - match: '\.(?!\d|\.\.)'
       scope: keyword.operator.accessor.es
       set: ae_NO_IN_AFTER_ACCESSOR_OPERATOR
     - match: '((\[))'
