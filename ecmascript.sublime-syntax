@@ -3550,17 +3550,20 @@ contexts:
       scope: punctuation.separator.array-element.es
     - match: '\.{3}'
       scope: keyword.operator.spread.es
-      set: [ literalArray_AFTER_MEMBER, assignmentExpression ]
+      set: [ literalArray_AFTER_ELEMENT, assignmentExpression ]
     - match: '{{PLA_anything}}'
-      set: [ literalArray_AFTER_MEMBER, assignmentExpression ]
+      set: [ literalArray_AFTER_ELEMENT, assignmentExpression ]
 
-  literalArray_AFTER_MEMBER:
-    # This context is a safety catch for recovering correct scope when it turns
-    # out this was really a multiline binding pattern.
-    - match:  '(?<=\])(?==)'
-      set: bindingArray_AFTER_ELEM
-    - match: '{{PLA_anything}}'
+  literalArray_AFTER_ELEMENT:
+    - match: '((\]))'
+      captures:
+        1: punctuation.definition.array.end.es
+        2: meta.brace.square.js # ^BS
+      pop: true
+    - match: ','
+      scope: punctuation.separator.array-element.es
       set: literalArray_OPEN
+    - include: other_illegal
 
   literalObject_OPEN:
     - match: '((\}))'
