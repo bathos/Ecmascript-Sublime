@@ -1102,18 +1102,6 @@ contexts:
       set: [ classDeclaration_AFTER_BRACE, classDeclaration_AFTER_METHOD_OR_FIELD_NAME, stringDouble_AFTER_OPEN ]
     # None of the remainder are handled correctly in BS or JSN, so they are all
     # technically "-BS" cases
-    - match: '({{decNum}})'
-      scope: constant.numeric.decimal.es
-      captures:
-        1: entity.name.method.es
-        2: punctuation.decimal.es
-        3: punctuation.decimal.es
-        4: punctuation.decimal.es
-        5: meta.numeric.exponent.e.es
-        6: meta.numeric.exponent.sign.es
-        7: meta.numeric.exponent.digit.es
-        8: meta.numeric.suffix.es
-      set: [ classDeclaration_AFTER_BRACE, classDeclaration_AFTER_METHOD_OR_FIELD_NAME ]
     - match: '({{binNum}})'
       scope: constant.numeric.binary.es
       captures:
@@ -1134,6 +1122,18 @@ contexts:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
         3: meta.numeric.suffix.es
+      set: [ classDeclaration_AFTER_BRACE, classDeclaration_AFTER_METHOD_OR_FIELD_NAME ]
+    - match: '({{decNum}})'
+      scope: constant.numeric.decimal.es
+      captures:
+        1: entity.name.method.es
+        2: punctuation.decimal.es
+        3: punctuation.decimal.es
+        4: punctuation.decimal.es
+        5: meta.numeric.exponent.e.es
+        6: meta.numeric.exponent.sign.es
+        7: meta.numeric.exponent.digit.es
+        8: meta.numeric.suffix.es
       set: [ classDeclaration_AFTER_BRACE, classDeclaration_AFTER_METHOD_OR_FIELD_NAME ]
     - match: '((\[))'
       captures:
@@ -2589,17 +2589,6 @@ contexts:
       set: ae_AFTER_VALUE
 
   ae_NUMBERS:
-    - match: '{{decNum}}'
-      scope: constant.numeric.decimal.es
-      captures:
-        1: punctuation.decimal.es
-        2: punctuation.decimal.es
-        3: punctuation.decimal.es
-        4: meta.numeric.exponent.e.es
-        5: meta.numeric.exponent.sign.es
-        6: meta.numeric.exponent.digit.es
-        7: meta.numeric.suffix.es
-      set: ae_AFTER_VALUE
     - match: '{{binNum}}'
       scope: constant.numeric.binary.es
       captures:
@@ -2617,6 +2606,17 @@ contexts:
       captures:
         1: meta.numeric.prefix.es
         2: meta.numeric.suffix.es
+      set: ae_AFTER_VALUE
+    - match: '{{decNum}}'
+      scope: constant.numeric.decimal.es
+      captures:
+        1: punctuation.decimal.es
+        2: punctuation.decimal.es
+        3: punctuation.decimal.es
+        4: meta.numeric.exponent.e.es
+        5: meta.numeric.exponent.sign.es
+        6: meta.numeric.exponent.digit.es
+        7: meta.numeric.suffix.es
       set: ae_AFTER_VALUE
 
   ae_OBJECT_ARRAY_BINDING:
@@ -3338,17 +3338,6 @@ contexts:
       scope: constant.language.undefined.es
       set: ae_NO_IN_AFTER_VALUE
   ae_NO_IN_NUMBERS:
-    - match: '{{decNum}}'
-      scope: constant.numeric.decimal.es
-      captures:
-        1: punctuation.decimal.es
-        2: punctuation.decimal.es
-        3: punctuation.decimal.es
-        4: meta.numeric.exponent.e.es
-        5: meta.numeric.exponent.sign.es
-        6: meta.numeric.exponent.digit.es
-        7: meta.numeric.suffix.es
-      set: ae_NO_IN_AFTER_VALUE
     - match: '{{binNum}}'
       scope: constant.numeric.binary.es
       captures:
@@ -3366,6 +3355,17 @@ contexts:
       captures:
         1: meta.numeric.prefix.es
         2: meta.numeric.suffix.es
+      set: ae_NO_IN_AFTER_VALUE
+    - match: '{{decNum}}'
+      scope: constant.numeric.decimal.es
+      captures:
+        1: punctuation.decimal.es
+        2: punctuation.decimal.es
+        3: punctuation.decimal.es
+        4: meta.numeric.exponent.e.es
+        5: meta.numeric.exponent.sign.es
+        6: meta.numeric.exponent.digit.es
+        7: meta.numeric.suffix.es
       set: ae_NO_IN_AFTER_VALUE
   ae_NO_IN_OBJECT_ARRAY_BINDING:
     - match: '(?x) ((\{)) (?= (?<brackets> [^\{\}] | \{ \g<brackets>* \} )* \}\s*=[^=])'
@@ -3655,10 +3655,31 @@ contexts:
         2: punctuation.definition.decorator.es
       push: decoratorExpression
     # NUMERIC PROPERTY
-    - match: '({{decNum}})'
-      scope: constant.numeric.decimal.es
+    - match: '({{binNum}})'
+      scope: variable.other.readwrite.property.object-literal.es
       captures:
-        1: variable.other.readwrite.property.object-literal.es
+        1: constant.numeric.binary.es
+        2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
+      set: literalObject_AFTER_PROP
+    - match: '({{octNum}})'
+      scope: variable.other.readwrite.property.object-literal.es
+      captures:
+        1: constant.numeric.octal.es
+        2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
+      set: literalObject_AFTER_PROP
+    - match: '({{hexNum}})'
+      scope: variable.other.readwrite.property.object-literal.es
+      captures:
+        1: constant.numeric.hexadecimal.es
+        2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
+      set: literalObject_AFTER_PROP
+    - match: '({{decNum}})'
+      scope: variable.other.readwrite.property.object-literal.es
+      captures:
+        1: constant.numeric.decimal.es
         2: punctuation.decimal.es
         3: punctuation.decimal.es
         4: punctuation.decimal.es
@@ -3666,27 +3687,6 @@ contexts:
         6: meta.numeric.exponent.sign.es
         7: meta.numeric.exponent.digit.es
         8: meta.numeric.suffix.es
-      set: literalObject_AFTER_PROP
-    - match: '({{binNum}})'
-      scope: constant.numeric.binary.es
-      captures:
-        1: variable.other.readwrite.property.object-literal.es
-        2: meta.numeric.prefix.es
-        3: meta.numeric.suffix.es
-      set: literalObject_AFTER_PROP
-    - match: '({{octNum}})'
-      scope: constant.numeric.octal.es
-      captures:
-        1: variable.other.readwrite.property.object-literal.es
-        2: meta.numeric.prefix.es
-        3: meta.numeric.suffix.es
-      set: literalObject_AFTER_PROP
-    - match: '({{hexNum}})'
-      scope: constant.numeric.hexadecimal.es
-      captures:
-        1: variable.other.readwrite.property.object-literal.es
-        2: meta.numeric.prefix.es
-        3: meta.numeric.suffix.es
       set: literalObject_AFTER_PROP
     # COMPUTED PROPERTY
     - match: '((\[))'
@@ -3858,10 +3858,31 @@ contexts:
     - match: '"'
       scope: punctuation.definition.string.quoted.double.begin.es
       set: [ asyncMethod_AFTER_NAME, stringDouble_AFTER_OPEN ]
-    - match: '({{decNum}})'
-      scope: constant.numeric.decimal.es
+    - match: '({{binNum}})'
+      scope: entity.name.method.es
       captures:
-        1: entity.name.method.es
+        1: constant.numeric.binary.es
+        2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
+      set: asyncMethod_AFTER_NAME
+    - match: '({{octNum}})'
+      scope: entity.name.method.es
+      captures:
+        1: constant.numeric.octal.es
+        2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
+      set: asyncMethod_AFTER_NAME
+    - match: '({{hexNum}})'
+      scope: entity.name.method.es
+      captures:
+        1: constant.numeric.hexadecimal.es
+        2: meta.numeric.prefix.es
+        3: meta.numeric.suffix.es
+      set: asyncMethod_AFTER_NAME
+    - match: '({{decNum}})'
+      scope: entity.name.method.es
+      captures:
+        1: constant.numeric.decimal.es
         2: punctuation.decimal.es
         3: punctuation.decimal.es
         4: punctuation.decimal.es
@@ -3869,27 +3890,6 @@ contexts:
         6: meta.numeric.exponent.sign.es
         7: meta.numeric.exponent.digit.es
         8: meta.numeric.suffix.es
-      set: asyncMethod_AFTER_NAME
-    - match: '({{binNum}})'
-      scope: constant.numeric.binary.es
-      captures:
-        1: entity.name.method.es
-        2: meta.numeric.prefix.es
-        3: meta.numeric.suffix.es
-      set: asyncMethod_AFTER_NAME
-    - match: '({{octNum}})'
-      scope: constant.numeric.octal.es
-      captures:
-        1: entity.name.method.es
-        2: meta.numeric.prefix.es
-        3: meta.numeric.suffix.es
-      set: asyncMethod_AFTER_NAME
-    - match: '({{hexNum}})'
-      scope: constant.numeric.hexadecimal.es
-      captures:
-        1: entity.name.method.es
-        2: meta.numeric.prefix.es
-        3: meta.numeric.suffix.es
       set: asyncMethod_AFTER_NAME
     - match: '((\[))'
       captures:
@@ -3943,18 +3943,6 @@ contexts:
     - match: '"'
       scope: punctuation.definition.string.quoted.double.begin.es
       set: [ accessorMethod_AFTER_GET_NAME, stringDouble_AFTER_OPEN ]
-    - match: '({{decNum}})'
-      scope: constant.numeric.decimal.es
-      captures:
-        1: entity.name.method.es
-        2: punctuation.decimal.es
-        3: punctuation.decimal.es
-        4: punctuation.decimal.es
-        5: meta.numeric.exponent.e.es
-        6: meta.numeric.exponent.sign.es
-        7: meta.numeric.exponent.digit.es
-        8: meta.numeric.suffix.es
-      set: accessorMethod_AFTER_GET_NAME
     - match: '({{binNum}})'
       scope: constant.numeric.binary.es
       captures:
@@ -3963,18 +3951,30 @@ contexts:
         3: meta.numeric.suffix.es
       set: accessorMethod_AFTER_GET_NAME
     - match: '({{octNum}})'
-      scope: constant.numeric.octal.es
+      scope: entity.name.method.es
       captures:
-        1: entity.name.method.es
+        1: constant.numeric.octal.es
         2: meta.numeric.prefix.es
         3: meta.numeric.suffix.es
       set: accessorMethod_AFTER_GET_NAME
     - match: '({{hexNum}})'
-      scope: constant.numeric.hexadecimal.es
+      scope: entity.name.method.es
       captures:
-        1: entity.name.method.es
+        1: constant.numeric.hexadecimal.es
         2: meta.numeric.prefix.es
         3: meta.numeric.suffix.es
+      set: accessorMethod_AFTER_GET_NAME
+    - match: '({{decNum}})'
+      scope: entity.name.method.es
+      captures:
+        1: constant.numeric.decimal.es
+        2: punctuation.decimal.es
+        3: punctuation.decimal.es
+        4: punctuation.decimal.es
+        5: meta.numeric.exponent.e.es
+        6: meta.numeric.exponent.sign.es
+        7: meta.numeric.exponent.digit.es
+        8: meta.numeric.suffix.es
       set: accessorMethod_AFTER_GET_NAME
     - match: '((\[))'
       captures:
@@ -4036,18 +4036,6 @@ contexts:
     - match: '"'
       scope: punctuation.definition.string.quoted.double.begin.es
       set: [ accessorMethod_AFTER_SET_NAME, stringDouble_AFTER_OPEN ]
-    - match: '({{decNum}})'
-      scope: constant.numeric.decimal.es
-      captures:
-        1: entity.name.method.es
-        2: punctuation.decimal.es
-        3: punctuation.decimal.es
-        4: punctuation.decimal.es
-        5: meta.numeric.exponent.e.es
-        6: meta.numeric.exponent.sign.es
-        7: meta.numeric.exponent.digit.es
-        8: meta.numeric.suffix.es
-      set: accessorMethod_AFTER_SET_NAME
     - match: '({{binNum}})'
       scope: constant.numeric.binary.es
       captures:
@@ -4068,6 +4056,18 @@ contexts:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
         3: meta.numeric.suffix.es
+      set: accessorMethod_AFTER_SET_NAME
+    - match: '({{decNum}})'
+      scope: constant.numeric.decimal.es
+      captures:
+        1: entity.name.method.es
+        2: punctuation.decimal.es
+        3: punctuation.decimal.es
+        4: punctuation.decimal.es
+        5: meta.numeric.exponent.e.es
+        6: meta.numeric.exponent.sign.es
+        7: meta.numeric.exponent.digit.es
+        8: meta.numeric.suffix.es
       set: accessorMethod_AFTER_SET_NAME
     - match: '((\[))'
       captures:
@@ -4168,18 +4168,6 @@ contexts:
     - match: '"'
       scope: punctuation.definition.string.quoted.double.begin.es
       set: [ generatorMethod_AFTER_NAME, stringDouble_AFTER_OPEN ]
-    - match: '({{decNum}})'
-      scope: constant.numeric.decimal.es
-      captures:
-        1: entity.name.method.es
-        2: punctuation.decimal.es
-        3: punctuation.decimal.es
-        4: punctuation.decimal.es
-        5: meta.numeric.exponent.e.es
-        6: meta.numeric.exponent.sign.es
-        7: meta.numeric.exponent.digit.es
-        8: meta.numeric.suffix.es
-      set: generatorMethod_AFTER_NAME
     - match: '({{binNum}})'
       scope: constant.numeric.binary.es
       captures:
@@ -4200,6 +4188,18 @@ contexts:
         1: entity.name.method.es
         2: meta.numeric.prefix.es
         3: meta.numeric.suffix.es
+      set: generatorMethod_AFTER_NAME
+    - match: '({{decNum}})'
+      scope: constant.numeric.decimal.es
+      captures:
+        1: entity.name.method.es
+        2: punctuation.decimal.es
+        3: punctuation.decimal.es
+        4: punctuation.decimal.es
+        5: meta.numeric.exponent.e.es
+        6: meta.numeric.exponent.sign.es
+        7: meta.numeric.exponent.digit.es
+        8: meta.numeric.suffix.es
       set: generatorMethod_AFTER_NAME
     - match: '((\[))'
       captures:
@@ -4384,18 +4384,6 @@ contexts:
       scope: keyword.other.rest.es # -BS
       set: bindingObject_AFTER_ELLIPSIS
     # NUMERIC PROPERTY
-    - match: '({{decNum}})'
-      scope: constant.numeric.decimal.es
-      captures:
-        1: entity.other.property-binding.es
-        2: punctuation.decimal.es
-        3: punctuation.decimal.es
-        4: punctuation.decimal.es
-        5: meta.numeric.exponent.e.es
-        6: meta.numeric.exponent.sign.es
-        7: meta.numeric.exponent.digit.es
-        8: meta.numeric.suffix.es
-      set: bindingObject_BEFORE_COLON
     - match: '({{binNum}})'
       scope: constant.numeric.binary.es
       captures:
@@ -4416,6 +4404,18 @@ contexts:
         1: entity.other.property-binding.es
         2: meta.numeric.prefix.es
         3: meta.numeric.suffix.es
+      set: bindingObject_BEFORE_COLON
+    - match: '({{decNum}})'
+      scope: constant.numeric.decimal.es
+      captures:
+        1: entity.other.property-binding.es
+        2: punctuation.decimal.es
+        3: punctuation.decimal.es
+        4: punctuation.decimal.es
+        5: meta.numeric.exponent.e.es
+        6: meta.numeric.exponent.sign.es
+        7: meta.numeric.exponent.digit.es
+        8: meta.numeric.suffix.es
       set: bindingObject_BEFORE_COLON
     - include: other_illegal
 
@@ -4575,18 +4575,6 @@ contexts:
       scope: keyword.other.rest.parameter.es # -BS
       set: bindingObject_PARAM_AFTER_ELLIPSIS
     # NUMERIC PROPERTY
-    - match: '({{decNum}})'
-      scope: constant.numeric.decimal.es
-      captures:
-        1: entity.other.property-binding.parameter.es
-        2: punctuation.decimal.es
-        3: punctuation.decimal.es
-        4: punctuation.decimal.es
-        5: meta.numeric.exponent.e.es
-        6: meta.numeric.exponent.sign.es
-        7: meta.numeric.exponent.digit.es
-        8: meta.numeric.suffix.es
-      set: bindingObject_PARAM_BEFORE_COLON
     - match: '({{binNum}})'
       scope: constant.numeric.binary.es
       captures:
@@ -4607,6 +4595,18 @@ contexts:
         1: entity.other.property-binding.parameter.es
         2: meta.numeric.prefix.es
         3: meta.numeric.suffix.es
+      set: bindingObject_PARAM_BEFORE_COLON
+    - match: '({{decNum}})'
+      scope: constant.numeric.decimal.es
+      captures:
+        1: entity.other.property-binding.parameter.es
+        2: punctuation.decimal.es
+        3: punctuation.decimal.es
+        4: punctuation.decimal.es
+        5: meta.numeric.exponent.e.es
+        6: meta.numeric.exponent.sign.es
+        7: meta.numeric.exponent.digit.es
+        8: meta.numeric.suffix.es
       set: bindingObject_PARAM_BEFORE_COLON
     - include: other_illegal
 
