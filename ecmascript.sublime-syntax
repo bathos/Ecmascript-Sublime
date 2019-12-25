@@ -76,7 +76,7 @@ variables:
       (?<![{{identifierContinueChars}}\\])
       {{identifierAllCaps}}
   identifierName: '{{identifierStart}}{{identifierPart}}*'
-  identifierContinueChars: '[\p{IDS}$_]$\x{200C}\x{200D}'
+  identifierContinueChars: '\p{IDC}$\x{200C}\x{200D}'
   identifierPart: '(?:[{{identifierContinueChars}}]|{{unicodeEscape}})'
   identifierStart: '(?:[\p{IDS}$_]|{{unicodeEscape}})'
   allThreeIDs: '({{identifierAllCaps}})|({{identifierInitCap}})|({{identifier}})'
