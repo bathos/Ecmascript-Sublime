@@ -2403,15 +2403,13 @@ contexts:
 
   ae_IDENTIFIERS_INTRINSIC:
     # CONSTRUCTORS
-    - match: '(?x) (((({{intrinsicConstructors}})))\s*)((\())'
+    - match: '(?x) (((({{intrinsicConstructors}}))))\s*(?=\()'
       captures:
         1: variable.other.readwrite.initCap.es
         2: meta.instance.constructor # ^BS
         3: support.class.builtin.es
         4: meta.invocation.es
-        5: punctuation.definition.arguments.begin.es
-        6: meta.brace.round.js # ^BS
-      set: [ ae_AFTER_THING, arguments ]
+      set: ae_AFTER_THING
     - match: '(?x) ({{intrinsicConstructors}}){{idEnd}}'
       scope: variable.other.readwrite.es
       captures:
@@ -3181,15 +3179,13 @@ contexts:
       scope: variable.language.arguments.es
       set: ae_NO_IN_AFTER_THING
   ae_NO_IN_IDENTIFIERS_INTRINSIC:
-    - match: '(?x) (((({{intrinsicConstructors}})))\s*)((\())'
+    - match: '(?x) (((({{intrinsicConstructors}}))))\s*(?=\()'
       captures:
-        1: variable.other.readwrite.es
-        2: meta.instance.constructor entity.name.type.new
-        3: meta.instantiation.es
-        4: support.class.builtin.es
-        5: punctuation.definition.arguments.begin.es
-        6: meta.brace.round.js
-      set: [ ae_NO_IN_AFTER_THING, arguments ]
+        1: variable.other.readwrite.initCap.es
+        2: meta.instance.constructor # ^BS
+        3: support.class.builtin.es
+        4: meta.invocation.es
+      set: ae_NO_IN_AFTER_THING
     - match: '(?x) ({{intrinsicConstructors}}){{idEnd}}'
       scope: variable.other.readwrite.es
       captures:
