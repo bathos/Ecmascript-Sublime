@@ -1893,10 +1893,10 @@ contexts:
     - match: '\.'
       scope: keyword.operator.accessor.es
       set: ae_AFTER_ACCESSOR_OPERATOR
-    # This is another special cases for crybaby decorator expressions. It will
-    # work only for computed properties that do not contain other brackets, but
-    # that should be sufficient for any realistic cases. It isn’t needed in the
-    # ‘NO_IN’ series.
+    # TODO: This concerned earlier grammars for the decorator proposal but it is
+    # should not be needed any longer as the grammar no longer permits the parts
+    # that were ambiguous. There are probably a few spots that should be updated
+    # due to that.
     - match: >-
         (?x) (?=
           \[
