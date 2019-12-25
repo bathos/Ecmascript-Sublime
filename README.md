@@ -568,6 +568,7 @@ in ‘.regexp’ do not also have ‘.es’.
   - **Evaluative**
     - `keyword.operator.accessor`
     - `keyword.operator.accessor.decorator`
+    - `keyword.operator.accessor.optional-chaining`
     - `keyword.operator.bind`
     - `keyword.operator.comma`
     - `keyword.operator.new`
