@@ -28,12 +28,6 @@ variables:
   MAT_word_or_any_one_char: '\w+|\S'
   PLA_anything: '(?=[\S\s])'
 
-  # UNICODE PROPERTY CLASS SHIMS ###############################################
-  ID_Continue: '{{ID_Start}}\p{Mn}\p{Mc}\p{Nd}\p{Pc}{{Other_ID_Continue}}'
-  ID_Start: '\p{L}\p{Nl}{{Other_ID_Start}}'
-  Other_ID_Continue: '··፩-፱᧚'
-  Other_ID_Start: '℘℮゛゜'
-
   # OTHER CHARACTER GROUPS #####################################################
   boxchars: '[─-╿▀-▟]+'
   whiteNoLine: '[\s&&[^\n\r]]+'
@@ -56,35 +50,35 @@ variables:
   keywordOther: >-
     Infinity | NaN | undefined
   reservedWords: >-
-    {{keywordLanguage}}|
-    {{keywordReserved}}|
-    {{keywordLiteral}}|
-    {{keywordOther}}
+    (?:
+      {{keywordLanguage}}|
+      {{keywordReserved}}|
+      {{keywordLiteral}}|
+      {{keywordOther}}
+    )
 
   # IDENTIFIERS ################################################################
   identifier: >-
     (?x)
-      (?! (?:{{reservedWords}})
-      [^\$_‍‍{{ID_Continue}}] )
-      (?<![{{ID_Continue}}])
+      (?!{{reservedWords}}{{idEnd}})
+      (?<![{{identifierContinueChars}}\\])
       {{identifierName}}
-  identifierInitCap: '(?:\p{Lu}{{identifierPart}}){{idEnd}}'
+  identifierInitCap: '(?:\p{Lu}{{identifierPart}}+){{idEnd}}'
   identifierInitCapStrict: >-
     (?x)
-      (?! (?:{{reservedWords}})
-      [^\$_‍‍{{ID_Continue}}] )
-      (?<![{{ID_Continue}}])
+      (?!{{reservedWords}}{{idEnd}})
+      (?<![{{identifierContinueChars}}\\])
       {{identifierInitCap}}
   identifierAllCaps: '(?:[\p{Lu}\d_]{2,}|\p{Lu}){{idEnd}}'
   identifierAllCapsStrict: >-
     (?x)
-      (?! (?:{{reservedWords}})
-      [^\$_‍‍{{ID_Continue}}] )
-      (?<![{{ID_Continue}}])
+      (?!{{reservedWords}}{{idEnd}})
+      (?<![{{identifierContinueChars}}\\])
       {{identifierAllCaps}}
-  identifierName: '{{identifierStart}}{{identifierPart}}'
-  identifierPart: '(?:[\$_‍‍{{ID_Continue}}]|{{unicodeEscape}})*' # ZWN?J after _
-  identifierStart: '(?:[\$_{{ID_Start}}]|{{unicodeEscape}})'
+  identifierName: '{{identifierStart}}{{identifierPart}}*'
+  identifierContinueChars: '\p{IDS}$\x{200C}\x{200D}'
+  identifierPart: '(?:[{{identifierContinueChars}}]|{{unicodeEscape}})'
+  identifierStart: '(?:[\p{IDS}$_]|{{unicodeEscape}})'
   allThreeIDs: '({{identifierAllCaps}})|({{identifierInitCap}})|({{identifier}})'
   unicodeEscape: '\\u(?:\h{4}|\{\h+\})'
   jsxComponentIdentifier: '{{identifierInitCapStrict}}'
@@ -124,7 +118,7 @@ variables:
   hexNum: '(0[Xx])(?:\h+(?:_+\h+)*)(n)?'
 
   # LOOKAHEADS #################################################################
-  idEnd: '(?=[^\$_‍‍{{ID_Continue}}]|$)'
+  idEnd: '(?=[^{{identifierContinueChars}}\\]|$)'
 
   # SYNTAX DIRECTIVES ##########################################################
   syntaxDirectiveHead: '(\s*syntax\s*:\s*)'
@@ -2580,22 +2574,22 @@ contexts:
     # totally reasonable to scope them as such since this odd fact is just a bit
     # of legacy bs. In modern implementions they can’t be redefined (although
     # the assignment is itself a legal operation, fun fact).
-    - match: 'NaN(?![{{ID_Continue}}])'
+    - match: 'NaN(?!{{identifierPart}})'
       scope: constant.language.nan.es
       set: ae_AFTER_VALUE
-    - match: 'null(?![{{ID_Continue}}])'
+    - match: 'null(?!{{identifierPart}})'
       scope: constant.language.null.es
       set: ae_AFTER_VALUE
-    - match: 'true(?![{{ID_Continue}}])'
+    - match: 'true(?!{{identifierPart}})'
       scope: constant.language.boolean.true.es
       set: ae_AFTER_VALUE
-    - match: 'false(?![{{ID_Continue}}])'
+    - match: 'false(?!{{identifierPart}})'
       scope: constant.language.boolean.false.es
       set: ae_AFTER_VALUE
-    - match: 'Infinity(?![{{ID_Continue}}])'
+    - match: 'Infinity(?!{{identifierPart}})'
       scope: constant.language.infinity.es
       set: ae_AFTER_VALUE
-    - match: 'undefined(?![{{ID_Continue}}])'
+    - match: 'undefined(?!{{identifierPart}})'
       scope: constant.language.undefined.es
       set: ae_AFTER_VALUE
 
@@ -3334,22 +3328,22 @@ contexts:
       scope: keyword.operator.assignment.augmented.bitwise.shift.right.es
       set: assignmentExpression_NO_IN
   ae_NO_IN_LITERAL_VALUES:
-    - match: 'NaN(?![{{ID_Continue}}])'
+    - match: 'NaN(?!{{identifierPart}})'
       scope: constant.language.nan.es
       set: ae_NO_IN_AFTER_VALUE
-    - match: 'null(?![{{ID_Continue}}])'
+    - match: 'null(?!{{identifierPart}})'
       scope: constant.language.null.es
       set: ae_NO_IN_AFTER_VALUE
-    - match: 'true(?![{{ID_Continue}}])'
+    - match: 'true(?!{{identifierPart}})'
       scope: constant.language.boolean.true.es
       set: ae_NO_IN_AFTER_VALUE
-    - match: 'false(?![{{ID_Continue}}])'
+    - match: 'false(?!{{identifierPart}})'
       scope: constant.language.boolean.false.es
       set: ae_NO_IN_AFTER_VALUE
-    - match: 'Infinity(?![{{ID_Continue}}])'
+    - match: 'Infinity(?!{{identifierPart}})'
       scope: constant.language.infinity.es
       set: ae_NO_IN_AFTER_VALUE
-    - match: 'undefined(?![{{ID_Continue}}])'
+    - match: 'undefined(?!{{identifierPart}})'
       scope: constant.language.undefined.es
       set: ae_NO_IN_AFTER_VALUE
   ae_NO_IN_NUMBERS:
