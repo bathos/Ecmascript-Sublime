@@ -51,10 +51,15 @@ let g_syntax = yaml.safeLoad(s_syntax, {
 	a_ae_rules.splice(a_ae_rules.findIndex(g => 'ae_JSX' === g.include), 1);
 
 	// see: https://github.com/SublimeTextIssues/Core/issues/2395
-	h_contexts.main = [
-		{meta_include_prototype:false},
-		{include:'root'},
-	];
+	// see: https://github.com/bathos/Ecmascript-Sublime/issues/79
+	// insert root rules into main context including import and export stmnts
+	h_contexts.main.splice(-1, 1, ...[
+		...h_contexts.root.slice(0, -1),
+		{
+			match: '{{PLA_anything}}',
+			push: 'root',
+		},
+	]);
 }
 
 // make this syntax a nested one
@@ -366,4 +371,4 @@ Object.assign(g_syntax.contexts, {
 });
 
 // dump changes
-process.stdout.write(`%YAML 1.2\n---\n${yaml.safeDump(g_syntax)}`);
+process.stdout.write(`%YAML 1.2\n---\n${yaml.safeDump(g_syntax, {noRefs:true})}`);

@@ -136,7 +136,25 @@ variables:
 contexts:
   main:
     - meta_include_prototype: false
-    - include: root
+    - match: '^(\#\!)(.*)'
+      scope: comment.line.shebang.es
+      captures:
+        '1': punctuation.definition.comment.begin.es
+        '2': meta.comment.body.es
+      set: root
+    - include: useStrict
+    - match: '((import)){{idEnd}}(?!\s*[\(\.])'
+      captures:
+        '1': storage.type.module.import.es
+        '2': keyword.operator.module.js
+      push: moduleDeclaration_AFTER_IMPORT
+    - match: '((export)){{idEnd}}'
+      captures:
+        '1': storage.type.module.export.es
+        '2': keyword.operator.module.js
+      push: moduleDeclaration_AFTER_EXPORT
+    - match: '{{PLA_anything}}'
+      push: root
   root:
     - include: useStrict
     - match: '((import)){{idEnd}}(?!\s*[\(\.])'
