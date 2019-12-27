@@ -5,7 +5,9 @@ uuid: ec03bb31-a261-42cf-84e0-5d6fc178a126
 # CLASS
 scope: >-
   source.es entity.name.class.es,
-  source.es meta.symbol-helper.class
+  source.es meta.symbol-helper.class,
+  source.js entity.name.class.es,
+  source.js meta.symbol-helper.class
 settings:
   showInSymbolList: 1
   showInIndexedSymbolList: 1

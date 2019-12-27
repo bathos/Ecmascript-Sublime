@@ -5,7 +5,7 @@
 	<key>name</key>
 	<string>Arrow Symbol</string>
 	<key>scope</key>
-	<string>source.es meta.symbol-helper.arrow</string>
+	<string>source.es meta.symbol-helper.arrow, source.js meta.symbol-helper.arrow</string>
 	<key>settings</key>
 	<dict>
 		<key>showInIndexedSymbolList</key>
