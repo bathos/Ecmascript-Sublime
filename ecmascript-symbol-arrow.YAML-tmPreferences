@@ -4,7 +4,8 @@ uuid: 96597763-6760-4814-a82f-2ff424cea154
 
 # ARROW FUNCTION
 scope: >-
-  source.es meta.symbol-helper.arrow
+  source.es meta.symbol-helper.arrow,
+  source.js meta.symbol-helper.arrow
 settings:
   showInSymbolList: 1
   showInIndexedSymbolList: 0
