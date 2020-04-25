@@ -89,6 +89,7 @@ variables:
   syntaxDirective_HTML: '([Hh](?:tml|TML))(){{syntaxDirectiveTail}}'
   syntaxDirective_JS: '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)(){{syntaxDirectiveTail}}'
   syntaxDirective_JS_VALUE: '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Vv]alue){{syntaxDirectiveTail}}'
+  syntaxDirective_JS_THEN: '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Tt]hen){{syntaxDirectiveTail}}'
   syntaxDirective_JS_METHOD: '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Mm]ethod){{syntaxDirectiveTail}}'
   syntaxDirective_JS_REGEXP: >-
     ([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Rr]egexp?){{syntaxDirectiveTail}}
@@ -118,6 +119,7 @@ variables:
         | {{syntaxDirective_HTML}}
         | {{syntaxDirective_JS}}
         | {{syntaxDirective_JS_VALUE}}
+        | {{syntaxDirective_JS_THEN}}
         | {{syntaxDirective_JS_METHOD}}
         | {{syntaxDirective_JS_REGEXP}}
         | {{syntaxDirective_JS_OBJECT_LITERAL}}

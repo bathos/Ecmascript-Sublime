@@ -131,6 +131,7 @@ variables:
   syntaxDirective_HTML:                   '([Hh](?:tml|TML))(){{syntaxDirectiveTail}}'
   syntaxDirective_JS:                     '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)(){{syntaxDirectiveTail}}'
   syntaxDirective_JS_VALUE:               '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Vv]alue){{syntaxDirectiveTail}}'
+  syntaxDirective_JS_THEN:              '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Tt]hen){{syntaxDirectiveTail}}'
   syntaxDirective_JS_METHOD:              '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Mm]ethod){{syntaxDirectiveTail}}'
   syntaxDirective_JS_REGEXP:              '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Rr]egexp?){{syntaxDirectiveTail}}'
   syntaxDirective_JS_OBJECT_LITERAL:      '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Oo]bject-[Ll]iteral){{syntaxDirectiveTail}}'
@@ -156,6 +157,7 @@ variables:
         | {{syntaxDirective_HTML}}
         | {{syntaxDirective_JS}}
         | {{syntaxDirective_JS_VALUE}}
+        | {{syntaxDirective_JS_THEN}}
         | {{syntaxDirective_JS_METHOD}}
         | {{syntaxDirective_JS_REGEXP}}
         | {{syntaxDirective_JS_OBJECT_LITERAL}}
@@ -5387,6 +5389,14 @@ contexts:
         4: entity.quasi.tag.name.js # ^BS
         5: variable.other.readwrite.tag.es
       set: [ syntax_meta_JS, syntax_JS_VALUE_OPEN ]
+    - match: '{{syntaxDirective_JS_THEN}}'
+      captures:
+        1: meta.directive.syntax.language.es
+        2: meta.directive.syntax.context.es
+        3: punctuation.definition.comment.end.es
+        4: entity.quasi.tag.name.js # ^BS
+        5: variable.other.readwrite.tag.es
+      set: [ syntax_meta_JS, syntax_JS_THEN_OPEN ]
     - match: '{{syntaxDirective_JS_METHOD}}'
       captures:
         1: meta.directive.syntax.language.es
@@ -5712,6 +5722,14 @@ contexts:
     - match: '`'
       scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
       set: scope:source.js.nested.es#assignmentExpression_CORE
+      with_prototype:
+        - include: syntax_AFTER_OPEN_NESTS_JS
+
+  syntax_JS_THEN_OPEN:
+    - meta_include_prototype: false
+    - match: '`'
+      scope: string.interpolated.es punctuation.definition.string.interpolated.begin.es
+      set: scope:source.js.nested.es#ifStatement_STMT_AFTER_BRACE
       with_prototype:
         - include: syntax_AFTER_OPEN_NESTS_JS
 

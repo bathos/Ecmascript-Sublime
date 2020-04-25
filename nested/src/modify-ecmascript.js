@@ -148,7 +148,6 @@ if('nest' === s_mode) {
 
 		'$.variables': h_variables => Object.assign(h_variables, {
 			identifierName: regexp(/(?:{{identifierStart}}{{identifierPart}}*|(?=[-+*/%&|^<>=:;\[\]?,(]|\.{{identifierStart}}))/),
-			// identifierName: regexp(/(?:{{identifierStart}}{{identifierPart}}*|(?=\$\{))/),
 			identifierPart: regexp(/(?:\$(?!\{)|[{{identifierContinueChars}}]|{{unicodeEscape}})/),
 			identifierStart: regexp(/(?:\$(?!\{)|[\p{IDS}_]|{{unicodeEscape}})/),
 			idEnd: regexp(/(?=\$(?!\{)|[^{{identifierContinueChars}}\\]|$)/),
