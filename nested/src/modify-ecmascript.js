@@ -2,7 +2,7 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const jp = require('jsonpath');
 
-const B_DEBUG_ILLEGAL = false;
+const B_DEBUG_ILLEGAL = true;
 
 // syntax file
 let p_file = process.argv[2];
@@ -147,10 +147,24 @@ if('nest' === s_mode) {
 		'$.contexts.string_COMMON_ESCAPES[?(@.match)]': match_replace(/^(.)/, '\\\\$1'),
 
 		'$.variables': h_variables => Object.assign(h_variables, {
+			identifierName: regexp(/(?:{{identifierStart}}{{identifierPart}}*|(?=[-+*/%&|^<>=:;\[\]?,(]|\.{{identifierStart}}))/),
+			// identifierName: regexp(/(?:{{identifierStart}}{{identifierPart}}*|(?=\$\{))/),
 			identifierPart: regexp(/(?:\$(?!\{)|[{{identifierContinueChars}}]|{{unicodeEscape}})/),
-			identifierStart: regexp(/(?:\$(?!\{)|[\p{IDS}$_]|{{unicodeEscape}})/),
+			identifierStart: regexp(/(?:\$(?!\{)|[\p{IDS}_]|{{unicodeEscape}})/),
 			idEnd: regexp(/(?=\$(?!\{)|[^{{identifierContinueChars}}\\]|$)/),
 		}),
+
+		'$.contexts.assignmentExpression': insert_rules(/* syntax: sublime-syntax#context */ `
+			- match: '\\.(?=\\s*[\\}\\)\\]])'
+			  scope: invalid.illegal.token
+			  pop: true
+			- match: \\.(?!\\d|\\.\\.)
+			  scope: keyword.operator.accessor.es
+			  set: ae_AFTER_ACCESSOR_OPERATOR
+			- match: \\?\\.(?!\\d)
+			  scope: keyword.operator.accessor.optional-chaining.es
+			  set: ae_AFTER_ACCESSOR_OPERATOR
+		`, 1),
 
 		'$.contexts.classDeclaration_AFTER_CLASS[?(@.set=="classDeclaration_AFTER_NAME")]': match_replace(/(\)+)$/, '|(?=\\s*(?:\\{|extends))$1'),
 
