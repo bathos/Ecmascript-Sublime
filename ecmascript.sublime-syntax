@@ -1862,6 +1862,13 @@ contexts:
       set: ae_ARROW_AFTER_ARROW
     - include: ae_AFTER_THING
 
+  ae_AFTER_OPTIONAL_CHAINING_OPERATOR:
+    - match: '(?=\[)'
+      set: ae_AFTER_VALUE # Return to AFTER_VALUE to match as property access
+    - match: '(?=[\(`])'
+      set: ae_AFTER_THING # Send to AFTER_THING to match as args or template
+    - include: ae_AFTER_ACCESSOR_OPERATOR
+
   # The ‘thing’ in question is a ‘value’ that is conceivably invocable.
   ae_AFTER_THING:
     - match: '((\())'
@@ -1891,7 +1898,7 @@ contexts:
       set: ae_AFTER_ACCESSOR_OPERATOR
     - match: '\?\.(?!\d)'
       scope: keyword.operator.accessor.optional-chaining.es
-      set: ae_AFTER_ACCESSOR_OPERATOR
+      set: ae_AFTER_OPTIONAL_CHAINING_OPERATOR
     # TODO: This concerned earlier grammars for the decorator proposal but it is
     # should not be needed any longer as the grammar no longer permits the parts
     # that were ambiguous. There are probably a few spots that should be updated
@@ -2920,6 +2927,12 @@ contexts:
       scope: storage.type.function.arrow.es
       set: ae_NO_IN_ARROW_AFTER_ARROW
     - include: ae_NO_IN_AFTER_THING
+  ae_NO_IN_AFTER_OPTIONAL_CHAINING_OPERATOR:
+    - match: '(?=\[)'
+      set: ae_NO_IN_AFTER_VALUE
+    - match: '(?=[\(`])'
+      set: ae_NO_IN_AFTER_THING
+    - include: ae_AFTER_ACCESSOR_OPERATOR
   ae_NO_IN_AFTER_THING:
     - match: '((\())'
       captures:
@@ -2939,7 +2952,7 @@ contexts:
       set: ae_NO_IN_AFTER_ACCESSOR_OPERATOR
     - match: '\?\.(?!\d)'
       scope: keyword.operator.accessor.optional-chaining.es
-      set: ae_NO_IN_AFTER_ACCESSOR_OPERATOR
+      set: ae_NO_IN_AFTER_OPTIONAL_CHAINING_OPERATOR
     - match: '((\[))'
       captures:
         1: punctuation.definition.accessor.begin.es
