@@ -131,7 +131,7 @@ variables:
   syntaxDirective_HTML:                   '([Hh](?:tml|TML))(){{syntaxDirectiveTail}}'
   syntaxDirective_JS:                     '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)(){{syntaxDirectiveTail}}'
   syntaxDirective_JS_VALUE:               '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Vv]alue){{syntaxDirectiveTail}}'
-  syntaxDirective_JS_THEN:              '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Tt]hen){{syntaxDirectiveTail}}'
+  syntaxDirective_JS_THEN:                '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Tt]hen){{syntaxDirectiveTail}}'
   syntaxDirective_JS_METHOD:              '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Mm]ethod){{syntaxDirectiveTail}}'
   syntaxDirective_JS_REGEXP:              '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Rr]egexp?){{syntaxDirectiveTail}}'
   syntaxDirective_JS_OBJECT_LITERAL:      '([Jj](?:ava|AVA)?[Ss](?:cript|CRIPT)?)([.#][Oo]bject-[Ll]iteral){{syntaxDirectiveTail}}'
@@ -147,10 +147,10 @@ variables:
   syntaxDirective_XML:                    '([Xx](?:ml|ML))(){{syntaxDirectiveTail}}'
   syntaxDirective_YAML:                   '([Yy](?:aml|AML))(){{syntaxDirectiveTail}}'
 
-  syntaxDirective: >-
+  syntaxDirectiveBare: >-
     (?x)
-      ((\/\*)){{syntaxDirectiveHead}}
-      (?= {{syntaxDirective_CSS}}
+      (
+          {{syntaxDirective_CSS}}
         | {{syntaxDirective_CSS_STYLE}}
         | {{syntaxDirective_DOT}}
         | {{syntaxDirective_GLSL}}
@@ -173,6 +173,9 @@ variables:
         | {{syntaxDirective_XML}}
         | {{syntaxDirective_YAML}}
       )
+  syntaxDirective: >-
+    (?x)
+      ((\/\*))({{syntaxDirectiveHead}}|\s*)(?={{syntaxDirectiveBare}})
 
 contexts:
 
@@ -236,7 +239,7 @@ contexts:
           scope: comment.line.todo.es
 
   non_syntax_block_comment:
-    - match: '((\/\*))(?!{{syntaxDirectiveHead}})'
+    - match: '((\/\*))(?!{{syntaxDirectiveHead}}|\s*{{syntaxDirectiveBare}})'
       captures:
         1: meta.comment.border.es
         2: punctuation.definition.comment.begin.es

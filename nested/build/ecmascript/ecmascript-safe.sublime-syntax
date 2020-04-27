@@ -109,10 +109,10 @@ variables:
     ([Ss](?:ublime-?[Ss]yntax|UBLIME-SYNTAX))([.#][Rr]egexp?){{syntaxDirectiveTail}}
   syntaxDirective_XML: '([Xx](?:ml|ML))(){{syntaxDirectiveTail}}'
   syntaxDirective_YAML: '([Yy](?:aml|AML))(){{syntaxDirectiveTail}}'
-  syntaxDirective: |-
+  syntaxDirectiveBare: |-
     (?x)
-      ((\/\*)){{syntaxDirectiveHead}}
-      (?= {{syntaxDirective_CSS}}
+      (
+          {{syntaxDirective_CSS}}
         | {{syntaxDirective_CSS_STYLE}}
         | {{syntaxDirective_DOT}}
         | {{syntaxDirective_GLSL}}
@@ -135,6 +135,9 @@ variables:
         | {{syntaxDirective_XML}}
         | {{syntaxDirective_YAML}}
       )
+  syntaxDirective: |-
+    (?x)
+      ((\/\*))({{syntaxDirectiveHead}}|\s*)(?={{syntaxDirectiveBare}})
 contexts:
   main:
     - meta_include_prototype: false
@@ -194,7 +197,7 @@ contexts:
         - match: '\b(?i:todo|hack)\b'
           scope: comment.line.todo.es
   non_syntax_block_comment:
-    - match: '((\/\*))(?!{{syntaxDirectiveHead}})'
+    - match: '((\/\*))(?!{{syntaxDirectiveHead}}|\s*{{syntaxDirectiveBare}})'
       captures:
         '1': meta.comment.border.es
         '2': punctuation.definition.comment.begin.es
@@ -1678,6 +1681,12 @@ contexts:
       scope: storage.type.function.arrow.es
       set: ae_ARROW_AFTER_ARROW
     - include: ae_AFTER_THING
+  ae_AFTER_OPTIONAL_CHAINING_OPERATOR:
+    - match: '(?=\[)'
+      set: ae_AFTER_VALUE
+    - match: '(?=[\(`])'
+      set: ae_AFTER_THING
+    - include: ae_AFTER_ACCESSOR_OPERATOR
   ae_AFTER_THING:
     - match: ((\())
       captures:
@@ -1702,7 +1711,7 @@ contexts:
       set: ae_AFTER_ACCESSOR_OPERATOR
     - match: \?\.(?!\d)
       scope: keyword.operator.accessor.optional-chaining.es
-      set: ae_AFTER_ACCESSOR_OPERATOR
+      set: ae_AFTER_OPTIONAL_CHAINING_OPERATOR
     - match: |-
         (?x) (?=
           \[
@@ -2658,6 +2667,12 @@ contexts:
       scope: storage.type.function.arrow.es
       set: ae_NO_IN_ARROW_AFTER_ARROW
     - include: ae_NO_IN_AFTER_THING
+  ae_NO_IN_AFTER_OPTIONAL_CHAINING_OPERATOR:
+    - match: '(?=\[)'
+      set: ae_NO_IN_AFTER_VALUE
+    - match: '(?=[\(`])'
+      set: ae_NO_IN_AFTER_THING
+    - include: ae_AFTER_ACCESSOR_OPERATOR
   ae_NO_IN_AFTER_THING:
     - match: ((\())
       captures:
@@ -2679,7 +2694,7 @@ contexts:
       set: ae_NO_IN_AFTER_ACCESSOR_OPERATOR
     - match: \?\.(?!\d)
       scope: keyword.operator.accessor.optional-chaining.es
-      set: ae_NO_IN_AFTER_ACCESSOR_OPERATOR
+      set: ae_NO_IN_AFTER_OPTIONAL_CHAINING_OPERATOR
     - match: '((\[))'
       captures:
         '1': punctuation.definition.accessor.begin.es
