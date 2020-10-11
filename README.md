@@ -1,3 +1,5 @@
+[![Gitter](https://badges.gitter.im/Ecmascript-Sublime/community.svg)](https://gitter.im/Ecmascript-Sublime/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 # Ecmascript Sublime Syntax
 
 A sublime-syntax language definition for Ecmascript / Javascript / ES6 / ES2015
