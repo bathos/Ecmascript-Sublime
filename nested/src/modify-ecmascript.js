@@ -252,7 +252,7 @@ if('nest' === s_mode) {
 
 			insert_rules([
 				...yaml_load(/* syntax: sublime-syntax#contexts */ `
-					- match: ((\\*))(?=\\s*\\$\{)
+					- match: ((\\*))(?=\\s*\\$\\{)
 					  captures:
 					    1: keyword.generator.asterisk.js
 					    2: storage.modifier.generator.asterisk.method.es
@@ -269,7 +269,7 @@ if('nest' === s_mode) {
 					`)], [])),
 
 				...yaml_load(/* syntax: sublime-syntax#contexts */ `
-					- match: ((async))((\\s*\\*))?(?=\\s*\\$\{)
+					- match: ((async))((\\s*\\*))?(?=\\s*\\$\\{)
 					  captures:
 					    1: storage.type.accessor.js
 					    2: storage.modifier.async.method.es
