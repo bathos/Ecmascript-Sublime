@@ -2541,13 +2541,7 @@ contexts:
       scope: support.function.builtin.es
       set: ae_AFTER_THING
   ae_INFIX_OPS:
-    - match: '\?\?(?=\s*\$\{)'
-      scope: keyword.operator.logical.or.nullish-coalescing.es
-      set: assignmentExpression_INTERP
-    - match: \?\?
-      scope: keyword.operator.logical.or.nullish-coalescing.es
-      set: assignmentExpression
-    - match: \?
+    - match: \?(?!\?)
       scope: keyword.operator.ternary.if.es
       set: ae_TERNARY_AFTER_QUESTION
     - match: '\+(?!=)(?=\s*\$\{)'
@@ -2610,10 +2604,10 @@ contexts:
     - match: '!='
       scope: keyword.operator.comparison.non-equality.coercive.es
       set: assignmentExpression
-    - match: '&&(?=\s*\$\{)'
+    - match: '&&(?!=)(?=\s*\$\{)'
       scope: keyword.operator.logical.and.es
       set: assignmentExpression_INTERP
-    - match: '&&'
+    - match: '&&(?!=)'
       scope: keyword.operator.logical.and.es
       set: assignmentExpression
     - match: '\|\|(?!=)(?=\s*\$\{)'
@@ -2621,6 +2615,12 @@ contexts:
       set: assignmentExpression_INTERP
     - match: \|\|(?!=)
       scope: keyword.operator.logical.or.es
+      set: assignmentExpression
+    - match: '\?\?(?!=)(?=\s*\$\{)'
+      scope: keyword.operator.logical.or.nullish-coalescing.es
+      set: assignmentExpression_INTERP
+    - match: \?\?(?!=)
+      scope: keyword.operator.logical.or.nullish-coalescing.es
       set: assignmentExpression
     - match: '&(?!=)(?=\s*\$\{)'
       scope: keyword.operator.bitwise.logical.and.es
@@ -2710,8 +2710,17 @@ contexts:
     - match: '%='
       scope: keyword.operator.assignment.augmented.arithmetic.modulo.es
       set: assignmentExpression
+    - match: '&&=(?=\s*\$\{)'
+      scope: keyword.operator.assignment.augmented.logical.and.es
+      set: assignmentExpression_INTERP
+    - match: '&&='
+      scope: keyword.operator.assignment.augmented.logical.and.es
+      set: assignmentExpression
     - match: \|\|=
-      scope: keyword.operator.assignment.conditional.mallet.es
+      scope: keyword.operator.assignment.augmented.logical.or.es
+      set: assignmentExpression
+    - match: \?\?=
+      scope: keyword.operator.assignment.augmented.logical.or.nullish-coalescing.es
       set: assignmentExpression
     - match: '&='
       scope: keyword.operator.assignment.augmented.bitwise.logical.and.es
@@ -3368,10 +3377,7 @@ contexts:
       scope: support.function.builtin.es
       set: ae_NO_IN_AFTER_THING
   ae_NO_IN_INFIX_OPS:
-    - match: \?\?
-      scope: keyword.operator.logical.or.nullish-coalescing.es
-      set: assignmentExpression_NO_IN
-    - match: \?
+    - match: \?(?!\?)
       scope: keyword.operator.ternary.if.es
       set: ae_NO_IN_TERNARY_AFTER_QUESTION
     - match: \+(?!=)
@@ -3411,11 +3417,14 @@ contexts:
     - match: '!='
       scope: keyword.operator.comparison.non-equality.coercive.es
       set: assignmentExpression_NO_IN
-    - match: '&&'
+    - match: '&&(?!=)'
       scope: keyword.operator.logical.and.es
       set: assignmentExpression_NO_IN
     - match: \|\|(?!=)
       scope: keyword.operator.logical.or.es
+      set: assignmentExpression_NO_IN
+    - match: \?\?(?!=)
+      scope: keyword.operator.logical.or.nullish-coalescing.es
       set: assignmentExpression_NO_IN
     - match: '&(?!=)'
       scope: keyword.operator.bitwise.logical.and.es
@@ -3475,8 +3484,14 @@ contexts:
     - match: '%='
       scope: keyword.operator.assignment.augmented.arithmetic.modulo.es
       set: assignmentExpression_NO_IN
+    - match: '&&='
+      scope: keyword.operator.assignment.augmented.logical.and.es
+      set: assignmentExpression_NO_IN
     - match: \|\|=
-      scope: keyword.operator.assignment.conditional.mallet.es
+      scope: keyword.operator.assignment.augmented.logical.or.es
+      set: assignmentExpression_NO_IN
+    - match: \?\?=
+      scope: keyword.operator.assignment.augmented.logical.or.nullish-coalescing.es
       set: assignmentExpression_NO_IN
     - match: '&='
       scope: keyword.operator.assignment.augmented.bitwise.logical.and.es
