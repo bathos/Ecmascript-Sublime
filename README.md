@@ -521,7 +521,6 @@ in ‘.regexp’ do not also have ‘.es’.
       - `keyword.operator.assignment`
       - `keyword.operator.assignment.conditional`
       - `keyword.operator.assignment.conditional.default` (default initializer)
-      - `keyword.operator.assignment.conditional.mallet` (`||=` -- used to be in Babel)
       - `keyword.operator.unary.delete`
     - **Augmented**
       - `keyword.operator.assignment.augmented`
@@ -541,6 +540,9 @@ in ‘.regexp’ do not also have ‘.es’.
       - `keyword.operator.assignment.augmented.bitwise.shift.left`
       - `keyword.operator.assignment.augmented.bitwise.shift.right`
       - `keyword.operator.assignment.augmented.bitwise.shift.right.unsigned`
+      - `keyword.operator.assignment.augmented.logical.and`
+      - `keyword.operator.assignment.augmented.logical.or`
+      - `keyword.operator.assignment.augmented.logical.or.nullish-coalescing`
   - **Bitwise**
     - `keyword.operator.bitwise`
     - `keyword.operator.bitwise.logical`
