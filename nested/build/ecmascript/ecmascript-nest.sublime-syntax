@@ -972,7 +972,7 @@ contexts:
     - match: '{{PLA_anything}}'
       set: classDeclaration_AFTER_BRACE
   classDeclaration_METHOD_COMMON:
-    - match: '((\*))(?=\s*\${)'
+    - match: '((\*))(?=\s*\$\{)'
       captures:
         '1': keyword.generator.asterisk.js
         '2': storage.modifier.generator.asterisk.method.es
@@ -993,7 +993,7 @@ contexts:
       set:
         - classDeclaration_AFTER_BRACE
         - accessorMethod_AFTER_SET_NAME_INTERP
-    - match: '((async))((\s*\*))?(?=\s*\${)'
+    - match: '((async))((\s*\*))?(?=\s*\$\{)'
       captures:
         '1': storage.type.accessor.js
         '2': storage.modifier.async.method.es
