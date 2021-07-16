@@ -7,6 +7,27 @@ A sublime-syntax language definition for Ecmascript / Javascript / ES6 / ES2015
 
 > Sublime syntax is only available in Sublime Text 3.0.
 
+**New in 1.7**
+
+Added:
+
+- Logical assignment operators `&&=`, `??=` (`||=` was already present)
+- Ergonomic private field brand checks (`#foo in bar`)
+- Class static blocks
+- Import assertions
+
+Removed:
+
+- The old bind operator proposal (`::`) has been dead for too many years to
+  justify keeping around. Goodbye old friend — you were actually pretty cool.
+- The scope `keyword.operator.assignment.conditional.mallet` was changed to
+  align with the pattern established for other augmented assignment operators.
+
+Fixed:
+
+- Private generator methods no longer cause the class body context to stick
+  around past the end of the actual class body.
+
 **New in 1.6**
 
 - Nested syntax highlighting
@@ -41,7 +62,6 @@ Here's the list of currently supported syntaxes. I just went with all the ones t
 And here is a demonstration of all the currently supported syntaxes:
 
 ![Nested Syntaxes](https://github.com/bathos/Ecmascript-Sublime/raw/master/examples/nested-syntax-highlighting.png)
-
 
 **New in 1.3**
 
@@ -136,6 +156,7 @@ if anybody has stuff to contribute!)
 - [Remaining Work](#remaining-work)
 - [Why Bother](#why-bother)
 - [Feature Coverage](#feature-coverage)
+  - [Non-JS extensions](#non-js-extensions)
 - [SublimeText Symbols](#sublimetext-symbols)
 - [Themes](#themes)
 - [Scopes](#scopes)
@@ -219,25 +240,47 @@ of matching groups in a regular expression:
 
 ## Feature Coverage
 
-In addition to everything in the final draft of ES6, I’ve included support for
-certain ES7 strawmen that have already been implemented in Babel or Firefox. The
-depth is not always as great as with established language features, though.
+ECMAScript Sublime tries to stay current with the editor’s draft ES spec and any
+stage 4 proposals that introduce new syntax.
 
-The following proposed features, as they stand today anyway, are covered:
+Syntax-change proposals at earlier stages are supported in many cases. If a
+proposal gets withdrawn, we eventually remove it here too. To be included before
+stage 4, some combo of the following has to be true (but it’s not a science):
 
- - class and method decorators
- - private methods
- - object literal spread and object binding pattern rest
- - bind operator
- - do expression
- - async iteration (for-async & async generators)
- - optional catch binding
- - dynamic import & import.meta
- - function.sent
- - class fields (private fields and instance initializers)
- - export extensions
+ - One or more engines have implemented it
+ - The syntax is a reasonably settled aspect of the proposal
+ - It’s specified clearly enough to not make us just guess
+ - The proposal has high momentum/usage and the syntax is unlikely to change
+ - The scope is small enough that it’s not costly to add or remove it
 
-In addition to ES and some proposed ES, JSX is supported.
+Some earlier-than-stage-4 proposals (as of mid 2021) which are supported are:
+
+ - [class static block](https://github.com/tc39/proposal-class-static-block)
+ - [decorators](https://github.com/tc39/proposal-decorators)
+ - [do expressions](https://github.com/tc39/proposal-do-expressions)
+ - [`function.sent` meta property](https://github.com/tc39/proposal-function.sent)
+ - [hashbang grammar](https://github.com/tc39/proposal-hashbang)
+ - [import assertions](https://github.com/tc39/proposal-import-assertions)
+ - [pipeline operator](https://github.com/tc39/proposal-pipeline-operator)
+ - [export default from](https://github.com/tc39/proposal-export-default-from)
+
+### Non-JS extensions
+
+Apart from the special handling for some tagged template strings, the only
+syntactic feature supported which isn’t either JS or proposed JS is JSX. This
+is due to its popularity, low complexity (esp. w/ regard to how “isolatable” it
+is), and the unlikelihood of collision with new grammar features of JS proper.
+It’s “safe.”
+
+TypeScript isn’t supported. It’s a distinct language that merits a distinct
+syntax definition. TS syntactic extensions touch almost every production and
+many occur in “unsafe” places that would make preserving the signature feature
+of ES Sublime — its relatively high specificity — very difficult.
+
+> Also, despite its size, its grammar doesn’t seem to be specified! I thought
+> that was pretty surprising when I first researched the viability here. I did
+> find evidence of an early attempt at formalizing it, but it was pretty
+> different from current TS (and it wasn’t a sound).
 
 ## SublimeText Symbols
 
@@ -463,6 +506,7 @@ in ‘.regexp’ do not also have ‘.es’.
       - `meta.decorator.parenthesized`
       - `meta.super-expression`
       - `punctuation.definition.class.body`
+      - `punctuation.definition.class.body.block`
       - `punctuation.definition.constructor.body`
       - `punctuation.definition.decorator`
       - `punctuation.definition.method.private.body`
@@ -521,7 +565,6 @@ in ‘.regexp’ do not also have ‘.es’.
       - `keyword.operator.assignment`
       - `keyword.operator.assignment.conditional`
       - `keyword.operator.assignment.conditional.default` (default initializer)
-      - `keyword.operator.assignment.conditional.mallet` (`||=` -- used to be in Babel)
       - `keyword.operator.unary.delete`
     - **Augmented**
       - `keyword.operator.assignment.augmented`
@@ -541,6 +584,9 @@ in ‘.regexp’ do not also have ‘.es’.
       - `keyword.operator.assignment.augmented.bitwise.shift.left`
       - `keyword.operator.assignment.augmented.bitwise.shift.right`
       - `keyword.operator.assignment.augmented.bitwise.shift.right.unsigned`
+      - `keyword.operator.assignment.augmented.logical.and`
+      - `keyword.operator.assignment.augmented.logical.or`
+      - `keyword.operator.assignment.augmented.logical.or.nullish-coalescing`
   - **Bitwise**
     - `keyword.operator.bitwise`
     - `keyword.operator.bitwise.logical`
@@ -571,7 +617,6 @@ in ‘.regexp’ do not also have ‘.es’.
     - `keyword.operator.accessor`
     - `keyword.operator.accessor.decorator`
     - `keyword.operator.accessor.optional-chaining`
-    - `keyword.operator.bind`
     - `keyword.operator.comma`
     - `keyword.operator.new`
     - `keyword.operator.pipeline` (smart and F# pipelines proposals)
@@ -649,14 +694,19 @@ in ‘.regexp’ do not also have ‘.es’.
   - **Module Statements**
     - `entity.name.module.export`
     - `entity.name.module.import`
+    - `punctuation.definition.assertions` (braces in `import x from 'z' assert { type: "json" }`)
     - `punctuation.definition.module-binding` (braces in `import { x, y } from 'z'`)
+    - `punctuation.separator.assertion` (colon in `assert { type: "json" }`)
+    - `punctuation.separator.assertions` (comma in `assert { type: "json" }`)
     - `punctuation.separator.module-binding` (comma in `import { x, y } from 'z'`)
     - `storage.modifier.module.as`
+    - `storage.modifier.module.assert`
     - `storage.modifier.module.default`
     - `storage.modifier.module.from`
     - `storage.modifier.module.namespace` (the asterisk in `import * from z`)
     - `storage.type.module.export`
     - `storage.type.module.import`
+    - `variable.annotation.assertion.key` (the key “type” in `assert { type: "json" }`)
     - `variable.other.readwrite.export`
     - `variable.other.readwrite.import`
   - **Nonsense**
