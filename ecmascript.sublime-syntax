@@ -1094,12 +1094,12 @@ contexts:
             set: assignmentExpression
           - match: '{{PLA_anything}}'
             pop: true
-    - match: '((#{{identifierName}})){{idEnd}}'
+    - match: '((#{{identifierName}}))'
       captures:
         1: entity.name.method.js # ^BS -- monokai
         2: entity.name.method.private.es
       set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME_PRIVATE ]
-    - match: '(({{identifierName}})){{idEnd}}'
+    - match: '(({{identifierName}}))'
       captures:
         1: entity.name.method.js # ^BS -- monokai
         2: entity.name.method.es
@@ -1562,6 +1562,61 @@ contexts:
       set: asyncDeclaration_AFTER_NAME
     - include: other_illegal_pop
 
+  moduleDeclaration_BEFORE_ASSERT:
+    - match: '((assert)){{idEnd}}'
+      captures:
+        1: keyword.operator.module.js # ^BS
+        2: storage.modifier.module.assert.es
+      set:
+        - - match: ';'
+            scope: punctuation.terminator.statement.es
+            pop: true
+          - include: else_pop
+        - - match: '((\}))'
+            captures:
+              1: punctuation.definition.assertions.end.es
+              2: meta.brace.curly.js # ^BS
+            pop: true
+          - match: '{{identifierName}}'
+            scope: variable.annotation.assertion.key.es
+            push: moduleDeclaration_AFTER_ASSERTION_KEY
+          - match: "'"
+            scope: punctuation.definition.string.quoted.single.begin.es
+            push: [ moduleDeclaration_AFTER_ASSERTION_KEY, stringSingle_AFTER_OPEN ]
+          - match: '"'
+            scope: punctuation.definition.string.quoted.double.begin.es
+            push: [ moduleDeclaration_AFTER_ASSERTION_KEY, stringDouble_AFTER_OPEN ]
+          - include: other_illegal
+        - - match: '((\{))'
+            captures:
+              1: punctuation.definition.assertions.begin.es
+              2: meta.brace.curly.js # ^BS
+            pop: true
+          - include: other_illegal_pop
+    - match: ';'
+      scope: punctuation.terminator.statement.es
+      pop: true
+    - include: else_pop
+
+  moduleDeclaration_AFTER_ASSERTION_KEY:
+    - match: ':'
+      scope: punctuation.separator.assertion.es
+      set:
+        - - match: ','
+            scope: punctuation.separator.assertions.es
+            pop: true
+          - match: (?=\})
+            pop: true
+          - include: other_illegal
+        - - match: "'"
+            scope: punctuation.definition.string.quoted.single.begin.es
+            set: stringSingle_AFTER_OPEN
+          - match: '"'
+            scope: punctuation.definition.string.quoted.double.begin.es
+            set: stringDouble_AFTER_OPEN
+          - include: other_illegal_pop
+    - include: other_illegal_pop
+
   moduleDeclaration_BEFORE_FROM:
     - match: '((from)){{idEnd}}'
       captures:
@@ -1573,10 +1628,10 @@ contexts:
   moduleDeclaration_BEFORE_SPECIFIER:
     - match: "'"
       scope: punctuation.definition.string.quoted.single.begin.es
-      set: stringSingle_AFTER_OPEN
+      set: [ moduleDeclaration_BEFORE_ASSERT, stringSingle_AFTER_OPEN ]
     - match: '"'
       scope: punctuation.definition.string.quoted.double.begin.es
-      set: stringDouble_AFTER_OPEN
+      set: [ moduleDeclaration_BEFORE_ASSERT, stringDouble_AFTER_OPEN ]
     - include: other_illegal_pop
 
   moduleDeclaration_EXPORT_BINDING_AFTER_BRACE:
@@ -4263,7 +4318,7 @@ contexts:
     - include: other_illegal_pop
 
   generatorMethod_AFTER_ASTERISK_CLASS:
-    - match: '((#{{identifierName}})){{idEnd}}'
+    - match: '((#{{identifierName}}))'
       captures:
         1: entity.name.method.js # ^BS -- monokai
         2: entity.name.method.private.es
