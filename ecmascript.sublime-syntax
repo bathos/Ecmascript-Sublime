@@ -1025,6 +1025,17 @@ contexts:
     - include: method_AFTER_NAME
 
   classDeclaration_AFTER_STATIC:
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.class.body.block.begin.es
+        2: meta.brace.curly.js # ^BS
+      set:
+        - match: '((\}))'
+          captures:
+            1: punctuation.definition.class.body.block.es
+            2: meta.brace.curly.js # ^BS
+          set: classDeclaration_AFTER_BRACE
+        - include: statements
     - include: classDeclaration_METHOD_COMMON
     - match: '{{PLA_anything}}'
       set: classDeclaration_AFTER_BRACE
