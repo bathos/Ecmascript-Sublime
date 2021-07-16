@@ -2358,6 +2358,14 @@ contexts:
     - match: '{{identifier}}'
       scope: variable.other.readwrite.es
       set: ae_AFTER_IDENTIFIER
+    - match: '#{{identifierName}}'
+      scope: variable.language.private.es
+      set:
+        - - include: assignmentExpression
+        - - match: 'in{{idEnd}}'
+            scope: keyword.operator.relational.in.es
+            pop: true
+          - include: other_illegal_pop
 
   ae_IDENTIFIERS_LANGUAGE:
     # THIS
@@ -2373,7 +2381,9 @@ contexts:
       scope: variable.language.this.es
       set: ae_AFTER_THING
     # PIPELINE PROPOSAL
-    - match: '#'
+    # The idEnd is to prevent conflict with private brand checks. I’m not sure
+    # if the two grammars currently compatible.
+    - match: '#{{idEnd}}'
       scope: variable.language.topic.es
       set: ae_AFTER_THING
     # SUPER
@@ -3163,6 +3173,9 @@ contexts:
       set: [ ae_NO_IN_AFTER_THING, arguments ]
     - match: 'this{{idEnd}}'
       scope: variable.language.this.es
+      set: ae_NO_IN_AFTER_THING
+    - match: '#{{idEnd}}'
+      scope: variable.language.topic.es
       set: ae_NO_IN_AFTER_THING
     - match: '(((super)))\s*((\())'
       captures:
