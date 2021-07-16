@@ -7,7 +7,7 @@ A sublime-syntax language definition for Ecmascript / Javascript / ES6 / ES2015
 
 > Sublime syntax is only available in Sublime Text 3.0.
 
-**New in 1.7**
+**New in 2.5**
 
 Added:
 
