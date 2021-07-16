@@ -4256,7 +4256,7 @@ contexts:
       captures:
         1: entity.name.method.js # ^BS -- monokai
         2: entity.name.method.private.es
-      set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME_PRIVATE ]
+      set: method_AFTER_NAME_PRIVATE
     - include: generatorMethod_AFTER_ASTERISK
 
   generatorMethod_AFTER_NAME:
