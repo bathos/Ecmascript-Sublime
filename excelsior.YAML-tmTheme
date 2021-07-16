@@ -370,18 +370,24 @@ settings:
   settings:
     foreground: '#8FB239'
 
-- name: Decorator
+- name: Decorator + Module Assertion Key
   scope: >-
     keyword.operator.accessor.decorator,
-    variable.other.readwrite.decorator
+    variable.other.readwrite.decorator,
+    variable.annotation.assertion.key,
+    punctuation.separator.assertion
   settings:
     fontStyle: 'italic'
     foreground: '#597873'
 
-- name: Decorator Arguments
+- name: Decorator Arguments + Module Assertion Structure
   scope: >-
     meta.decorator.arguments.es punctuation.definition.arguments,
-    punctuation.definition.decorator
+    punctuation.definition.decorator,
+    punctuation.definition.assertion,
+    punctuation.definition.assertions,
+    punctuation.separator.assertion,
+    storage.modifier.module.assert
   settings:
     foreground: '#597873'
 

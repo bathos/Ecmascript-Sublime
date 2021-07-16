@@ -706,10 +706,12 @@ punctuation.definition.parameters.method.generator</string>
       </dict>
       <dict>
         <key>name</key>
-        <string>Decorator</string>
+        <string>Decorator + Module Assertion Key</string>
         <key>scope</key>
         <string>keyword.operator.accessor.decorator,
-variable.other.readwrite.decorator</string>
+variable.other.readwrite.decorator,
+variable.annotation.assertion.key,
+punctuation.separator.assertion</string>
         <key>settings</key>
         <dict>
           <key>fontStyle</key>
@@ -720,10 +722,14 @@ variable.other.readwrite.decorator</string>
       </dict>
       <dict>
         <key>name</key>
-        <string>Decorator Arguments</string>
+        <string>Decorator Arguments + Module Assertion Structure</string>
         <key>scope</key>
         <string>meta.decorator.arguments.es punctuation.definition.arguments,
-punctuation.definition.decorator</string>
+punctuation.definition.decorator,
+punctuation.definition.assertion,
+punctuation.definition.assertions,
+punctuation.separator.assertion,
+storage.modifier.module.assert</string>
         <key>settings</key>
         <dict>
           <key>foreground</key>

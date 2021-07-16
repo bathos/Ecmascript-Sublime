@@ -1025,6 +1025,17 @@ contexts:
     - include: method_AFTER_NAME
 
   classDeclaration_AFTER_STATIC:
+    - match: '((\{))'
+      captures:
+        1: punctuation.definition.class.body.block.begin.es
+        2: meta.brace.curly.js # ^BS
+      set:
+        - match: '((\}))'
+          captures:
+            1: punctuation.definition.class.body.block.es
+            2: meta.brace.curly.js # ^BS
+          set: classDeclaration_AFTER_BRACE
+        - include: statements
     - include: classDeclaration_METHOD_COMMON
     - match: '{{PLA_anything}}'
       set: classDeclaration_AFTER_BRACE
@@ -1083,12 +1094,12 @@ contexts:
             set: assignmentExpression
           - match: '{{PLA_anything}}'
             pop: true
-    - match: '((#{{identifierName}})){{idEnd}}'
+    - match: '((#{{identifierName}}))'
       captures:
         1: entity.name.method.js # ^BS -- monokai
         2: entity.name.method.private.es
       set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME_PRIVATE ]
-    - match: '(({{identifierName}})){{idEnd}}'
+    - match: '(({{identifierName}}))'
       captures:
         1: entity.name.method.js # ^BS -- monokai
         2: entity.name.method.es
@@ -1551,6 +1562,61 @@ contexts:
       set: asyncDeclaration_AFTER_NAME
     - include: other_illegal_pop
 
+  moduleDeclaration_BEFORE_ASSERT:
+    - match: '((assert)){{idEnd}}'
+      captures:
+        1: keyword.operator.module.js # ^BS
+        2: storage.modifier.module.assert.es
+      set:
+        - - match: ';'
+            scope: punctuation.terminator.statement.es
+            pop: true
+          - include: else_pop
+        - - match: '((\}))'
+            captures:
+              1: punctuation.definition.assertions.end.es
+              2: meta.brace.curly.js # ^BS
+            pop: true
+          - match: '{{identifierName}}'
+            scope: variable.annotation.assertion.key.es
+            push: moduleDeclaration_AFTER_ASSERTION_KEY
+          - match: "'"
+            scope: punctuation.definition.string.quoted.single.begin.es
+            push: [ moduleDeclaration_AFTER_ASSERTION_KEY, stringSingle_AFTER_OPEN ]
+          - match: '"'
+            scope: punctuation.definition.string.quoted.double.begin.es
+            push: [ moduleDeclaration_AFTER_ASSERTION_KEY, stringDouble_AFTER_OPEN ]
+          - include: other_illegal
+        - - match: '((\{))'
+            captures:
+              1: punctuation.definition.assertions.begin.es
+              2: meta.brace.curly.js # ^BS
+            pop: true
+          - include: other_illegal_pop
+    - match: ';'
+      scope: punctuation.terminator.statement.es
+      pop: true
+    - include: else_pop
+
+  moduleDeclaration_AFTER_ASSERTION_KEY:
+    - match: ':'
+      scope: punctuation.separator.assertion.es
+      set:
+        - - match: ','
+            scope: punctuation.separator.assertions.es
+            pop: true
+          - match: (?=\})
+            pop: true
+          - include: other_illegal
+        - - match: "'"
+            scope: punctuation.definition.string.quoted.single.begin.es
+            set: stringSingle_AFTER_OPEN
+          - match: '"'
+            scope: punctuation.definition.string.quoted.double.begin.es
+            set: stringDouble_AFTER_OPEN
+          - include: other_illegal_pop
+    - include: other_illegal_pop
+
   moduleDeclaration_BEFORE_FROM:
     - match: '((from)){{idEnd}}'
       captures:
@@ -1562,10 +1628,10 @@ contexts:
   moduleDeclaration_BEFORE_SPECIFIER:
     - match: "'"
       scope: punctuation.definition.string.quoted.single.begin.es
-      set: stringSingle_AFTER_OPEN
+      set: [ moduleDeclaration_BEFORE_ASSERT, stringSingle_AFTER_OPEN ]
     - match: '"'
       scope: punctuation.definition.string.quoted.double.begin.es
-      set: stringDouble_AFTER_OPEN
+      set: [ moduleDeclaration_BEFORE_ASSERT, stringDouble_AFTER_OPEN ]
     - include: other_illegal_pop
 
   moduleDeclaration_EXPORT_BINDING_AFTER_BRACE:
@@ -2358,6 +2424,14 @@ contexts:
     - match: '{{identifier}}'
       scope: variable.other.readwrite.es
       set: ae_AFTER_IDENTIFIER
+    - match: '#{{identifierName}}'
+      scope: variable.language.private.es
+      set:
+        - - include: assignmentExpression
+        - - match: 'in{{idEnd}}'
+            scope: keyword.operator.relational.in.es
+            pop: true
+          - include: other_illegal_pop
 
   ae_IDENTIFIERS_LANGUAGE:
     # THIS
@@ -2373,7 +2447,9 @@ contexts:
       scope: variable.language.this.es
       set: ae_AFTER_THING
     # PIPELINE PROPOSAL
-    - match: '#'
+    # The idEnd is to prevent conflict with private brand checks. I’m not sure
+    # if the two grammars currently compatible.
+    - match: '#{{idEnd}}'
       scope: variable.language.topic.es
       set: ae_AFTER_THING
     # SUPER
@@ -2439,11 +2515,11 @@ contexts:
 
   ae_INFIX_OPS:
     # NULLISH COALESCING
-    - match: '\?\?'
+    - match: '\?\?(?!=)'
       scope: keyword.operator.logical.or.nullish-coalescing.es
       set: assignmentExpression
     # TERNARY
-    - match: '\?'
+    - match: '\?(?!\?=)'
       scope: keyword.operator.ternary.if.es
       set: ae_TERNARY_AFTER_QUESTION
     # ARITHMETIC
@@ -2528,9 +2604,6 @@ contexts:
     - match: '\|>'
       scope: keyword.operator.pipeline.es
       set: assignmentExpression
-    - match: '::'
-      scope: keyword.operator.bind.es
-      set: assignmentExpression
 
   ae_INFIX_OPS_ASSIGNMENT:
     # VANILLA
@@ -2556,9 +2629,15 @@ contexts:
     - match: '%='
       scope: keyword.operator.assignment.augmented.arithmetic.modulo.es
       set: assignmentExpression
-    # MALLET
+    # LOGICAL
+    - match: '&&='
+      scope: keyword.operator.assignment.augmented.logical.and.es
+      set: assignmentExpression
     - match: '\|\|='
-      scope: keyword.operator.assignment.conditional.mallet.es
+      scope: keyword.operator.assignment.augmented.logical.or.es
+      set: assignmentExpression
+    - match: '\?\?='
+      scope: keyword.operator.assignment.augmented.logical.or.nullish-coalescing.es
       set: assignmentExpression
     # BITWISE LOGICAL
     - match: '&='
@@ -2731,12 +2810,6 @@ contexts:
         1: meta.idiomatic-cast.boolean.es
     - match: '!'
       scope: keyword.operator.logical.not.es
-    - match: '::'
-      scope: keyword.operator.bind.es
-    # The current strawman spec suggests this is the reasonable place for await.
-    # Syntactically, it isn’t like yield. I’m unsure if this is intended to be a
-    # no-linebreak-here situation. Babel currently gets upset by newlines before
-    # the operand, but the spec doesn’t say anything about this.
     - match: 'await{{idEnd}}'
       scope: keyword.control.flow.await
 
@@ -3164,6 +3237,9 @@ contexts:
     - match: 'this{{idEnd}}'
       scope: variable.language.this.es
       set: ae_NO_IN_AFTER_THING
+    - match: '#{{idEnd}}'
+      scope: variable.language.topic.es
+      set: ae_NO_IN_AFTER_THING
     - match: '(((super)))\s*((\())'
       captures:
         1: variable.language.super.es
@@ -3217,10 +3293,10 @@ contexts:
       scope: support.function.builtin.es
       set: ae_NO_IN_AFTER_THING
   ae_NO_IN_INFIX_OPS:
-    - match: '\?\?'
+    - match: '\?\?(?!=)'
       scope: keyword.operator.logical.or.nullish-coalescing.es
       set: assignmentExpression_NO_IN
-    - match: '\?'
+    - match: '\?(?!\?=)'
       scope: keyword.operator.ternary.if.es
       set: ae_NO_IN_TERNARY_AFTER_QUESTION
     - match: '\+(?!=)'
@@ -3299,9 +3375,6 @@ contexts:
     - match: 'instanceof{{idEnd}}'
       scope: keyword.operator.relational.instanceof.es
       set: assignmentExpression_NO_IN
-    - match: '::'
-      scope: keyword.operator.bind.es
-      set: assignmentExpression_NO_IN
   ae_NO_IN_INFIX_OPS_ASSIGNMENT:
     - match: '=(?!=)'
       scope: keyword.operator.assignment.es
@@ -3324,8 +3397,14 @@ contexts:
     - match: '%='
       scope: keyword.operator.assignment.augmented.arithmetic.modulo.es
       set: assignmentExpression_NO_IN
+    - match: '&&='
+      scope: keyword.operator.assignment.augmented.logical.and.es
+      set: assignmentExpression_NO_IN
     - match: '\|\|='
-      scope: keyword.operator.assignment.conditional.mallet.es
+      scope: keyword.operator.assignment.augmented.logical.or.es
+      set: assignmentExpression_NO_IN
+    - match: '\?\?='
+      scope: keyword.operator.assignment.augmented.logical.or.nullish-coalescing.es
       set: assignmentExpression_NO_IN
     - match: '&='
       scope: keyword.operator.assignment.augmented.bitwise.logical.and.es
@@ -4239,11 +4318,11 @@ contexts:
     - include: other_illegal_pop
 
   generatorMethod_AFTER_ASTERISK_CLASS:
-    - match: '((#{{identifierName}})){{idEnd}}'
+    - match: '((#{{identifierName}}))'
       captures:
         1: entity.name.method.js # ^BS -- monokai
         2: entity.name.method.private.es
-      set: [ classDeclaration_AFTER_BRACE, method_AFTER_NAME_PRIVATE ]
+      set: method_AFTER_NAME_PRIVATE
     - include: generatorMethod_AFTER_ASTERISK
 
   generatorMethod_AFTER_NAME:
