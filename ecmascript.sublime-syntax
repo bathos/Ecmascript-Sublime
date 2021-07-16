@@ -2744,12 +2744,6 @@ contexts:
         1: meta.idiomatic-cast.boolean.es
     - match: '!'
       scope: keyword.operator.logical.not.es
-    - match: '::'
-      scope: keyword.operator.bind.es
-    # The current strawman spec suggests this is the reasonable place for await.
-    # Syntactically, it isn’t like yield. I’m unsure if this is intended to be a
-    # no-linebreak-here situation. Babel currently gets upset by newlines before
-    # the operand, but the spec doesn’t say anything about this.
     - match: 'await{{idEnd}}'
       scope: keyword.control.flow.await
 
@@ -3314,9 +3308,6 @@ contexts:
       set: assignmentExpression_NO_IN
     - match: 'instanceof{{idEnd}}'
       scope: keyword.operator.relational.instanceof.es
-      set: assignmentExpression_NO_IN
-    - match: '::'
-      scope: keyword.operator.bind.es
       set: assignmentExpression_NO_IN
   ae_NO_IN_INFIX_OPS_ASSIGNMENT:
     - match: '=(?!=)'
