@@ -1661,6 +1661,12 @@ contexts:
     - match: '{{identifierName}}'
       scope: entity.name.module.export.es
       set: moduleDeclaration_AFTER_EXPORT_BINDING_SPECIFIER
+    - match: "'"
+      scope: punctuation.definition.string.quoted.single.begin.es
+      set: [ moduleDeclaration_AFTER_EXPORT_BINDING_SPECIFIER, stringSingle_AFTER_OPEN ]
+    - match: '"'
+      scope: punctuation.definition.string.quoted.double.begin.es
+      set: [ moduleDeclaration_AFTER_EXPORT_BINDING_SPECIFIER, stringDouble_AFTER_OPEN ]
     - include: other_illegal_pop
 
   moduleDeclaration_AFTER_EXPORT_BINDING_SPECIFIER:
@@ -1765,7 +1771,21 @@ contexts:
     - match: '{{identifier}}'
       scope: variable.other.readwrite.import.es
       set: moduleDeclaration_AFTER_IMPORT_BINDING_SPECIFIER_AMBIG
+    - match: "'"
+      scope: punctuation.definition.string.quoted.single.begin.es
+      set: [ moduleDeclaration_IMPORT_BINDING_BEFORE_AS, stringSingle_AFTER_OPEN ]
+    - match: '"'
+      scope: punctuation.definition.string.quoted.double.begin.es
+      set: [ moduleDeclaration_IMPORT_BINDING_BEFORE_AS, stringDouble_AFTER_OPEN ]
     - include: other_illegal
+
+  moduleDeclaration_IMPORT_BINDING_BEFORE_AS:
+    - match: '((as)){{idEnd}}'
+      captures:
+        1: keyword.operator.module.js # ^BS
+        2: storage.modifier.module.as.es
+      set: moduleDeclaration_IMPORT_BINDING_AFTER_AS_BEFORE_BRACE_CLOSE
+    - include: other_illegal_pop
 
   moduleDeclaration_IMPORT_BINDING_AFTER_AS_BEFORE_BRACE_CLOSE:
     - match: '{{identifier}}'
