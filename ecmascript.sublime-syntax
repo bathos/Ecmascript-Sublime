@@ -90,10 +90,11 @@ variables:
 
   intrinsicConstructors: >-
     Array(?:Buffer)? | BigInt | Big(Ui|I)nt64Array | Boolean | Date |
-    DataView | (?:Eval|Range|Reference|Syntax|Type|URI)?Error |
-    Float(?:32|64)Array | Function | Int(?:8|16|32)Array |
-    Number | Object | Promise | Proxy | RegExp | SharedArrayBuffer |
-    String | Symbol | Uint(?:8(?:Clamped)?|16|32)Array | (?:Weak)?(?:Map|Set)
+    DataView | (?:Aggregate|Eval|Range|Reference|Syntax|Type|URI)?Error |
+    FinalizationRegistry | Float(?:32|64)Array | Function |
+    Int(?:8|16|32)Array | Number | Object | Promise | Proxy | RegExp |
+    SharedArrayBuffer | String | Symbol | Uint(?:8(?:Clamped)?|16|32)Array |
+    (?:Weak)?(?:Map|Set) | WeakRef
   intrinsicFunctions: >-
     (?:de|en)codeURI(?:Component)? |
     eval | is(?:Finite|NaN) | parse(?:Float|Int)
