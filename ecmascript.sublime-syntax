@@ -93,10 +93,10 @@ variables:
     DataView | (?:Aggregate|Eval|Range|Reference|Syntax|Type|URI)?Error |
     FinalizationRegistry | Float(?:32|64)Array | Function |
     Int(?:8|16|32)Array | Number | Object | Promise | Proxy | RegExp |
-    SharedArrayBuffer | String | Symbol | Uint(?:8(?:Clamped)?|16|32)Array |
-    (?:Weak)?(?:Map|Set) | WeakRef
+    ShadowRealm | SharedArrayBuffer | String | Symbol |
+    Uint(?:8(?:Clamped)?|16|32)Array | (?:Weak)?(?:Map|Set) | WeakRef
   intrinsicFunctions: >-
-    (?:de|en)codeURI(?:Component)? |
+    (?:de|en)codeURI(?:Component)? | (?:un)?escape |
     eval | is(?:Finite|NaN) | parse(?:Float|Int)
 
   # NUMERIC LITERALS ###########################################################
@@ -2542,7 +2542,7 @@ contexts:
         1: support.class.builtin.es
       set: ae_AFTER_THING
     # OBJECTS
-    - match: '(?:globalThis|Atomics|Intl|JSON|Math|Reflect){{idEnd}}'
+    - match: '(?:globalThis|Atomics|Intl|JSON|Math|Reflect|Temporal){{idEnd}}'
       scope: support.variable.builtin.es
       set: ae_AFTER_THING
     # FUNCTIONS
@@ -3323,7 +3323,7 @@ contexts:
       captures:
         1: support.class.builtin.es
       set: ae_NO_IN_AFTER_THING
-    - match: '(?:globalThis|Intl|JSON|Math|Reflect){{idEnd}}'
+    - match: '(?:globalThis|Atomics|Intl|JSON|Math|Reflect|Temporal){{idEnd}}'
       scope: support.variable.builtin.es
       set: ae_NO_IN_AFTER_THING
     - match: '(?x) ((( {{intrinsicFunctions}} )))\s*((\())'
